@@ -1,0 +1,946 @@
+#+TITLE:  Configuration for my kitchen sink
+#+AUTHOR: Lucas Gruss
+
+* Table of content :TOC:
+- [[#introduction][Introduction]]
+- [[#personal-doom-modules][Personal Doom Modules]]
+  - [[#desktop][Desktop]]
+- [[#doom-configuration][Doom configuration]]
+  - [[#initel][init.el]]
+  - [[#packagesel][packages.el]]
+  - [[#configel][config.el]]
+
+* Introduction
+This is my configuration file for Doom Emacs. It is a self contained document
+with everything needed to set up Doom. Normally you customize Doom by editing
+three =.el= files, which are =config.el=, =packages.el= and =init.el=. Thanks to
+the =literate= config module, it is possible to have all three in the same org
+document and they get automatically tangled in the right place upon saving this
+file. Without having to set anything up!
+
+This is why I love Doom, I used to have an org configuration that was hell to
+maintain and that would never have been nearly as performant. But Doom allows me
+to keep the same workflow, and has saved me a /ton/ of time, and now my config
+file is about four times smaller than it was.
+
+* Personal Doom Modules
+** Desktop
+*** EXWM
+**** Packages
+#+begin_src emacs-lisp :tangle ./modules/desktop/exwm/packages.el
+(package! exwm)
+(package! exwm-firefox-core)
+(package! exwm-firefox-evil)
+(package! exwm-firefox
+  :recipe
+  (:host github
+   :repo "ieure/exwm-firefox"))
+#+end_src
+
+**** Config
+***** Media keys
+#+begin_src emacs-lisp :tangle ./modules/desktop/exwm/config.el
+(defun my/volume-down ()
+  "Lower volume of the computer"
+  (interactive)
+  (shell-command "~/scripts/volume.sh down"))
+
+(defun my/volume-up ()
+  "Increase volume of the computer"
+  (interactive)
+  (shell-command "~/scripts/volume.sh up"))
+
+(defun my/brightness-down ()
+  "Lower brightness of the screen"
+  (interactive)
+  (shell-command "xbacklight -dec 10"))
+
+(defun my/brightness-up ()
+  "Increase brightness of the screen"
+  (interactive)
+  (shell-command "xbacklight -inc 10"))
+#+end_src
+
+***** EXWM
+EXWM is seriously awesome. Now I don't have to exit emacs *ever* and I get to
+configure my window manager with emacs lisp. Life is good.
+
+#+begin_src emacs-lisp :tangle ./modules/desktop/exwm/config.el
+(use-package! exwm
+  :config
+  ;; (defun exwm-workspace--on-minibuffer-setup ()
+  ;;   "Run in minibuffer-setup-hook to show the minibuffer and its container."
+  ;;   (exwm--log)
+  ;;   (when (and (= 1 (minibuffer-depth))
+  ;;              (not (exwm-workspace--client-p)))
+  ;;     (add-hook 'post-command-hook #'exwm-workspace--update-minibuffer-height)
+  ;;     ;(exwm-workspace--show-minibuffer)
+  ;;     )
+  ;;   ;; FIXME: This is a temporary fix for the *Completions* buffer not
+  ;;   ;;        being correctly fitted by its displaying window.  As with
+  ;;   ;;        `exwm-workspace--display-buffer', the problem is caused by
+  ;;   ;;        the fact that the minibuffer (rather than the workspace)
+  ;;   ;;        frame is the 'selected frame'.  `get-buffer-window' will
+  ;;   ;;        fail to retrieve the correct window.  It's likely there are
+  ;;   ;;        other related issues.
+  ;;   ;; This is not required by Emacs 24.
+  ;;   (when (fboundp 'window-preserve-size)
+  ;;     (let ((window (get-buffer-window "*Completions*"
+  ;;                                      exwm-workspace--current)))
+  ;;       (when window
+  ;;         (fit-window-to-buffer window)
+  ;;         (window-preserve-size window)))))
+
+  ;; (defun exwm-workspace--on-minibuffer-exit ()
+  ;;   "Run in minibuffer-exit-hook to hide the minibuffer container."
+  ;;   (exwm--log)
+  ;;   (when (and (= 1 (minibuffer-depth))
+  ;;              (not (exwm-workspace--client-p)))
+  ;;     (remove-hook 'post-command-hook #'exwm-workspace--update-minibuffer-height)
+  ;;     ;(exwm-workspace--hide-minibuffer)
+  ;;     ))
+
+  ;; (defun exwm-workspace--on-echo-area-dirty ()
+  ;;   "Run when new message arrives to show the echo area and its container."
+  ;;   (when (and (not (active-minibuffer-window))
+  ;;              (not (exwm-workspace--client-p))
+  ;;              (or (current-message)
+  ;;                  cursor-in-echo-area))
+  ;;     (exwm-workspace--update-minibuffer-height t)
+  ;;     ;; (exwm-workspace--show-minibuffer)
+  ;;     (unless (or (not exwm-workspace-display-echo-area-timeout)
+  ;;                 exwm-input--during-command ;e.g. read-event
+  ;;                 input-method-use-echo-area)
+  ;;       (setq exwm-workspace--display-echo-area-timer
+  ;;             (run-with-timer exwm-workspace-display-echo-area-timeout nil
+  ;;                             ;;#'exwm-workspace--echo-area-maybe-clear)))))
+
+  ;; (defun exwm-workspace--on-echo-area-clear ()
+  ;;   "Run in echo-area-clear-hook to hide echo area container."
+  ;;   (unless (exwm-workspace--client-p)
+  ;;     (unless (active-minibuffer-window)
+  ;;       ;(exwm-workspace--hide-minibuffer)
+  ;;       )
+  ;;     (when exwm-workspace--display-echo-area-timer
+  ;;       (cancel-timer exwm-workspace--display-echo-area-timer)
+  ;;       (setq exwm-workspace--display-echo-area-timer nil))))
+
+  (defun my/exwm-async-run (name)
+    "Run a process asynchronously"
+    (interactive)
+    (start-process name nil name))
+
+  (defun my/invoke-firefox ()
+    "If firefox exists, switch to its buffer or else launch it"
+    (interactive)
+    ;;(let ((firefox-string)))
+    (if (string= (buffer-name) "Firefox")
+        (bury-buffer)
+      (if (get-buffer "Firefox")
+          (progn
+            (exwm-workspace-switch-to-buffer "Firefox")
+            (my/exwm-firefox-force-fullscreen))
+        (my/exwm-async-run "firefox"))))
+
+  (defun my/switch-to-firefox-open-new-tab ()
+    "Switch to firefox and then open a new tab."
+    (interactive)
+    (my/invoke-firefox)
+    (exwm-firefox-core-tab-new))
+
+  (defun my/invoke-firefox-other-window ()
+    "Invoke Firefox in a new window"
+    (interactive)
+    (split-window-right)
+    (other-window 1)
+    (my/invoke-firefox))
+
+  (defun my/invoke-spotify ()
+    "If spotify exists, switch to its buffer or else launch it"
+    (interactive)
+    (if (string= (buffer-name) "Spotify")
+        (bury-buffer)
+      (if (get-buffer "Spotify")
+          (exwm-workspace-switch-to-buffer "Spotify")
+        (my/exwm-async-run "spotify"))))
+
+  (defun my/invoke-spotify-other-window ()
+    "Invoke spotify in a new window"
+    (interactive)
+    (split-window-right)
+    (other-window 1)
+    (my/invoke-spotify))
+
+  (defun my/launch-process (command)
+    "Launch a process"
+    (interactive (list (read-shell-command "$ ")))
+    (start-process-shell-command command nil command))
+
+  (defun my/toggle-line-char-modes ()
+    "If on a EXWM buffer, toggle 'line' or 'char'"
+    (interactive)
+    (if exwm-window-type
+        (if (string= exwm--input-mode "line-mode")
+            (call-interactively #'exwm-input-release-keyboard) ; switch to char mode
+          (call-interactively #'exwm-input-grab-keyboard)))) ; switch to line mode
+
+  (defun my/toggle-panel ()
+    (interactive)
+    (shell-command "cd && pgrep xfce4-panel && xfce4-panel -q || xfce4-panel &"))
+
+  (defun my/lock-screen ()
+    "Lock screen with slock"
+    (interactive)
+    (start-process "" nil "/usr/local/bin/slock"))
+
+  (add-hook 'exwm-update-class-hook
+            (lambda ()
+              (exwm-workspace-rename-buffer exwm-class-name)))
+                                        ;(add-hook 'exwm-manage-finish-hook 'exwm-layout-hide-mode-line)
+
+  (setq exwm-input-global-keys
+        `(;; EXWM
+          ([S-s-backspace] . exwm-workspace-delete)
+          ([?\s-f] . exwm-layout-set-fullscreen)
+          ([?\s-r] . exwm-reset)
+          ([?\s-w] . exwm-workspace-switch)
+          ;; Bind "s-0" to "s-9" to switch to a workspace by its index.
+          ,@(mapcar (lambda (i)
+                      `(,(kbd (format "s-%d" i)) .
+                        (lambda ()
+                          (interactive)
+                          (exwm-workspace-switch-create ,i))))
+                    (number-sequence 0 9))
+          ([?\s-b] . counsel-switch-buffer)
+          ([?\s-&] . (lambda (command) (interactive (list (read-shell-command "$ ")))
+                       (start-process-shell-command command nil command)))
+          ([s-f2]  . my/lock-screen)
+          ([?\s-d] . counsel-linux-app)
+          ([?\s-i] . my/invoke-firefox)
+          ([?\s-I] . my/invoke-firefox-other-window)
+          ([?\s-m] . my/toggle-line-char-modes)
+          ([?\s-s] . my/invoke-spotify)
+          ([s-return] . +term/toggle)
+          ([s-backspace] . my/kill-this-buffer)
+          ;; Everything window
+          ([?\s-q] . evil-window-delete)
+          ([s-tab]  . windower-switch-to-last-buffer)
+          ([?\s-\\] . windower-toggle-split)
+          ([?\s-o]  . windower-toggle-single)
+          ([142606440] . windower-move-border-left) ; M-s-h
+          ([142606442] . windower-move-border-below); M-s-j
+          ([142606443] . windower-move-border-above); M-s-k
+          ([142606444] . windower-move-border-right); M-s-l
+          ([?\s-h] . windmove-left)  ([?\s-H] . windower-swap-left)
+          ([?\s-j] . windmove-down)  ([?\s-J] . windower-swap-below)
+          ([?\s-k] . windmove-up)    ([?\s-K] . windower-swap-above)
+          ([?\s-l] . windmove-right) ([?\s-L] . windower-swap-right)
+          ;; Media keys
+          ([XF86MonBrightnessUp]   . my/brightness-up)
+          ([XF86MonBrightnessDown] . my/brightness-down)
+          ([XF86AudioRaiseVolume]  . my/volume-up)
+          ([XF86AudioLowerVolume]  . my/volume-down))
+        exwm-workspace-show-all-buffers t
+        exwm-workspace-number 1
+        exwm-workspace-minibuffer-position 'bottom
+        exwm-workspace-display-echo-area-timeout 1)
+
+  (push (aref (kbd "<escape>") 0) exwm-input-prefix-keys)
+  ;; (setq! exwm-input-simulation-keys
+  ;;   '(([?\M-h] . [left])
+  ;;     ([?\M-l] . [right])
+  ;;     ([?\M-k] . [up])
+  ;;     ([?\M-j] . [down])
+  ;;     ;([?\C-a] . [home])
+  ;;     ;([?\C-e] . [end])
+  ;;     ;([?\M-v] . [prior])
+  ;;     ;([?\C-v] . [next])
+  ;;     ;([?\C-d] . [delete])
+  ;;     ([?\C-k] . [S-end delete])))
+  (exwm-enable))
+#+end_src
+
+***** EXWM-Systemtray
+It's nice to have a systray, and there is nothing wrong with exwm-systray, but
+since I am using XFCE and the XFCE-panel is just [insert chef's kiss], I don't
+use it anylonger.
+#+begin_src emacs-lisp :tangle ./modules/desktop/exwm/config.el
+(use-package! exwm-systemtray
+  :disabled
+  :config
+  (setq! exwm-systemtray-height 15)
+                                        ;exwm-systemtray-icon-gap 3)
+                                        ;exwm-systemtray-background-color 'black)
+  (exwm-systemtray-enable))
+#+end_src
+
+***** EXWM-randr
+#+begin_src emacs-lisp :tangle ./modules/desktop/exwm/config.el
+(use-package! exwm-randr
+  :config
+  (add-hook 'exwm-randr-screen-change-hook
+            (lambda ()
+              (start-process-shell-command
+               "xrandr" nil "xrandr --output DP2 --right-of eDP1")))
+  (exwm-randr-enable))
+#+end_src
+
+***** EXWM-Firefox
+With EXWM emulation keys, you can have vi-style keybindings within firefox,
+without having to install anything on the browser. Have I mentioned how awesome EXWM
+is? My next objective will probably be to bring firefox even closer to emacs by
+enabling new tabs within new windows and have emacs handle all windows with iBuffer.
+
+#+begin_src emacs-lisp :tangle ./modules/desktop/exwm/config.el
+(use-package! exwm-firefox-evil
+  :hook ((exwm-manage-finish . exwm-firefox-evil-activate-if-firefox)
+         ;; (exwm-manage-finish . my/exwm-firefox-force-fullscreen)
+         (exwm-firefox-evil-mode . my/exwm-firefox-hook))
+  :config
+
+  (defun exwm-input--on-ButtonPress-line-mode (buffer button-event)
+    "Handle button events in line mode.
+BUFFER is the `exwm-mode' buffer the event was generated
+on. BUTTON-EVENT is the X event converted into an Emacs event.
+
+The return value is used as event_mode to release the original
+button event."
+    (with-current-buffer buffer
+      (let ((read-event (exwm-input--mimic-read-event button-event)))
+        (exwm--log "%s" read-event)
+        (if (and read-event
+                 (exwm-input--event-passthrough-p read-event))
+            ;; The event should be forwarded to emacs
+            (progn
+              (exwm-input--cache-event read-event)
+              (exwm-input--unread-event button-event)
+              xcb:Allow:ReplayPointer)
+          ;; xcb:Allow:SyncPointer)
+          ;; The event should be replayed
+          xcb:Allow:ReplayPointer))))
+
+  (defun my/exwm-firefox-force-fullscreen ()
+    "Send F11 to firefox to always be in full screen.
+
+Whenever you switch to another window and then come back to
+firefox, it leaves fullscreen mode."
+    (interactive)
+    (exwm-input--fake-key 'f11))
+
+  (defun my/exwm-firefox-toggle-tree-tab ()
+    "Toggle the tree tab extension"
+    (interactive)
+    (exwm-input--fake-key 'f1))
+
+  (defun my/exwm-firefox-hook ()
+    "Sets firefox how I like it"
+    (interactive)
+    (when exwm-firefox-evil-mode
+      (my/exwm-firefox-toggle-tree-tab)))
+
+  (defun my/exwm-firefox-hint ()
+    "Highlights hints on the page."
+    (interactive)
+    (exwm-input--fake-key 'C-m)
+    (exwm-firefox-evil-insert))
+
+  (define-key! 'normal exwm-firefox-evil-mode-map
+    "f" #'my/exwm-firefox-hint
+    "F" #'my/exwm-firefox-force-fullscreen
+    "T" #'my/exwm-firefox-toggle-tree-tab
+    "q" #'exwm-input-send-next-key))
+
+(use-package! exwm-firefox
+  :after exwm-firefox-evil
+  :config
+  ;; I have different keybinding in firefox for tabdetach-attach : M-S-t
+  (defun my/exwm-firefox-attach ()
+    "Attach the current tab into its parent window.
+
+   This requires the tabdetach extension to work."
+    (interactive)
+    (exwm-input--fake-key ?\M-\S-T))
+
+  (define-key! 'normal exwm-firefox-evil-mode-map
+    "A" #'my/exwm-firefox-attach
+    "D" #'exwm-firefox-split-detach
+    "M" #'exwm-firefox-merge)
+  ;; I don't like renaming the name of the firefox window
+  (remove-hook 'exwm-update-title-hook 'exwm-firefox--update-title))
+#+end_src
+
+***** Keybindings
+#+begin_src emacs-lisp :tangle ./modules/desktop/exwm/config.el
+(map!
+ :map exwm-mode-map
+ :localleader
+  :desc "Toggle mode-line"       "m" #'exwm-layout-toggle-mode-line
+
+ :leader
+  (:prefix ("e" . "EXWM")
+   :desc "Attach minibuffer"      "a" #'exwm-workspace-attach-minibuffer
+   :desc "Detach minibuffer"      "d" #'exwm-workspace-detach-minibuffer
+   :desc "Fullscreen"             "f" #'exwm-layout-set-fullscreen
+   :desc "Floating hide"          "h" #'exwm-layout-set-fullscreen
+   :desc "Release keyboard"       "k" #'exwm-input-release-keyboard
+   :desc "Send next key"          "q" #'exwm-input-send-next-key
+   :desc "Reset"                  "r" #'exwm-reset
+   :desc "Toggle floating layout" "t" #'exwm-floating-toggle-floating
+   :desc "Workspace move window"  "w" #'exwm-workspace-move-window))
+#+end_src
+
+* Doom configuration
+** init.el
+This is my doom block. What it contains is pretty self explanatory.
+
+#+begin_src emacs-lisp :tangle init.el
+;;; init.el -*- lexical-binding: t; -*-
+
+(doom! :input
+       ;;chinese
+       ;;japanese
+
+       :completion
+       company           ; the ultimate code completion backend
+       ;;(helm +fuzzy +icons +childframe)              ; the *other* search engine for love and life
+       ;;ido               ; the other *other* search engine...
+       (ivy +icons +childframe +prescient +fuzzy)               ; a search engine for love and life
+
+       :ui
+       deft              ; notational velocity for Emacs
+       doom              ; what makes DOOM look the way it does
+       doom-dashboard    ; a nifty splash screen for Emacs
+       doom-quit         ; DOOM quit-message prompts when you quit Emacs
+       ;;fill-column       ; a `fill-column' indicator
+       hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
+       hydra
+       ;;indent-guides     ; highlighted indent columns
+       modeline         ; snazzy, Atom-inspired modeline, plus API
+       nav-flash         ; blink the current line after jumping
+       ;;neotree           ; a project drawer, like NERDTree for vim
+       ophints           ; highlight the region an operation acts on
+       ;;(popup +defaults)   ; tame sudden yet inevitable temporary windows
+       ;;ligatures       ; ligatures or substitute text with pretty symbols
+       ;;tabs              ; an tab bar for Emacs
+       treemacs          ; a project drawer, like neotree but cooler
+       ;;unicode           ; extended unicode support for various languages
+       vc-gutter         ; vcs diff in the fringe
+       vi-tilde-fringe   ; fringe tildes to mark beyond EOB
+       ;;window-select     ; visually switch windows
+       ;;workspaces        ; tab emulation, persistence & separate workspaces
+       zen               ; distraction-free coding or writing
+
+       :editor
+       (evil +everywhere); come to the dark side, we have cookies
+       file-templates    ; auto-snippets for empty files
+       fold              ; (nigh) universal code folding
+       ;;(format +onsave)  ; automated prettiness
+       ;;god               ; run Emacs commands without modifier keys
+       ;;lispy             ; vim for lisp, for people who don't like vim
+       ;;multiple-cursors  ; editing in many places at once
+       ;;objed             ; text object editing for the innocent
+       ;;parinfer          ; turn lisp into python, sort of
+       ;;rotate-text       ; cycle region at point between text candidates
+       snippets          ; my elves. They type so I don't have to
+       ;;word-wrap         ; soft wrapping with language-aware indent
+
+       :emacs
+       (dired +ranger +icons)   ; making dired pretty [functional]
+       electric          ; smarter, keyword-based electric-indent
+       ibuffer         ; interactive buffer management
+       vc                ; version-control and Emacs, sitting in a tree
+
+       :term
+       eshell            ; a consistent, cross-platform shell (WIP)
+       ;;shell             ; a terminal REPL for Emacs
+       term              ; terminals in Emacs
+       ;;vterm             ; another terminals in Emacs
+
+       :checkers
+       syntax              ; tasing you for every semicolon you forget
+       ;;spell             ; tasing you for misspelling mispelling
+       ;;grammar           ; tasing grammar mistake every you make
+
+       :tools
+       ;;ansible
+       ;;debugger          ; FIXME stepping through code, to help you add bugs
+       ;;direnv
+       ;;docker
+       ;;editorconfig      ; let someone else argue about tabs vs spaces
+       ;; ein               ; tame Jupyter notebooks with emacs
+       (eval +overlay)     ; run code, run (also, repls)
+       ;;gist              ; interacting with github gists
+       (lookup +docsets +dictionnary +offline)               ; navigate your code and its documentation
+       ;;lsp
+       ;;macos             ; MacOS-specific commands
+       magit             ; a git porcelain for Emacs
+       make              ; run make tasks from Emacs
+       pass              ; password manager for nerds
+       pdf               ; pdf enhancements
+       ;;prodigy           ; FIXME managing external services & code builders
+       ;;rgb               ; creating color strings
+       ;;terraform         ; infrastructure as code
+       ;;tmux              ; an API for interacting with tmux
+       ;;upload            ; map local to remote projects via ssh/ftp
+
+       :lang
+       ;;agda              ; types of types of types of types...
+       ;;assembly          ; assembly for fun or debugging
+       cc                ; C/C++/Obj-C madness
+                                        ;clojure           ; java with a lisp
+       ;;common-lisp       ; if you've seen one lisp, you've seen them all
+       ;;coq               ; proofs-as-programs
+       ;;crystal           ; ruby at the speed of c
+       ;;csharp            ; unity, .NET, and mono shenanigans
+       data              ; config/data formats
+       ;;(dart +flutter)   ; paint ui and not much else
+       ;;elixir            ; erlang done right
+       ;;elm               ; care for a cup of TEA?
+       emacs-lisp        ; drown in parentheses
+       ;;erlang            ; an elegant language for a more civilized age
+       ;;ess               ; emacs speaks statistics
+       ;;faust             ; dsp, but you get to keep your soul
+       ;;fsharp           ; ML stands for Microsoft's Language
+       ;;fstar             ; (dependent) types and (monadic) effects and Z3
+       ;;go                ; the hipster dialect
+       ;;(haskell +dante)  ; a language that's lazier than I am
+       ;;hy                ; readability of scheme w/ speed of python
+       ;;idris             ;
+       ;;(java +meghanada) ; the poster child for carpal tunnel syndrome
+       ;;javascript        ; all(hope(abandon(ye(who(enter(here))))))
+       ;;julia             ; a better, faster MATLAB
+       ;;kotlin            ; a better, slicker Java(Script)
+       latex             ; writing papers in Emacs has never been so fun
+       ;;lean
+       ;;factor
+       ;;ledger            ; an accounting system in Emacs
+       lua               ; one-based indices? one-based indices
+       markdown          ; writing docs for people to ignore
+       ;;nim               ; python + lisp at the speed of c
+       ;;nix               ; I hereby declare "nix geht mehr!"
+       ;;ocaml             ; an objective camel
+       (org +roam)               ; organize your plain life in plain text
+       ;;perl              ; write code no one else can comprehend
+       ;;php               ; perl's insecure younger brother
+       ;;plantuml          ; diagrams for confusing people more
+       ;;purescript        ; javascript, but functional
+       python; +lsp)           ; beautiful is better than ugly
+       ;;qt                ; the 'cutest' gui framework ever
+       ;;racket            ; a DSL for DSLs
+       ;;rest              ; Emacs as a REST client
+       ;;rst               ; ReST in peace
+       ;;(ruby +rails)     ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
+       ;;rust              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+       ;;scala             ; java, but good
+       ;;scheme            ; a fully conniving family of lisps
+       sh                ; she sells {ba,z,fi}sh shells on the C xor
+       ;;sml
+       ;;solidity          ; do you need a blockchain? No.
+       ;;swift             ; who asked for emoji variables?
+       ;;terra             ; Earth and Moon in alignment for performance.
+       ;;web               ; the tubes
+
+       :email
+       (mu4e +gmail)
+       ;;notmuch
+       ;;(wanderlust +gmail)
+
+       :app
+       ;;calendar
+       ;;irc               ; how neckbeards socialize
+       (rss +org)        ; emacs as an RSS reader
+       ;;twitter           ; twitter client https://twitter.com/vnought
+
+       :config
+       literate
+       (default +bindings +smartparens))
+#+end_src
+
+** packages.el
+#+begin_src emacs-lisp :tangle packages.el
+(package! modus-vivendi-theme)
+(package! modus-operandi-theme)
+(package! solo-jazz-theme
+  :recipe (:host github
+           :repo "cstby/solo-jazz-emacs-theme"))
+(package! theme-magic)
+(package! explain-pause-mode
+  :recipe (:host github
+           :repo "lastquestion/explain-pause-mode"))
+(package! windower)
+(package! counsel-spotify)
+(package! orderless)
+(package! solaire-mode :disable t)
+(package! rg)
+(package! zoom)
+(package! hyperbole)
+(package! calfw
+  :recipe (:host github
+           :repo "kiwanami/emacs-calfw"))
+(package! calfw-org
+  :recipe (:host github
+           :repo "kiwanami/emacs-calfw"))
+(package! org-tree-slide)
+(package! org-superstar)
+(package! org-sidebar)
+(package! which-key-posframe
+  :recipe (:host github
+           :repo "yanghaoxie/which-key-posframe"))
+#+end_src
+
+** config.el
+*** Window management
+**** Zoom mode
+Zoom is a nice package for window management in emacs. It enlarges the window
+that has focus.
+#+begin_src emacs-lisp :tangle config.el
+(use-package! zoom
+  :config
+  (map!
+   :leader
+   (:prefix ("t" . "toggle")
+    :desc "Zoom mode" "Z" #'zoom-mode))
+  (zoom-mode +1))
+#+end_src
+    
+**** Windmove
+#+begin_src emacs-lisp :tangle config.el
+(use-package! windmove
+  :init
+  (map! "s-h" #'windmove-left
+        "s-j" #'windmove-down
+        "s-k" #'windmove-up
+        "s-l" #'windmove-right)
+  :config
+  (setq! windmove-wrap-around t
+         windmove-window-distance-delta 1))
+#+end_src
+
+**** Windower
+#+begin_src emacs-lisp :tangle config.el
+(use-package! windower
+  :init
+  (map! "s-H"     #'windower-swap-left
+        "s-J"     #'windower-swap-below
+        "s-K"     #'windower-swap-above
+        "s-L"     #'windower-swap-right
+        "s-M-h"   #'windower-move-border-left
+        "s-M-j"   #'windower-move-border-below
+        "s-M-k"   #'windower-move-border-above
+        "s-M-l"   #'windower-move-border-right
+        "s-<tab>" #'windower-switch-to-last-buffer
+        "s-o"     #'windower-toggle-single
+        "s-\\"    #'windower-toggle-split))
+#+end_src
+
+*** Convenience
+#+begin_src emacs-lisp :tangle config.el
+(explain-pause-mode -1)
+;; (server-start)
+(setq! user-full-name "Lucas Gruss"
+       user-mail-address "lucas.gruss@laposte.net"
+       org-directory "~/org/"
+       display-line-numbers-type `relative
+       window-min-height 1
+       idle-update-delay 0.2)
+
+(defun my/kill-this-buffer ()
+  "Kill the current buffer"
+  (interactive)
+  (kill-buffer (current-buffer)))
+#+end_src
+
+**** Which-key
+Which key is one of the killer features for using emacs, it's good to discover
+features and also to not worry about remembering keybindings. I have nothing but
+praise for this package *but* the way Doom Emacs uses it has a fairly slow delay
+for it to pop-up. I want it to appear almost instantaneously.
+
+#+begin_src emacs-lisp :tangle config.el
+(after! which-key
+  ;; which-key-idle-delay must be set before enabling the mode
+  ;; so we disable it, set the variable and re-enable it
+  (which-key-mode -1)
+  (setq! which-key-idle-delay 0.2)
+  (which-key-mode +1))
+
+(use-package! which-key-posframe
+  :config
+  (which-key-posframe-mode +1))
+#+end_src
+
+**** Deft
+#+BEGIN_SRC emacs-lisp :tangle config.el
+(setq deft-directory "~/org")
+#+END_SRC
+
+*** Theme
+**** Theme magic
+#+begin_src emacs-lisp :tangle config.el
+(use-package! theme-magic
+  ;; in the offchance I am not using emacs for something, this tricks me by using the
+  ;; same theme as in emacs everywhere else.
+  :config
+  (theme-magic-export-theme-mode +1))
+#+end_src
+
+**** Theme choice
+#+begin_src emacs-lisp :tangle config.el
+(setq! doom-theme 'modus-operandi)
+;; (setq! doom-font (font-spec :name "Source Code Pro" :family "monospace" :size 14))
+;; (setq! doom-font (font-spec :family "monospace" :size 14))
+;; (setq fancy-splash-image "~/Images/Wallpaper/vaporwave-fuji-thumbnail.jpg")
+
+(defun my/toggle-transparency ()
+  "Toggle the transparency of Emacs on and off"
+  (interactive)
+  (let ((alpha (frame-parameter nil 'alpha)))
+    (set-frame-parameter
+     nil 'alpha
+     (if (eql (cond ((numberp alpha) alpha)
+                    ((numberp (cdr alpha)) (cdr alpha))
+                    ;; Also handle undocumented (<active> <inactive>) form.
+                    ((numberp (cadr alpha)) (cadr alpha)))
+              100)
+         '(91 . 80) '(100 . 100)))))
+#+end_src
+
+**** Modeline
+#+begin_src emacs-lisp :tangle config.el
+(after! doom-modeline
+  (progn
+    (setq doom-modeline-buffer-file-name-style 'auto
+          doom-modeline-bar-width (frame-parameter nil 'left-fringe)
+          doom-modeline-height 10
+          doom-modeline-icon t
+          all-the-icons-scale-factor 1
+          display-time-format " %H:%M - %Y/%m/%d ")
+    (display-time-mode -1)))
+#+end_src
+
+*** Org mode
+**** Latex
+#+begin_src emacs-lisp :tangle config.el
+;; (after! org
+;;   (add-to-list 'org-latex-classes '("lettre" "\\documentclass[11pt]{lettre}
+;; \\usepackage[utf8]{inputenc}
+;; \\usepackage[T1]{fontenc}
+;; \\usepackage{lmodern}
+;; \\usepackage{eurosym}
+;; \\usepackage[french]{babel}"
+;;                                     ("\\section{%s}" . "\\section*{%s}")
+;;                                     ("\\subsection{%s}" . "\\subsection*{%s}")
+;;                                     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+;;                                     ("\\paragraph{%s}" . "\\paragraph*{%s}")
+;;                                     ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+#+end_src
+
+**** Calfw
+#+begin_src emacs-lisp :tangle no
+(use-package! calfw
+  :after org)
+(use-package! calfw-org
+  :after calfw)
+#+end_src
+
+**** Org-sidebar
+#+begin_src emacs-lisp :tangle no
+(use-package! org-sidebar
+  :after org)
+#+end_src
+
+**** Presentation mode
+    
+#+begin_src emacs-lisp :tangle config.el
+(use-package! org-superstar              ; supersedes `org-bullets'
+  :ensure
+  :after org
+  :config
+  (setq org-superstar-remove-leading-stars t)
+  (setq org-superstar-headline-bullets-list
+        '("🞛" "◉" "○" "▷"))
+  (setq org-superstar-item-bullet-alist
+        '((?+ . ?•)
+          (?* . ?➤)
+          (?- . ?–))))
+
+(use-package! org-tree-slide
+  :ensure
+  :after org
+  :commands prot/org-presentation-mode
+  :config
+  (setq org-tree-slide-breadcrumbs nil)
+  (setq org-tree-slide-header nil)
+  (setq org-tree-slide-slide-in-effect nil)
+  (setq org-tree-slide-heading-emphasis nil)
+  (setq org-tree-slide-cursor-init t)
+  (setq org-tree-slide-modeline-display nil)
+  (setq org-tree-slide-skip-done nil)
+  (setq org-tree-slide-skip-comments t)
+  (setq org-tree-slide-fold-subtrees-skipped t)
+  (setq org-tree-slide-skip-outline-level 2)
+  (setq org-tree-slide-never-touch-face t)
+  (setq org-tree-slide-activate-message
+        (propertize "Presentation mode ON" 'face 'success))
+  (setq org-tree-slide-deactivate-message
+        (propertize "Presentation mode OFF" 'face 'error))
+
+  (define-minor-mode prot/org-presentation-mode
+    "Parameters for plain text presentations with `org-mode'."
+    :init-value nil
+    :global nil
+    (if prot/org-presentation-mode
+        (progn
+          (unless (eq major-mode 'org-mode)
+            (user-error "Not in an Org buffer"))
+          (org-tree-slide-mode 1)
+          (writeroom-mode 1)
+          (org-superstar-mode 1)
+          (setq-local display-line-numbers nil)
+          (org-indent-mode 1))
+      (org-tree-slide-mode -1)
+      (writeroom-mode -1)
+      (org-superstar-mode -1)
+      (setq-local display-line-numbers 'relative)
+      (org-indent-mode -1)))
+
+  :bind (("C-c P" . prot/org-presentation-mode)
+         :map org-tree-slide-mode-map
+         ("C-h" . org-tree-slide-display-header-toggle)
+         ("C-l" . org-tree-slide-display-header-toggle)
+         ("C-j" . org-tree-slide-move-next-tree)
+         ("C-k" . org-tree-slide-move-previous-tree)))
+#+end_src
+
+*** Completions
+**** Ivy
+#+begin_src emacs-lisp :tangle no
+;; (after! ivy
+;;   (progn
+;;     (setq ivy-fixed-height-minibuffer nil
+;;           ivy-add-newline-after-prompt nil)))
+#+end_src
+
+**** Ivy-posframe
+#+BEGIN_SRC emacs-lisp :tangle config.el
+(after! ivy-posframe
+  (progn
+    (setq ivy-posframe-border-width 1)
+    (setq ivy-posframe-parameters nil)
+    ;; prevent posframe from spawning behind X-windows
+    (when (featurep! :desktop exwm)
+      (setq ivy-posframe-parameters '((parent-frame nil))))))
+#+END_SRC
+
+**** Ivy-Spotify
+
+#+begin_src emacs-lisp :tangle config.el
+(use-package! counsel-spotify
+  :commands
+  (counsel-spotify-next
+   counsel-spotify-previous
+   counsel-spotify-toggle-play-pause
+   counsel-spotify-search-album
+   counsel-spotify-search-track
+   counsel-spotify-search-artist
+   counsel-spotify-search-playlist)
+  :init
+  (defvar counsel-spotify-map (make-sparse-keymap))
+  (define-key! counsel-spotify-map
+    "a"  #'counsel-spotify-toggle-play-pause
+    "n"  #'counsel-spotify-next
+    "p"  #'counsel-spotify-previous
+    "j"  #'counsel-spotify-next
+    "k"  #'counsel-spotify-previous
+    "s"  nil
+    "sA" #'counsel-spotify-search-album
+    "sa" #'counsel-spotify-search-artist
+    "st" #'counsel-spotify-search-track
+    "sp" #'counsel-spotify-search-playlist)
+  (map! (:leader
+         :desc "audio" "a" counsel-spotify-map))
+  ;; the package should be "manually" reloaded in order to function properly
+  :config
+  (load! "private.el")
+  (cl-defmethod counsel-spotify-do-play ((backend counsel-spotify-linux-backend) (something (eql nil)))
+    nil))
+#+end_src
+
+**** Orderless
+
+#+begin_src emacs-lisp :tangle no
+(use-package! orderless
+  :config
+  (setq completion-styles '(orderless)))
+#+end_src
+
+*** Elfeed
+#+begin_src emacs-lisp :tangle no
+(after! elfeed
+  (setq elfeed-feeds
+        '("http://lukesmith.xyz/rss.xml"
+          "https://xkcd.com/atom.xml"
+          "https://www.lemonde.fr/politique/rss_full.xml"
+          "https://www.lemonde.fr/societe/rss_full.xml")))
+#+end_src
+
+*** ripgrep
+#+begin_src emacs-lisp :tangle config.el
+(use-package! rg)
+#+end_src
+
+*** Treemacs
+#+begin_src emacs-lisp :tangle config.el
+(use-package! treemacs
+  :config
+  (setq treemacs-width 20))
+#+end_src
+
+*** Keybindings
+
+#+begin_src emacs-lisp :tangle config.el
+(map! (:leader
+       :desc "Control-x" "x" ctl-x-map
+       (:prefix ("b" . "buffer")
+        "b"   #'counsel-switch-buffer
+        "o"   #'counsel-switch-buffer-other-window
+        "C-b" #'counsel-switch-buffer-other-window)
+       (:prefix ("e" . "EXWM")
+        :desc "Attach minibuffer"      "a" #'exwm-workspace-attach-minibuffer
+        :desc "Detach minibuffer"      "d" #'exwm-workspace-detach-minibuffer
+        :desc "Fullscreen"             "f" #'exwm-layout-set-fullscreen
+        :desc "Floating hide"          "h" #'exwm-layout-set-fullscreen
+        :desc "Release keyboard"       "k" #'exwm-input-release-keyboard
+        :desc "Toggle mode-line"       "m" #'exwm-layout-toggle-mode-line
+        :desc "Send next key"          "q" #'exwm-input-send-next-key
+        :desc "Reset"                  "r" #'exwm-reset
+        :desc "Toggle floating layout" "t" #'exwm-floating-toggle-floating
+        :desc "Workspace move window"  "w" #'exwm-workspace-move-window)
+       (:prefix ("f" . "file")
+        "o"   #'find-file-other-window
+        "C-f" #'find-file-other-window)
+       (:prefix ("o" . "open")
+        :desc "Spotify"                "s" #'my/invoke-spotify
+        :desc "Spotify (other window)" "S" #'my/invoke-spotify-other-window
+        :desc "El[f]eed"               "f" #'elfeed
+        :desc "El[F]eed update"        "F" #'elfeed-update
+        :desc "Firefox"                "i" #'my/invoke-firefox
+        :desc "Firefox (other window)" "I" #'my/invoke-firefox-other-window)
+       (:prefix ("t" . "toggle")
+        :desc "Transparency"          "t" #'my/toggle-transparency
+        :desc "dwm-style"             "d" #'edwina-mode
+        :desc "Treemacs"              "T" #'treemacs
+        :desc "Org presentation mode" "P" #'prot/org-presentation-mode))
+      "M-j" #'drag-stuff-down
+      "M-k" #'drag-stuff-up
+      "M-<tab>" #'counsel-switch-buffer
+      (:map ivy-minibuffer-map
+       "M-<tab>" #'next-line
+       "<M-iso-lefttab>" #'previous-line)
+      (:n
+       "gss" #'avy-goto-char-timer)
+      "<s-return>" #'+term/toggle
+      "<S-s-return>" #'+term/here
+      "<s-backspace>" #'my/kill-this-buffer
+      "s-d" #'counsel-linux-app)
+#+end_src
