@@ -38,7 +38,22 @@ file is about four times smaller than it was.
 #+end_src
 
 **** Config
+
+The following snippet should go into the file
+=/usr/share/xsessions/emacs.desktop= to make EXWM a possible choice in the
+display manager.
+
+#+begin_src conf :tangle no
+[Desktop Entry]
+Name=EXWM
+Comment=Emacs is awesome!
+Exec=emacs
+Type=application
+#+end_src
+
 ***** Media keys
+
+Media keys need to be explicitely bound, as we might not use EXWM in a DE.
 #+begin_src emacs-lisp :tangle ./modules/desktop/exwm/config.el
 (defun my/volume-down ()
   "Lower volume of the computer"
@@ -61,12 +76,44 @@ file is about four times smaller than it was.
   (shell-command "xbacklight -inc 10"))
 #+end_src
 
+***** EXWM-randr
+
+#+begin_src emacs-lisp :tangle ./modules/desktop/exwm/config.el
+(use-package! exwm-randr
+  :config
+  (setq! exwm-randr-workspace-output-plist '(1 "VGA1"))
+  (add-hook 'exwm-randr-screen-change-hook
+            (lambda ()
+              (start-process-shell-command
+               ;;"xrandr" nil "xrandr --output DP2 --right-of eDP1"
+               "xrandr" nil "xrandr --output VGA1 --left-of LVDS1"
+               )))
+  (exwm-randr-enable))
+#+end_src
+
+***** EXWM-Systemtray
+It's nice to have a systray, and there is nothing wrong with exwm-systray, but
+since I am using XFCE and the XFCE-panel is just [insert chef's kiss], I don't
+use it any longer.
+
+#+begin_src emacs-lisp :tangle ./modules/desktop/exwm/config.el
+(use-package! exwm-systemtray
+  :disabled
+  :config
+  (setq! exwm-systemtray-height 15)
+  ;;exwm-systemtray-icon-gap 3)
+  ;;exwm-systemtray-background-color 'black)
+  (exwm-systemtray-enable))
+#+end_src
+
 ***** EXWM
 EXWM is seriously awesome. Now I don't have to exit emacs *ever* and I get to
 configure my window manager with emacs lisp. Life is good.
 
 #+begin_src emacs-lisp :tangle ./modules/desktop/exwm/config.el
 (use-package! exwm
+  :init
+  (setq! exwm-firefox-buffer-name "Firefox-esr")
   :config
   ;; (defun exwm-workspace--on-minibuffer-setup ()
   ;;   "Run in minibuffer-setup-hook to show the minibuffer and its container."
@@ -134,11 +181,11 @@ configure my window manager with emacs lisp. Life is good.
     "If firefox exists, switch to its buffer or else launch it"
     (interactive)
     ;;(let ((firefox-string)))
-    (if (string= (buffer-name) "Firefox")
+    (if (string= (buffer-name) exwm-firefox-buffer-name)
         (bury-buffer)
-      (if (get-buffer "Firefox")
+      (if (get-buffer exwm-firefox-buffer-name)
           (progn
-            (exwm-workspace-switch-to-buffer "Firefox")
+            (exwm-workspace-switch-to-buffer exwm-firefox-buffer-name)
             (my/exwm-firefox-force-fullscreen))
         (my/exwm-async-run "firefox"))))
 
@@ -242,7 +289,7 @@ configure my window manager with emacs lisp. Life is good.
           ([XF86AudioLowerVolume]  . my/volume-down))
         exwm-workspace-show-all-buffers t
         exwm-workspace-number 1
-        exwm-workspace-minibuffer-position 'bottom
+        exwm-workspace-minibuffer-position nil
         exwm-workspace-display-echo-area-timeout 1)
 
   (push (aref (kbd "<escape>") 0) exwm-input-prefix-keys)
@@ -260,31 +307,6 @@ configure my window manager with emacs lisp. Life is good.
   (exwm-enable))
 #+end_src
 
-***** EXWM-Systemtray
-It's nice to have a systray, and there is nothing wrong with exwm-systray, but
-since I am using XFCE and the XFCE-panel is just [insert chef's kiss], I don't
-use it anylonger.
-#+begin_src emacs-lisp :tangle ./modules/desktop/exwm/config.el
-(use-package! exwm-systemtray
-  :disabled
-  :config
-  (setq! exwm-systemtray-height 15)
-                                        ;exwm-systemtray-icon-gap 3)
-                                        ;exwm-systemtray-background-color 'black)
-  (exwm-systemtray-enable))
-#+end_src
-
-***** EXWM-randr
-#+begin_src emacs-lisp :tangle ./modules/desktop/exwm/config.el
-(use-package! exwm-randr
-  :config
-  (add-hook 'exwm-randr-screen-change-hook
-            (lambda ()
-              (start-process-shell-command
-               "xrandr" nil "xrandr --output DP2 --right-of eDP1")))
-  (exwm-randr-enable))
-#+end_src
-
 ***** EXWM-Firefox
 With EXWM emulation keys, you can have vi-style keybindings within firefox,
 without having to install anything on the browser. Have I mentioned how awesome EXWM
@@ -297,7 +319,7 @@ enabling new tabs within new windows and have emacs handle all windows with iBuf
          ;; (exwm-manage-finish . my/exwm-firefox-force-fullscreen)
          (exwm-firefox-evil-mode . my/exwm-firefox-hook))
   :config
-
+  (setq exwm-firefox-evil-class-name '("Firefox" "Firefox-esr"))
   (defun exwm-input--on-ButtonPress-line-mode (buffer button-event)
     "Handle button events in line mode.
 BUFFER is the `exwm-mode' buffer the event was generated
@@ -553,7 +575,10 @@ This is my doom block. What it contains is pretty self explanatory.
 
        :config
        literate
-       (default +bindings +smartparens))
+       (default +bindings +smartparens)
+
+       :desktop
+       exwm)
 #+end_src
 
 ** packages.el
@@ -586,6 +611,10 @@ This is my doom block. What it contains is pretty self explanatory.
 (package! which-key-posframe
   :recipe (:host github
            :repo "yanghaoxie/which-key-posframe"))
+(package! framemove
+  :recipe (:host github
+           :repo "emacsmirror/emacswiki.org"
+           :files ("framemove.el")))
 #+end_src
 
 ** config.el
@@ -614,6 +643,13 @@ that has focus.
   :config
   (setq! windmove-wrap-around t
          windmove-window-distance-delta 1))
+#+end_src
+
+**** Framemove
+#+begin_src emacs-lisp :tangle config.el
+(use-package! framemove
+  :config
+  (setq framemove-hook-into-windmove t))
 #+end_src
 
 **** Windower
@@ -905,17 +941,6 @@ for it to pop-up. I want it to appear almost instantaneously.
         "b"   #'counsel-switch-buffer
         "o"   #'counsel-switch-buffer-other-window
         "C-b" #'counsel-switch-buffer-other-window)
-       (:prefix ("e" . "EXWM")
-        :desc "Attach minibuffer"      "a" #'exwm-workspace-attach-minibuffer
-        :desc "Detach minibuffer"      "d" #'exwm-workspace-detach-minibuffer
-        :desc "Fullscreen"             "f" #'exwm-layout-set-fullscreen
-        :desc "Floating hide"          "h" #'exwm-layout-set-fullscreen
-        :desc "Release keyboard"       "k" #'exwm-input-release-keyboard
-        :desc "Toggle mode-line"       "m" #'exwm-layout-toggle-mode-line
-        :desc "Send next key"          "q" #'exwm-input-send-next-key
-        :desc "Reset"                  "r" #'exwm-reset
-        :desc "Toggle floating layout" "t" #'exwm-floating-toggle-floating
-        :desc "Workspace move window"  "w" #'exwm-workspace-move-window)
        (:prefix ("f" . "file")
         "o"   #'find-file-other-window
         "C-f" #'find-file-other-window)
