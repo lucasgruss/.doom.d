@@ -78,6 +78,7 @@ Media keys need to be explicitely bound, as we might not use EXWM in a DE.
 
 ***** EXWM-randr
 
+EXWM has built in support for multi-monitor.
 #+begin_src emacs-lisp :tangle ./modules/desktop/exwm/config.el
 (use-package! exwm-randr
   :config
@@ -86,8 +87,7 @@ Media keys need to be explicitely bound, as we might not use EXWM in a DE.
             (lambda ()
               (start-process-shell-command
                ;;"xrandr" nil "xrandr --output DP2 --right-of eDP1"
-               "xrandr" nil "xrandr --output VGA1 --left-of LVDS1"
-               )))
+               "xrandr" nil "xrandr --output VGA1 --left-of LVDS1")))
   (exwm-randr-enable))
 #+end_src
 
@@ -114,64 +114,23 @@ configure my window manager with emacs lisp. Life is good.
 (use-package! exwm
   :init
   (setq! exwm-firefox-buffer-name "Firefox-esr")
+  (map!
+   :map exwm-mode-map
+   :localleader
+   :desc "Toggle mode-line"       "m" #'exwm-layout-toggle-mode-line
+   :leader
+   (:prefix ("e" . "EXWM")
+    :desc "Attach minibuffer"      "a" #'exwm-workspace-attach-minibuffer
+    :desc "Detach minibuffer"      "d" #'exwm-workspace-detach-minibuffer
+    :desc "Fullscreen"             "f" #'exwm-layout-set-fullscreen
+    :desc "Floating hide"          "h" #'exwm-layout-set-fullscreen
+    :desc "Release keyboard"       "k" #'exwm-input-release-keyboard
+    :desc "Send next key"          "q" #'exwm-input-send-next-key
+    :desc "Reset"                  "r" #'exwm-reset
+    :desc "Toggle floating layout" "t" #'exwm-floating-toggle-floating
+    :desc "Workspace move window"  "w" #'exwm-workspace-move-window))
+
   :config
-  ;; (defun exwm-workspace--on-minibuffer-setup ()
-  ;;   "Run in minibuffer-setup-hook to show the minibuffer and its container."
-  ;;   (exwm--log)
-  ;;   (when (and (= 1 (minibuffer-depth))
-  ;;              (not (exwm-workspace--client-p)))
-  ;;     (add-hook 'post-command-hook #'exwm-workspace--update-minibuffer-height)
-  ;;     ;(exwm-workspace--show-minibuffer)
-  ;;     )
-  ;;   ;; FIXME: This is a temporary fix for the *Completions* buffer not
-  ;;   ;;        being correctly fitted by its displaying window.  As with
-  ;;   ;;        `exwm-workspace--display-buffer', the problem is caused by
-  ;;   ;;        the fact that the minibuffer (rather than the workspace)
-  ;;   ;;        frame is the 'selected frame'.  `get-buffer-window' will
-  ;;   ;;        fail to retrieve the correct window.  It's likely there are
-  ;;   ;;        other related issues.
-  ;;   ;; This is not required by Emacs 24.
-  ;;   (when (fboundp 'window-preserve-size)
-  ;;     (let ((window (get-buffer-window "*Completions*"
-  ;;                                      exwm-workspace--current)))
-  ;;       (when window
-  ;;         (fit-window-to-buffer window)
-  ;;         (window-preserve-size window)))))
-
-  ;; (defun exwm-workspace--on-minibuffer-exit ()
-  ;;   "Run in minibuffer-exit-hook to hide the minibuffer container."
-  ;;   (exwm--log)
-  ;;   (when (and (= 1 (minibuffer-depth))
-  ;;              (not (exwm-workspace--client-p)))
-  ;;     (remove-hook 'post-command-hook #'exwm-workspace--update-minibuffer-height)
-  ;;     ;(exwm-workspace--hide-minibuffer)
-  ;;     ))
-
-  ;; (defun exwm-workspace--on-echo-area-dirty ()
-  ;;   "Run when new message arrives to show the echo area and its container."
-  ;;   (when (and (not (active-minibuffer-window))
-  ;;              (not (exwm-workspace--client-p))
-  ;;              (or (current-message)
-  ;;                  cursor-in-echo-area))
-  ;;     (exwm-workspace--update-minibuffer-height t)
-  ;;     ;; (exwm-workspace--show-minibuffer)
-  ;;     (unless (or (not exwm-workspace-display-echo-area-timeout)
-  ;;                 exwm-input--during-command ;e.g. read-event
-  ;;                 input-method-use-echo-area)
-  ;;       (setq exwm-workspace--display-echo-area-timer
-  ;;             (run-with-timer exwm-workspace-display-echo-area-timeout nil
-  ;;                             ;;#'exwm-workspace--echo-area-maybe-clear)))))
-
-  ;; (defun exwm-workspace--on-echo-area-clear ()
-  ;;   "Run in echo-area-clear-hook to hide echo area container."
-  ;;   (unless (exwm-workspace--client-p)
-  ;;     (unless (active-minibuffer-window)
-  ;;       ;(exwm-workspace--hide-minibuffer)
-  ;;       )
-  ;;     (when exwm-workspace--display-echo-area-timer
-  ;;       (cancel-timer exwm-workspace--display-echo-area-timer)
-  ;;       (setq exwm-workspace--display-echo-area-timer nil))))
-
   (defun my/exwm-async-run (name)
     "Run a process asynchronously"
     (interactive)
@@ -391,24 +350,28 @@ firefox, it leaves fullscreen mode."
   (remove-hook 'exwm-update-title-hook 'exwm-firefox--update-title))
 #+end_src
 
-***** Keybindings
-#+begin_src emacs-lisp :tangle ./modules/desktop/exwm/config.el
-(map!
- :map exwm-mode-map
- :localleader
-  :desc "Toggle mode-line"       "m" #'exwm-layout-toggle-mode-line
+***** Terminal
 
- :leader
-  (:prefix ("e" . "EXWM")
-   :desc "Attach minibuffer"      "a" #'exwm-workspace-attach-minibuffer
-   :desc "Detach minibuffer"      "d" #'exwm-workspace-detach-minibuffer
-   :desc "Fullscreen"             "f" #'exwm-layout-set-fullscreen
-   :desc "Floating hide"          "h" #'exwm-layout-set-fullscreen
-   :desc "Release keyboard"       "k" #'exwm-input-release-keyboard
-   :desc "Send next key"          "q" #'exwm-input-send-next-key
-   :desc "Reset"                  "r" #'exwm-reset
-   :desc "Toggle floating layout" "t" #'exwm-floating-toggle-floating
-   :desc "Workspace move window"  "w" #'exwm-workspace-move-window))
+Ansi-term and vterm are pretty decent, but EXWM makes it possible to use an
+/actual/ terminal emulator, which usually works better on corner cases.
+
+#+begin_src emacs-lisp :tangle ./modules/desktop/exwm/config.el
+(setq exwm-x-terminal-emulator "gnome-terminal")
+(defun my/invoke-x-terminal-emulator ()
+  "If external terminal emulator exists, switch to its buffer or
+else launch it."
+  (interactive)
+  (if (string= (buffer-name) exwm-x-terminal-emulator)
+      (bury-buffer)
+    (if (get-buffer exwm-x-terminal-emulator)
+        (exwm-workspace-switch-to-buffer exwm-x-terminal-emulator)
+      (my/exwm-async-run exwm-x-terminal-emulator))))
+
+(set-popup-rules!
+  '(("Gnome-terminal"
+     :vslot -5 :size 0.35 :select t :modeline t :quit nil)))
+
+(map! "<s-return>" #'my/invoke-x-terminal-emulator)
 #+end_src
 
 * Doom configuration
@@ -441,7 +404,7 @@ This is my doom block. What it contains is pretty self explanatory.
        nav-flash         ; blink the current line after jumping
        ;;neotree           ; a project drawer, like NERDTree for vim
        ophints           ; highlight the region an operation acts on
-       ;;(popup +defaults)   ; tame sudden yet inevitable temporary windows
+       (popup +defaults +hacks)   ; tame sudden yet inevitable temporary windows
        ;;ligatures       ; ligatures or substitute text with pretty symbols
        ;;tabs              ; an tab bar for Emacs
        treemacs          ; a project drawer, like neotree but cooler
@@ -850,11 +813,23 @@ for it to pop-up. I want it to appear almost instantaneously.
 
 *** Completions
 **** Ivy
+
 #+begin_src emacs-lisp :tangle no
-;; (after! ivy
-;;   (progn
-;;     (setq ivy-fixed-height-minibuffer nil
-;;           ivy-add-newline-after-prompt nil)))
+(after! ivy
+  (progn
+    (map! "M-<tab>" #'counsel-switch-buffer
+
+          (:leader
+           (:prefix ("b" . "buffer")
+            "b"   #'counsel-switch-buffer
+            "o"   #'counsel-switch-buffer-other-window
+            "C-b" #'counsel-switch-buffer-other-window))
+
+          (:map ivy-minibuffer-map
+           "M-<tab>" #'next-line
+           "<M-iso-lefttab>" #'previous-line))
+    (setq ivy-fixed-height-minibuffer nil
+          ivy-add-newline-after-prompt nil)))
 #+end_src
 
 **** Ivy-posframe
@@ -895,7 +870,6 @@ for it to pop-up. I want it to appear almost instantaneously.
     "sp" #'counsel-spotify-search-playlist)
   (map! (:leader
          :desc "audio" "a" counsel-spotify-map))
-  ;; the package should be "manually" reloaded in order to function properly
   :config
   (load! "private.el")
   (cl-defmethod counsel-spotify-do-play ((backend counsel-spotify-linux-backend) (something (eql nil)))
@@ -913,11 +887,11 @@ for it to pop-up. I want it to appear almost instantaneously.
 *** Elfeed
 #+begin_src emacs-lisp :tangle no
 (after! elfeed
-  (setq elfeed-feeds
-        '("http://lukesmith.xyz/rss.xml"
-          "https://xkcd.com/atom.xml"
-          "https://www.lemonde.fr/politique/rss_full.xml"
-          "https://www.lemonde.fr/societe/rss_full.xml")))
+  (progn
+    (map! (:leader
+           (:prefix ("o" . "open")
+            :desc "El[f]eed"         "f" #'elfeed
+            :desc "El[F]eed update"  "F" #'elfeed-update)))))
 #+end_src
 
 *** ripgrep
@@ -927,45 +901,42 @@ for it to pop-up. I want it to appear almost instantaneously.
 
 *** Treemacs
 #+begin_src emacs-lisp :tangle config.el
-(use-package! treemacs
-  :config
-  (setq treemacs-width 20))
+(after! treemacs
+  (progn
+    (map! (:leader
+           (:prefix ("t" . "toggle")
+            :desc "Treemacs" "T" #'treemacs)))
+    (setq treemacs-width 20)))
 #+end_src
 
 *** Keybindings
 
 #+begin_src emacs-lisp :tangle config.el
-(map! (:leader
+(map! "M-j" #'drag-stuff-down
+      "M-k" #'drag-stuff-up
+
+      (:leader
        :desc "Control-x" "x" ctl-x-map
-       (:prefix ("b" . "buffer")
-        "b"   #'counsel-switch-buffer
-        "o"   #'counsel-switch-buffer-other-window
-        "C-b" #'counsel-switch-buffer-other-window)
        (:prefix ("f" . "file")
         "o"   #'find-file-other-window
         "C-f" #'find-file-other-window)
        (:prefix ("o" . "open")
         :desc "Spotify"                "s" #'my/invoke-spotify
         :desc "Spotify (other window)" "S" #'my/invoke-spotify-other-window
-        :desc "El[f]eed"               "f" #'elfeed
-        :desc "El[F]eed update"        "F" #'elfeed-update
         :desc "Firefox"                "i" #'my/invoke-firefox
         :desc "Firefox (other window)" "I" #'my/invoke-firefox-other-window)
        (:prefix ("t" . "toggle")
         :desc "Transparency"          "t" #'my/toggle-transparency
         :desc "dwm-style"             "d" #'edwina-mode
-        :desc "Treemacs"              "T" #'treemacs
         :desc "Org presentation mode" "P" #'prot/org-presentation-mode))
-      "M-j" #'drag-stuff-down
-      "M-k" #'drag-stuff-up
-      "M-<tab>" #'counsel-switch-buffer
+
       (:map ivy-minibuffer-map
        "M-<tab>" #'next-line
        "<M-iso-lefttab>" #'previous-line)
       (:n
        "gss" #'avy-goto-char-timer)
-      "<s-return>" #'+term/toggle
-      "<S-s-return>" #'+term/here
+      ;; "<s-return>" #'+term/toggle
+      ;; "<S-s-return>" #'+term/here
       "<s-backspace>" #'my/kill-this-buffer
       "s-d" #'counsel-linux-app)
 #+end_src
