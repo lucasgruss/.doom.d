@@ -665,6 +665,7 @@ slowly. I want it to appear almost instantaneously.
   (which-key-mode +1))
 
 (use-package! which-key-posframe
+  :unless (featurep! :desktop exwm)
   :config
   (which-key-posframe-mode +1))
 #+end_src
