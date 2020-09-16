@@ -912,12 +912,14 @@ through Xressources.
             :desc "El[F]eed update"  "F" #'elfeed-update)))))
 #+end_src
 
-*** ripgrep
+*** Ripgrep
+
 #+begin_src emacs-lisp :tangle config.el
 (use-package! rg)
 #+end_src
 
 *** Treemacs
+
 #+begin_src emacs-lisp :tangle config.el
 (after! treemacs
   (progn
@@ -932,7 +934,6 @@ through Xressources.
 #+begin_src emacs-lisp :tangle config.el
 (map! "M-j" #'drag-stuff-down
       "M-k" #'drag-stuff-up
-
       (:leader
        :desc "Control-x" "x" ctl-x-map
        (:prefix ("f" . "file")
