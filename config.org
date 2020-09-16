@@ -226,7 +226,7 @@ configure my window manager with emacs lisp. Life is good.
           ([?\s-I] . my/invoke-firefox-other-window)
           ([?\s-m] . my/toggle-line-char-modes)
           ([?\s-s] . my/invoke-spotify)
-          ([s-return] . +term/toggle)
+          ([s-return] . my/invoke-x-terminal-emulator)
           ([s-backspace] . my/kill-this-buffer)
           ;; Everything window
           ([?\s-q] . evil-window-delete)
@@ -352,8 +352,9 @@ firefox, it leaves fullscreen mode."
 
 ***** Terminal
 
-Ansi-term and vterm are pretty decent, but EXWM makes it possible to use an
-/actual/ terminal emulator, which usually works better on corner cases.
+Ansi-term, eshell and vterm are pretty decent, but EXWM makes it possible to use
+an /actual/ terminal emulator, which usually works better for some programs
+(curses for instance).
 
 #+begin_src emacs-lisp :tangle ./modules/desktop/exwm/config.el
 (setq exwm-x-terminal-emulator "gnome-terminal")
@@ -361,10 +362,10 @@ Ansi-term and vterm are pretty decent, but EXWM makes it possible to use an
   "If external terminal emulator exists, switch to its buffer or
 else launch it."
   (interactive)
-  (if (string= (buffer-name) exwm-x-terminal-emulator)
+  (if (string= (buffer-name) "Gnome-terminal")
       (bury-buffer)
-    (if (get-buffer exwm-x-terminal-emulator)
-        (exwm-workspace-switch-to-buffer exwm-x-terminal-emulator)
+    (if (get-buffer "Gnome-terminal")
+        (exwm-workspace-switch-to-buffer "Gnome-terminal")
       (my/exwm-async-run exwm-x-terminal-emulator))))
 
 (set-popup-rules!
@@ -651,9 +652,9 @@ that has focus.
 
 **** Which-key
 Which key is one of the killer features for using emacs, it's good to discover
-features and also to not worry about remembering keybindings. I have nothing but
-praise for this package *but* the way Doom Emacs uses it has a fairly slow delay
-for it to pop-up. I want it to appear almost instantaneously.
+commands and also to not worry about remembering keybindings. I have nothing but
+praise for this package *but* the way Doom Emacs sets it makes it pop too
+slowly. I want it to appear almost instantaneously.
 
 #+begin_src emacs-lisp :tangle config.el
 (after! which-key
@@ -714,11 +715,12 @@ for it to pop-up. I want it to appear almost instantaneously.
           doom-modeline-icon t
           all-the-icons-scale-factor 1
           display-time-format " %H:%M - %Y/%m/%d ")
-    (display-time-mode -1)))
+    (display-time-mode +1)))
 #+end_src
 
 *** Org mode
 **** Latex
+
 #+begin_src emacs-lisp :tangle config.el
 ;; (after! org
 ;;   (add-to-list 'org-latex-classes '("lettre" "\\documentclass[11pt]{lettre}
