@@ -676,15 +676,18 @@ slowly. I want it to appear almost instantaneously.
 
 *** Theme
 **** Theme magic
+
+In the offchance I am not using emacs for something, then set the same theme
+through Xressources.
+
 #+begin_src emacs-lisp :tangle config.el
 (use-package! theme-magic
-  ;; in the offchance I am not using emacs for something, this tricks me by using the
-  ;; same theme as in emacs everywhere else.
   :config
   (theme-magic-export-theme-mode +1))
 #+end_src
 
 **** Theme choice
+
 #+begin_src emacs-lisp :tangle config.el
 (setq! doom-theme 'modus-operandi)
 ;; (setq! doom-font (font-spec :name "Source Code Pro" :family "monospace" :size 14))
@@ -706,6 +709,7 @@ slowly. I want it to appear almost instantaneously.
 #+end_src
 
 **** Modeline
+
 #+begin_src emacs-lisp :tangle config.el
 (after! doom-modeline
   (progn
@@ -737,6 +741,7 @@ slowly. I want it to appear almost instantaneously.
 #+end_src
 
 **** Calfw
+
 #+begin_src emacs-lisp :tangle no
 (use-package! calfw
   :after org)
@@ -745,6 +750,7 @@ slowly. I want it to appear almost instantaneously.
 #+end_src
 
 **** Org-sidebar
+
 #+begin_src emacs-lisp :tangle no
 (use-package! org-sidebar
   :after org)
@@ -766,7 +772,6 @@ slowly. I want it to appear almost instantaneously.
           (?- . ?–))))
 
 (use-package! org-tree-slide
-  :ensure
   :after org
   :commands prot/org-presentation-mode
   :config
