@@ -914,6 +914,7 @@ through Xressources.
   (map! (:leader
          :desc "audio" "a" counsel-spotify-map))
   :config
+  ;; load credentials for spotify premium
   (load! "private.el")
   (cl-defmethod counsel-spotify-do-play ((backend counsel-spotify-linux-backend) (something (eql nil)))
     nil))
