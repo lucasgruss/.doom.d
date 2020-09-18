@@ -606,7 +606,7 @@ that has focus.
         "s-k" #'windmove-up
         "s-l" #'windmove-right)
   :config
-  (setq! windmove-wrap-around t
+  (setq! windmove-wrap-around nil
          windmove-window-distance-delta 1))
 #+end_src
 
