@@ -878,12 +878,10 @@ through Xressources.
 
 #+BEGIN_SRC emacs-lisp :tangle config.el
 (after! ivy-posframe
-  (progn
-    (setq ivy-posframe-border-width 1)
-    (setq ivy-posframe-parameters nil)
-    ;; prevent posframe from spawning behind X-windows
-    (when (featurep! :desktop exwm)
-      (setq ivy-posframe-parameters '((parent-frame nil))))))
+  (unless (featurep! :desktop exwm)
+    (progn
+      (setq ivy-posframe-border-width 1)
+      (setq ivy-posframe-parameters nil))))
 #+END_SRC
 
 **** Ivy-Spotify
