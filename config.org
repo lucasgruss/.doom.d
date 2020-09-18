@@ -82,12 +82,13 @@ EXWM has built in support for multi-monitor.
 #+begin_src emacs-lisp :tangle ./modules/desktop/exwm/config.el
 (use-package! exwm-randr
   :config
-  (setq! exwm-randr-workspace-output-plist '(1 "VGA1"))
+  ;;(setq! exwm-randr-workspace-output-plist '(1 "VGA1"))
+  (setq! exwm-randr-workspace-output-plist '(1 "DP2"))
   (add-hook 'exwm-randr-screen-change-hook
             (lambda ()
               (start-process-shell-command
-               ;;"xrandr" nil "xrandr --output DP2 --right-of eDP1"
-               "xrandr" nil "xrandr --output VGA1 --left-of LVDS1")))
+               "xrandr" nil "xrandr --output DP2 --right-of eDP1")))
+               ;;"xrandr" nil "xrandr --output VGA1 --left-of LVDS1")))
   (exwm-randr-enable))
 #+end_src
 
