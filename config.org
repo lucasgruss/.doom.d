@@ -227,7 +227,7 @@ configure my window manager with emacs lisp. Life is good.
           ([?\s-I] . my/invoke-firefox-other-window)
           ([?\s-m] . my/toggle-line-char-modes)
           ([?\s-s] . my/invoke-spotify)
-          ([s-return] . my/invoke-x-terminal-emulator)
+          ([s-return] . +term/toggle)
           ([s-backspace] . my/kill-this-buffer)
           ;; Everything window
           ([?\s-q] . evil-window-delete)
@@ -357,7 +357,7 @@ Ansi-term, eshell and vterm are pretty decent, but EXWM makes it possible to use
 an /actual/ terminal emulator, which usually works better for some programs
 (curses for instance).
 
-#+begin_src emacs-lisp :tangle ./modules/desktop/exwm/config.el
+#+begin_src emacs-lisp :tangle no
 (setq exwm-x-terminal-emulator "gnome-terminal")
 (defun my/invoke-x-terminal-emulator ()
   "If external terminal emulator exists, switch to its buffer or
