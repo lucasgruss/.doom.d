@@ -3,18 +3,36 @@
 
 * Table of content :TOC:
 - [[#introduction][Introduction]]
-- [[#initel][init.el]]
-- [[#packagesel][packages.el]]
-- [[#configel][config.el]]
-  - [[#window-management][Window management]]
-  - [[#convenience][Convenience]]
-  - [[#theme][Theme]]
-  - [[#org-mode][Org mode]]
-  - [[#completions][Completions]]
-  - [[#elfeed][Elfeed]]
-  - [[#ripgrep][Ripgrep]]
-  - [[#treemacs][Treemacs]]
-  - [[#keybindings][Keybindings]]
+- [[#doom-stuff][Doom stuff]]
+  - [[#initel][init.el]]
+  - [[#packagesel][packages.el]]
+- [[#window-management][Window management]]
+  - [[#zoom-mode][Zoom mode]]
+  - [[#windmove][Windmove]]
+  - [[#framemove][Framemove]]
+  - [[#windower][Windower]]
+- [[#convenience][Convenience]]
+  - [[#which-key][Which-key]]
+  - [[#deft][Deft]]
+- [[#theme][Theme]]
+  - [[#theme-magic][Theme magic]]
+  - [[#theme-choice][Theme choice]]
+  - [[#modeline][Modeline]]
+- [[#org-mode][Org mode]]
+  - [[#latex][Latex]]
+  - [[#calfw][Calfw]]
+  - [[#org-sidebar][Org-sidebar]]
+  - [[#presentation-mode][Presentation mode]]
+- [[#completions][Completions]]
+  - [[#ivy][Ivy]]
+  - [[#counsel][Counsel]]
+  - [[#ivy-posframe][Ivy-posframe]]
+  - [[#ivy-spotify][Ivy-Spotify]]
+  - [[#orderless][Orderless]]
+- [[#elfeed][Elfeed]]
+- [[#ripgrep][Ripgrep]]
+- [[#treemacs][Treemacs]]
+- [[#keybindings][Keybindings]]
 
 * Introduction
 This is my configuration file for Doom Emacs. It is a self contained document
@@ -29,7 +47,8 @@ maintain and that would never have been nearly as performant. But Doom allows me
 to keep the same workflow, and has saved me a /ton/ of time, and now my config
 file is about four times smaller than it was.
 
-* init.el
+* Doom stuff
+** init.el
 This is my doom block. What it contains is pretty self explanatory.
 
 #+begin_src emacs-lisp :tangle init.el
@@ -198,7 +217,7 @@ This is my doom block. What it contains is pretty self explanatory.
        exwm)
 #+end_src
 
-* packages.el
+** packages.el
 #+begin_src emacs-lisp :tangle packages.el
 (package! modus-vivendi-theme)
 (package! modus-operandi-theme)
@@ -234,9 +253,8 @@ This is my doom block. What it contains is pretty self explanatory.
            :files ("framemove.el")))
 #+end_src
 
-* config.el
-** Window management
-*** Zoom mode
+* Window management
+** Zoom mode
 Zoom is a nice package for window management in emacs. It enlarges the window
 that has focus.
 #+begin_src emacs-lisp :tangle config.el
@@ -249,7 +267,7 @@ that has focus.
   (zoom-mode +1))
 #+end_src
     
-*** Windmove
+** Windmove
 #+begin_src emacs-lisp :tangle config.el
 (use-package! windmove
   :init
@@ -262,14 +280,14 @@ that has focus.
          windmove-window-distance-delta 1))
 #+end_src
 
-*** Framemove
+** Framemove
 #+begin_src emacs-lisp :tangle config.el
 (use-package! framemove
   :config
   (setq framemove-hook-into-windmove t))
 #+end_src
 
-*** Windower
+** Windower
 #+begin_src emacs-lisp :tangle config.el
 (use-package! windower
   :init
@@ -286,7 +304,7 @@ that has focus.
         "s-\\"    #'windower-toggle-split))
 #+end_src
 
-** Convenience
+* Convenience
 #+begin_src emacs-lisp :tangle config.el
 (explain-pause-mode -1)
 ;; (server-start)
@@ -303,7 +321,7 @@ that has focus.
   (kill-buffer (current-buffer)))
 #+end_src
 
-*** Which-key
+** Which-key
 Which key is one of the killer features for using emacs, it's good to discover
 commands and also to not worry about remembering keybindings. I have nothing but
 praise for this package *but* the way Doom Emacs sets it makes it pop too
@@ -323,13 +341,13 @@ slowly. I want it to appear almost instantaneously.
   (which-key-posframe-mode +1))
 #+end_src
 
-*** Deft
+** Deft
 #+BEGIN_SRC emacs-lisp :tangle config.el
 (setq deft-directory "~/org")
 #+END_SRC
 
-** Theme
-*** Theme magic
+* Theme
+** Theme magic
 
 In the offchance I am not using emacs for something, then set the same theme
 through Xressources.
@@ -340,7 +358,7 @@ through Xressources.
   (theme-magic-export-theme-mode +1))
 #+end_src
 
-*** Theme choice
+** Theme choice
 
 #+begin_src emacs-lisp :tangle config.el
 (setq! doom-theme 'modus-operandi)
@@ -386,7 +404,7 @@ through Xressources.
          '(91 . 80) '(100 . 100)))))
 #+end_src
 
-*** Modeline
+** Modeline
 
 #+begin_src emacs-lisp :tangle config.el
 (after! doom-modeline
@@ -400,8 +418,8 @@ through Xressources.
     (display-time-mode +1)))
 #+end_src
 
-** Org mode
-*** Latex
+* Org mode
+** Latex
 
 #+begin_src emacs-lisp :tangle config.el
 ;; (after! org
@@ -418,7 +436,7 @@ through Xressources.
 ;;                                     ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 #+end_src
 
-*** Calfw
+** Calfw
 
 #+begin_src emacs-lisp :tangle no
 (use-package! calfw
@@ -427,14 +445,14 @@ through Xressources.
   :after calfw)
 #+end_src
 
-*** Org-sidebar
+** Org-sidebar
 
 #+begin_src emacs-lisp :tangle no
 (use-package! org-sidebar
   :after org)
 #+end_src
 
-*** Presentation mode
+** Presentation mode
     
 #+begin_src emacs-lisp :tangle config.el
 (use-package! org-superstar              ; supersedes `org-bullets'
@@ -500,8 +518,8 @@ through Xressources.
          ("C-k" . org-tree-slide-move-previous-tree)))
 #+end_src
 
-** Completions
-*** Ivy
+* Completions
+** Ivy
 
 #+begin_src emacs-lisp :tangle config.el
 (after! ivy
@@ -513,7 +531,7 @@ through Xressources.
           ivy-add-newline-after-prompt nil)))
 #+end_src
 
-*** Counsel
+** Counsel
 
 #+begin_src emacs-lisp :tangle config.el
 (after! counsel
@@ -526,7 +544,7 @@ through Xressources.
             "C-b" #'counsel-switch-buffer-other-window)))))
 #+end_src
 
-*** Ivy-posframe
+** Ivy-posframe
 
 #+BEGIN_SRC emacs-lisp :tangle config.el
 (after! ivy-posframe
@@ -537,7 +555,7 @@ through Xressources.
       (ivy-posframe-mode -1))))
 #+END_SRC
 
-*** Ivy-Spotify
+** Ivy-Spotify
 
 #+begin_src emacs-lisp :tangle config.el
 (use-package! counsel-spotify
@@ -571,7 +589,7 @@ through Xressources.
     nil))
 #+end_src
 
-*** Orderless
+** Orderless
 
 #+begin_src emacs-lisp :tangle no
 (use-package! orderless
@@ -579,7 +597,7 @@ through Xressources.
   (setq completion-styles '(orderless)))
 #+end_src
 
-** Elfeed
+* Elfeed
 
 #+begin_src emacs-lisp :tangle config.el
 (after! elfeed
@@ -590,13 +608,13 @@ through Xressources.
             :desc "El[F]eed update"  "F" #'elfeed-update)))))
 #+end_src
 
-** Ripgrep
+* Ripgrep
 
 #+begin_src emacs-lisp :tangle config.el
 (use-package! rg)
 #+end_src
 
-** Treemacs
+* Treemacs
 
 #+begin_src emacs-lisp :tangle config.el
 (after! treemacs
@@ -607,7 +625,7 @@ through Xressources.
     (setq treemacs-width 20)))
 #+end_src
 
-** Keybindings
+* Keybindings
 
 #+begin_src emacs-lisp :tangle config.el
 (map! "M-j" #'drag-stuff-down
