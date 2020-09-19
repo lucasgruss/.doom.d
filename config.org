@@ -213,8 +213,10 @@ This is my doom block. What it contains is pretty self explanatory.
        literate
        (default +bindings +smartparens)
 
-       :desktop
-       exwm)
+       :personal
+       exwm
+       ;;selectrum)
+       )
 #+end_src
 
 ** packages.el
@@ -336,7 +338,7 @@ slowly. I want it to appear almost instantaneously.
   (which-key-mode +1))
 
 (use-package! which-key-posframe
-  :unless (featurep! :desktop exwm)
+  :unless (featurep! :personal exwm)
   :config
   (which-key-posframe-mode +1))
 #+end_src
@@ -551,7 +553,7 @@ through Xressources.
   (progn
     (setq ivy-posframe-border-width 1)
     (setq ivy-posframe-parameters nil)
-    (when (featurep! :desktop exwm)
+    (when (featurep! :personal exwm)
       (ivy-posframe-mode -1))))
 #+END_SRC
 

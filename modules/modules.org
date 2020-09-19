@@ -371,3 +371,30 @@ else launch it."
 
 (map! "<s-return>" #'my/invoke-x-terminal-emulator)
 #+end_src
+
+* Selectrum
+** packages.el
+
+#+begin_src emacs-lisp :tangle ./personal/selectrum/packages.el
+(package! selectrum
+  :recipe
+  (:host github :repo "raxod502/selectrum"))
+(package! selectrum-prescient
+  :recipe
+  (:host github
+   :repo "raxod502/prescient.el"
+   :files ("selectrum-prescient.el")))
+#+end_src
+
+** config.el
+
+#+begin_src emacs-lisp :tangle ./personal/selectrum/config.el
+(use-package! selectrum
+  :config
+  (selectrum-mode -1))
+
+(use-package! selectrum-prescient
+  :after selectrum
+  :config
+  (selectrum-prescient-mode -1))
+#+end_src
