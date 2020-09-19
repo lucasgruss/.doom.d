@@ -3,8 +3,12 @@
 
 * Table of content :TOC:
 - [[#introduction][Introduction]]
-- [[#desktop][Desktop]]
-  - [[#exwm][EXWM]]
+- [[#exwm][EXWM]]
+  - [[#packages][Packages]]
+  - [[#config][Config]]
+- [[#selectrum][Selectrum]]
+  - [[#packagesel][packages.el]]
+  - [[#configel][config.el]]
 
 * Introduction
 This file contains configuration for my personal doom modules. To recompile
@@ -17,10 +21,9 @@ everything, use the following function :
 or if you're using doom Emacs w/ evil-mode simply type =RET= when your cursor is
 on the src block to evaluate it.
 
-* Desktop
-** EXWM
-*** Packages
-#+begin_src emacs-lisp :tangle ./desktop/exwm/packages.el
+* EXWM
+** Packages
+#+begin_src emacs-lisp :tangle ./personal/exwm/packages.el
 (package! exwm)
 (package! exwm-firefox-core)
 (package! exwm-firefox-evil)
@@ -30,7 +33,7 @@ on the src block to evaluate it.
    :repo "ieure/exwm-firefox"))
 #+end_src
 
-*** Config
+** Config
 
 The following snippet should go into the file
 =/usr/share/xsessions/emacs.desktop= to make EXWM a possible choice in the
@@ -44,10 +47,10 @@ Exec=emacs
 Type=application
 #+end_src
 
-**** Media keys
+*** Media keys
 
 Media keys need to be explicitely bound, as we might not use EXWM in a DE.
-#+begin_src emacs-lisp :tangle ./desktop/exwm/config.el
+#+begin_src emacs-lisp :tangle ./personal/exwm/config.el
 (defun my/volume-down ()
   "Lower volume of the computer"
   (interactive)
@@ -69,10 +72,10 @@ Media keys need to be explicitely bound, as we might not use EXWM in a DE.
   (shell-command "xbacklight -inc 10"))
 #+end_src
 
-**** EXWM-randr
+*** EXWM-randr
 
 EXWM has built in support for multi-monitor.
-#+begin_src emacs-lisp :tangle ./desktop/exwm/config.el
+#+begin_src emacs-lisp :tangle ./personal/exwm/config.el
 (use-package! exwm-randr
   :config
   ;;(setq! exwm-randr-workspace-output-plist '(1 "VGA1"))
@@ -85,12 +88,12 @@ EXWM has built in support for multi-monitor.
   (exwm-randr-enable))
 #+end_src
 
-**** EXWM-Systemtray
+*** EXWM-Systemtray
 It's nice to have a systray, and there is nothing wrong with exwm-systray, but
 since I am using XFCE and the XFCE-panel is just [insert chef's kiss], I don't
 use it any longer.
 
-#+begin_src emacs-lisp :tangle ./desktop/exwm/config.el
+#+begin_src emacs-lisp :tangle ./personal/exwm/config.el
 (use-package! exwm-systemtray
   :disabled
   :config
@@ -100,11 +103,11 @@ use it any longer.
   (exwm-systemtray-enable))
 #+end_src
 
-**** EXWM
+*** EXWM
 EXWM is seriously awesome. Now I don't have to exit emacs *ever* and I get to
 configure my window manager with emacs lisp. Life is good.
 
-#+begin_src emacs-lisp :tangle ./desktop/exwm/config.el
+#+begin_src emacs-lisp :tangle ./personal/exwm/config.el
 (use-package! exwm
   :init
   (setq! exwm-firefox-buffer-name "Firefox-esr")
@@ -260,13 +263,13 @@ configure my window manager with emacs lisp. Life is good.
   (exwm-enable))
 #+end_src
 
-**** EXWM-Firefox
+*** EXWM-Firefox
 With EXWM emulation keys, you can have vi-style keybindings within firefox,
 without having to install anything on the browser. Have I mentioned how awesome EXWM
 is? My next objective will probably be to bring firefox even closer to emacs by
 enabling new tabs within new windows and have emacs handle all windows with iBuffer.
 
-#+begin_src emacs-lisp :tangle ./desktop/exwm/config.el
+#+begin_src emacs-lisp :tangle ./personal/exwm/config.el
 (use-package! exwm-firefox-evil
   :hook ((exwm-manage-finish . exwm-firefox-evil-activate-if-firefox)
          ;; (exwm-manage-finish . my/exwm-firefox-force-fullscreen)
@@ -344,7 +347,7 @@ firefox, it leaves fullscreen mode."
   (remove-hook 'exwm-update-title-hook 'exwm-firefox--update-title))
 #+end_src
 
-**** Terminal
+*** Terminal
 
 Ansi-term, eshell and vterm are pretty decent, but EXWM makes it possible to use
 an /actual/ terminal emulator, which usually works better for some programs
