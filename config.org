@@ -340,9 +340,9 @@ that has focus.
    :leader
    (:prefix ("t" . "toggle")
     :desc "Zoom mode" "Z" #'zoom-mode))
-  (zoom-mode +1))
+  (zoom-mode -1))
 #+end_src
-    
+
 ** Windmove
 #+begin_src emacs-lisp :tangle config.el
 (use-package! windmove
