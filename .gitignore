@@ -1,0 +1,11 @@
+.DS_Store
+.idea
+*.log
+tmp/
+private.el
+config.el
+packages.el
+init.el
+custom.el
+/modules/personal/*/packages.el
+/modules/personal/*/config.el
