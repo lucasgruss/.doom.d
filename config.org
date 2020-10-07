@@ -528,11 +528,11 @@ through Xressources.
   :after org)
 #+end_src
 
-** Presentation mode
-    
+** Org-superstar
+
+Pretty org bullet.
 #+begin_src emacs-lisp :tangle config.el
 (use-package! org-superstar              ; supersedes `org-bullets'
-  :ensure
   :after org
   :config
   (setq org-superstar-remove-leading-stars t)
@@ -541,11 +541,20 @@ through Xressources.
   (setq org-superstar-item-bullet-alist
         '((?+ . ?•)
           (?* . ?➤)
-          (?- . ?–))))
+          (?- . ?–)))
+  (org-superstar-mode 1))
+#+end_src
 
+** Presentation mode
+
+#+begin_src emacs-lisp :tangle config.el
 (use-package! org-tree-slide
   :after org
   :commands prot/org-presentation-mode
+  :init
+  (map! (:leader
+         (:prefix ("t" . "toggle")
+          :desc "Org presentation mode" "P" #'prot/org-presentation-mode)))
   :config
   (setq org-tree-slide-breadcrumbs nil)
   (setq org-tree-slide-header nil)
@@ -582,16 +591,30 @@ through Xressources.
       (setq-local display-line-numbers 'relative)
       (org-indent-mode -1)))
 
-  (map! (:leader
-         (:prefix ("t" . "toggle")
-          :desc "Org presentation mode" "P" #'prot/org-presentation-mode)))
- 
   :bind (("C-c P" . prot/org-presentation-mode)
          :map org-tree-slide-mode-map
          ("C-h" . org-tree-slide-display-header-toggle)
          ("C-l" . org-tree-slide-display-header-toggle)
          ("C-j" . org-tree-slide-move-next-tree)
          ("C-k" . org-tree-slide-move-previous-tree)))
+#+end_src
+
+** Org-noter
+
+#+begin_src emacs-lisp :tangle config.el
+(after! org-noter
+  (progn
+    (map!
+     (:after (org-noter)
+      :map pdf-view-mode-map
+      :n "i" #'org-noter-insert-note))))
+#+end_src
+
+* PDF
+** pdf-tools
+
+#+begin_src emacs-lisp :tangle config.el
+(setq pdf-view-midnight-colors '("#ffffff" . "#000000"))
 #+end_src
 
 * Completions
