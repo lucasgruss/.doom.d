@@ -386,16 +386,15 @@ switching from screen to screen easier in EXWM.
 * Convenience
 #+begin_src emacs-lisp :tangle config.el
 (explain-pause-mode -1)
-;; (server-start)
-(setq! user-full-name "Lucas Gruss"
-       user-mail-address "lucas.gruss@laposte.net"
-       org-directory "~/org/"
+(server-start)
+(load! "private.el") ; credentials and private info
+(setq! org-directory "~/org/"
        display-line-numbers-type `relative
        window-min-height 1
        idle-update-delay 0.2)
 
 (defun my/kill-this-buffer ()
-  "Kill the current buffer"
+  "Kill the current buffer without confirmation"
   (interactive)
   (kill-buffer (current-buffer)))
 #+end_src
@@ -411,13 +410,8 @@ slowly. I want it to appear almost instantaneously.
   ;; which-key-idle-delay must be set before enabling the mode
   ;; so we disable it, set the variable and re-enable it
   (which-key-mode -1)
-  (setq! which-key-idle-delay 0.2)
+  (setq! which-key-idle-delay 0.05)
   (which-key-mode +1))
-
-(use-package! which-key-posframe
-  :unless (featurep! :personal exwm)
-  :config
-  (which-key-posframe-mode +1))
 #+end_src
 
 ** Deft
