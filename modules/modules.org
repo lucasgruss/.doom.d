@@ -232,20 +232,33 @@ buffer (=minimizing in other WM/DE)"
         exwm-workspace-minibuffer-position nil
         exwm-workspace-display-echo-area-timeout 1)
 
+  (setq! exwm-manage-configurations
+         '(((equal "Whisker Menu" exwm-title)
+            ;;floating t
+            x 0
+            y 0
+            width 300
+            height 400
+            fullscreen nil
+            ;;char-mode t
+            managed t
+            )))
+
   (push (aref (kbd "<escape>") 0) exwm-input-prefix-keys)
   ;; (setq! exwm-input-simulation-keys
   ;;   '(([?\M-h] . [left])
   ;;     ([?\M-l] . [right])
-  ;;     ([?\M-k] . [up])
-  ;;     ([?\M-j] . [down])
-  ;;     ;([?\C-a] . [home])
-  ;;     ;([?\C-e] . [end])
-  ;;     ;([?\M-v] . [prior])
-  ;;     ;([?\C-v] . [next])
-  ;;     ;([?\C-d] . [delete])
-  ;;     ([?\C-k] . [S-end delete])))
-  (exwm-enable))
-#+end_src
+  ;;     ([?\C-k] . [up])
+  ;;     ([?\C-j] . [down])))
+      ;([?\C-a] . [home])
+      ;([?\C-e] . [end])
+      ;([?\M-v] . [prior])
+      ;([?\C-v] . [next])
+      ;([?\C-d] . [delete])
+  (exwm-enable)
+  ;; relaunch the panel so that it auto-hide correctly
+  (shell-command "xfce4-panel --restart"))
+  #+end_src
 
 *** EXWM-Firefox
 With EXWM emulation keys, you can have vi-style keybindings within firefox,
