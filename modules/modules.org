@@ -24,7 +24,8 @@ on the src block to evaluate it.
 * EXWM
 ** Packages
 #+begin_src emacs-lisp :tangle ./personal/exwm/packages.el
-(package! exwm)
+(package! xelb :recipe (:no-native-compile t))
+(package! exwm :recipe (:no-native-compile t))
 (package! exwm-firefox-core)
 (package! exwm-firefox-evil)
 (package! exwm-firefox
@@ -133,51 +134,33 @@ configure my window manager with emacs lisp. Life is good.
     (interactive)
     (start-process name nil name))
 
-  (defun my/invoke-firefox ()
-    "If firefox exists, switch to its buffer or else launch it"
-    (interactive)
-    ;;(let ((firefox-string)))
-    (if (string= (buffer-name) exwm-firefox-buffer-name)
-        (bury-buffer)
-      (if (get-buffer exwm-firefox-buffer-name)
+  (defun my/run-or-raise-or-dismiss (program program-buffer-name)
+    "If no instance of the program is running, launch the program.
+If an instance already exists, and its corresponding buffer is
+displayed on the screen, move to the buffer. If the buffer is not
+visible, switch to the buffer in the current window. Finally, if
+the current buffer is already that of the program, bury the
+buffer (=minimizing in other WM/DE)"
+    ;; check current buffer
+  (if (string= (buffer-name) program-buffer-name)
+      (bury-buffer)
+    ;; either switch to or launch program
+    (progn
+      (if (get-buffer program-buffer-name)
           (progn
-            (exwm-workspace-switch-to-buffer exwm-firefox-buffer-name)
-            (my/exwm-firefox-force-fullscreen))
-        (my/exwm-async-run "firefox"))))
+            (if (get-buffer-window program-buffer-name)
+                (select-window (display-buffer program-buffer-name) nil)
+              (exwm-workspace-switch-to-buffer program-buffer-name)))
+        ;; start program
+        (my/exwm-async-run program)))))
 
-  (defun my/switch-to-firefox-open-new-tab ()
-    "Switch to firefox and then open a new tab."
+  (defun my/run-or-raise-or-dismiss-firefox ()
     (interactive)
-    (my/invoke-firefox)
-    (exwm-firefox-core-tab-new))
+    (my/run-or-raise-or-dismiss "firefox" "Firefox"))
 
-  (defun my/invoke-firefox-other-window ()
-    "Invoke Firefox in a new window"
+  (defun my/run-or-raise-or-dismiss-spotify ()
     (interactive)
-    (split-window-right)
-    (other-window 1)
-    (my/invoke-firefox))
-
-  (defun my/invoke-spotify ()
-    "If spotify exists, switch to its buffer or else launch it"
-    (interactive)
-    (if (string= (buffer-name) "Spotify")
-        (bury-buffer)
-      (if (get-buffer "Spotify")
-          (exwm-workspace-switch-to-buffer "Spotify")
-        (my/exwm-async-run "spotify"))))
-
-  (defun my/invoke-spotify-other-window ()
-    "Invoke spotify in a new window"
-    (interactive)
-    (split-window-right)
-    (other-window 1)
-    (my/invoke-spotify))
-
-  (defun my/launch-process (command)
-    "Launch a process"
-    (interactive (list (read-shell-command "$ ")))
-    (start-process-shell-command command nil command))
+    (my/run-or-raise-or-dismiss "spotify" "Spotify"))
 
   (defun my/toggle-line-char-modes ()
     "If on a EXWM buffer, toggle 'line' or 'char'"
@@ -207,6 +190,7 @@ configure my window manager with emacs lisp. Life is good.
           ([?\s-f] . exwm-layout-set-fullscreen)
           ([?\s-r] . exwm-reset)
           ([?\s-w] . exwm-workspace-switch)
+          ([?\s-W] . exwm-workspace-move-window)
           ;; Bind "s-0" to "s-9" to switch to a workspace by its index.
           ,@(mapcar (lambda (i)
                       `(,(kbd (format "s-%d" i)) .
@@ -215,14 +199,14 @@ configure my window manager with emacs lisp. Life is good.
                           (exwm-workspace-switch-create ,i))))
                     (number-sequence 0 9))
           ([?\s-b] . counsel-switch-buffer)
+          ([?\s-B] . bury-buffer)
           ([?\s-&] . (lambda (command) (interactive (list (read-shell-command "$ ")))
                        (start-process-shell-command command nil command)))
           ([s-f2]  . my/lock-screen)
           ([?\s-d] . counsel-linux-app)
-          ([?\s-i] . my/invoke-firefox)
-          ([?\s-I] . my/invoke-firefox-other-window)
+          ([?\s-i] . my/run-or-raise-or-dismiss-firefox)
           ([?\s-m] . my/toggle-line-char-modes)
-          ([?\s-s] . my/invoke-spotify)
+          ([?\s-s] . my/run-or-raise-or-dismiss-spotify)
           ([s-return] . +term/toggle)
           ([s-backspace] . my/kill-this-buffer)
           ;; Everything window
@@ -391,10 +375,16 @@ else launch it."
 #+begin_src emacs-lisp :tangle ./personal/selectrum/config.el
 (use-package! selectrum
   :config
-  (selectrum-mode -1))
+  (map! :map selectrum-minibuffer-map
+        "C-j" #'next-line
+        "C-k" #'previous-line
+        "C-l" #'selectrum-insert-current-candidate
+        "<backspace>" #'doom/delete-backward-word
+        "<ESC>" #'exit-minibuffer)
+  (selectrum-mode +1))
 
 (use-package! selectrum-prescient
   :after selectrum
   :config
-  (selectrum-prescient-mode -1))
+  (selectrum-prescient-mode +1))
 #+end_src
