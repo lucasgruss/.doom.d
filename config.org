@@ -685,10 +685,21 @@ Pretty org bullet.
   (map! (:leader
          :desc "audio" "a" counsel-spotify-map))
   :config
-  ;; load credentials for spotify premium
-  (load! "private.el")
   (cl-defmethod counsel-spotify-do-play ((backend counsel-spotify-linux-backend) (something (eql nil)))
     nil))
+#+end_src
+
+** Ivy-yasnippet
+
+Snippets are cool, but being able to narrow, preview and discover snippets is
+even cooler !
+
+#+begin_src emacs-lisp :tangle config.el
+(use-package! ivy-yasnippet
+  :init
+  (map! (:leader
+         (:prefix ("i" . "insert")
+          :desc "Snippet" "s" #'ivy-yasnippet))))
 #+end_src
 
 ** Orderless
@@ -719,16 +730,33 @@ Pretty org bullet.
 * Treemacs
 
 #+begin_src emacs-lisp :tangle config.el
-(after! treemacs
-  (progn
-    (map! (:leader
-           (:prefix ("t" . "toggle")
-            :desc "Treemacs" "T" #'treemacs)))
-    (setq treemacs-width 20)))
+(when (featurep! :ui treemacs)
+  (map! (:leader
+         (:prefix ("t" . "toggle")
+          :desc "Treemacs" "T" #'treemacs)))
+  (setq treemacs-width 20))
 #+end_src
 
-* Keybindings
+* Terminal
+#+begin_src emacs-lisp :tangle config.el
+(setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
+#+end_src
+* Browsing the internet
+** TODO Eww
+** w3m
 
+* Keybindings
+** Evil mode
+#+begin_src emacs-lisp :tangle yes
+(after! evil
+  (progn
+    (map! :n
+          "C-e" #'end-of-line)))
+
+(use-package! evil-tutor)
+#+end_src
+
+** Misc
 #+begin_src emacs-lisp :tangle config.el
 (map! "M-j" #'drag-stuff-down
       "M-k" #'drag-stuff-up
@@ -738,19 +766,13 @@ Pretty org bullet.
         "o"   #'find-file-other-window
         "C-f" #'find-file-other-window)
        (:prefix ("o" . "open")
-        :desc "Spotify"                "s" #'my/invoke-spotify
-        :desc "Spotify (other window)" "S" #'my/invoke-spotify-other-window
-        :desc "Firefox"                "i" #'my/invoke-firefox
-        :desc "Firefox (other window)" "I" #'my/invoke-firefox-other-window)
-       (:prefix ("t" . "toggle")
-        :desc "Transparency"          "t" #'my/toggle-transparency
-        :desc "dwm-style"             "d" #'edwina-mode))
-      (:map ivy-minibuffer-map
-       "M-<tab>" #'next-line
-       "<M-iso-lefttab>" #'previous-line)
+        :desc "Spotify"                "s" #'my/run-or-raise-or-dismiss-spotify
+        :desc "Firefox"                "i" #'my/run-or-raise-or-dismiss-firefox))
+      ;; (:map ivy-minibuffer-map
+      ;;  "M-<tab>" #'next-line
+      ;;  "<M-iso-lefttab>" #'previous-line)
       (:n "gss" #'avy-goto-char-timer)
       ;; "<s-return>" #'+term/toggle
       ;; "<S-s-return>" #'+term/here
-      "<s-backspace>" #'my/kill-this-buffer
-      "s-d" #'counsel-linux-app)
+      "<s-backspace>" #'my/kill-this-buffer)
 #+end_src
