@@ -62,7 +62,7 @@ This is my doom block. What it contains is pretty self explanatory.
        company           ; the ultimate code completion backend
        ;;(helm +fuzzy +icons +childframe)              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
-       (ivy +icons +childframe +prescient +fuzzy)               ; a search engine for love and life
+       (ivy +icons +prescient +fuzzy) ; a search engine for love and life
 
        :ui
        deft              ; notational velocity for Emacs
@@ -72,7 +72,7 @@ This is my doom block. What it contains is pretty self explanatory.
        ;;fill-column       ; a `fill-column' indicator
        hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        hydra
-       ;;indent-guides     ; highlighted indent columns
+       indent-guides     ; highlighted indent columns
        modeline         ; snazzy, Atom-inspired modeline, plus API
        nav-flash         ; blink the current line after jumping
        ;;neotree           ; a project drawer, like NERDTree for vim
@@ -139,7 +139,7 @@ This is my doom block. What it contains is pretty self explanatory.
        ;;rgb               ; creating color strings
        ;;terraform         ; infrastructure as code
        ;;tmux              ; an API for interacting with tmux
-       ;;upload            ; map local to remote projects via ssh/ftp
+       upload            ; map local to remote projects via ssh/ftp
 
        :lang
        ;;agda              ; types of types of types of types...
@@ -177,7 +177,7 @@ This is my doom block. What it contains is pretty self explanatory.
        ;;nim               ; python + lisp at the speed of c
        ;;nix               ; I hereby declare "nix geht mehr!"
        ;;ocaml             ; an objective camel
-       (org +roam)               ; organize your plain life in plain text
+       (org +roam +noter +present +pretty)               ; organize your plain life in plain text
        ;;perl              ; write code no one else can comprehend
        ;;php               ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more
@@ -215,7 +215,7 @@ This is my doom block. What it contains is pretty self explanatory.
 
        :personal
        exwm
-       ;;selectrum)
+   ;;    selectrum
        )
 #+end_src
 
