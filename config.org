@@ -223,15 +223,13 @@ This is my doom block. What it contains is pretty self explanatory.
 #+begin_src emacs-lisp :tangle packages.el
 (package! modus-vivendi-theme)
 (package! modus-operandi-theme)
-(package! solo-jazz-theme
-  :recipe (:host github
-           :repo "cstby/solo-jazz-emacs-theme"))
 (package! theme-magic)
 (package! explain-pause-mode
   :recipe (:host github
            :repo "lastquestion/explain-pause-mode"))
 (package! windower)
 (package! counsel-spotify)
+(package! ivy-yasnippet)
 (package! orderless)
 (package! solaire-mode :disable t)
 (package! rg)
@@ -246,13 +244,89 @@ This is my doom block. What it contains is pretty self explanatory.
 (package! org-tree-slide)
 (package! org-superstar)
 (package! org-sidebar)
-(package! which-key-posframe
-  :recipe (:host github
-           :repo "yanghaoxie/which-key-posframe"))
 (package! framemove
   :recipe (:host github
            :repo "emacsmirror/emacswiki.org"
            :files ("framemove.el")))
+(package! w3m)
+(package! evil-tutor)
+#+end_src
+
+* Theme
+** Theme choice
+
+#+begin_src emacs-lisp :tangle config.el
+;; (run-at-time "9:00" nil (lambda () (setq! doom-theme 'modus-operandi)))
+;; (run-at-time "21:00" nil (lambda () (setq! doom-theme 'modus-vivendi)))
+(setq! doom-theme 'modus-vivendi)
+
+(setq! doom-font "Iosevka")
+(set-face-attribute 'default nil :family "Iosevka")
+
+(defmacro modus-themes-format-sexp (sexp &rest objects)
+  `(eval (read (format ,(format "%S" sexp) ,@objects))))
+
+(dolist (theme '("operandi" "vivendi"))
+  (modus-themes-format-sexp
+   (setq modus-%1$s-theme-slanted-constructs t
+         modus-%1$s-theme-bold-constructs t
+         modus-%1$s-theme-fringes 'subtle ; {nil,'subtle,'intense}
+         modus-%1$s-theme-mode-line '3d ; {nil,'3d,'moody}
+         modus-%1$s-theme-faint-syntax nil
+         modus-%1$s-theme-intense-hl-line t
+         modus-%1$s-theme-intense-paren-match t
+         modus-%1$s-theme-no-link-underline t
+         modus-%1$s-theme-prompts nil ; {nil,'subtle,'intense}
+         modus-%1$s-theme-completions nil ; {nil,'moderate,'opinionated}
+         modus-%1$s-theme-diffs nil ; {nil,'desaturated,'fg-only}
+         modus-%1$s-theme-org-blocks 'greyscale ; {nil,'greyscale,'rainbow}
+         modus-%1$s-theme-rainbow-headings t
+         modus-%1$s-theme-variable-pitch-headings nil
+         modus-%1$s-theme-scale-headings t
+         modus-%1$s-theme-scale-1 1.1
+         modus-%1$s-theme-scale-2 1.15
+         modus-%1$s-theme-scale-3 1.21
+         modus-%1$s-theme-scale-4 1.27
+         modus-%1$s-theme-scale-5 1.33)
+   theme))
+
+(defun my/toggle-transparency ()
+  "Toggle the transparency of Emacs on and off"
+  (interactive)
+  (let ((alpha (frame-parameter nil 'alpha)))
+    (set-frame-parameter
+     nil 'alpha
+     (if (eql (cond ((numberp alpha) alpha)
+                    ((numberp (cdr alpha)) (cdr alpha))
+                    ;; Also handle undocumented (<active> <inactive>) form.
+                    ((numberp (cadr alpha)) (cadr alpha)))
+              100)
+         '(91 . 80) '(100 . 100)))))
+#+end_src
+
+** Modeline
+
+#+begin_src emacs-lisp :tangle config.el
+(after! doom-modeline
+  (progn
+    (setq doom-modeline-buffer-file-name-style 'auto
+          doom-modeline-bar-width (frame-parameter nil 'left-fringe)
+          doom-modeline-height 10
+          doom-modeline-icon t
+          all-the-icons-scale-factor 1
+          display-time-format " %H:%M - %Y/%m/%d ")
+    (display-time-mode +1)))
+#+end_src
+
+** Theme magic
+
+In the offchance I am not using emacs for something, then set the same theme
+through Xressources.
+
+#+begin_src emacs-lisp :tangle config.el
+(use-package! theme-magic
+  :config
+  (theme-magic-export-theme-mode +1))
 #+end_src
 
 * Window management
