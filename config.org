@@ -233,14 +233,18 @@ This is my doom block. What it contains is pretty self explanatory.
 
 ** packages.el
 #+begin_src emacs-lisp :tangle packages.el
-(package! modus-vivendi-theme)
-(package! modus-operandi-theme)
+;;(package! modus-vivendi-theme)
+;;(package! modus-operandi-theme)
 (package! theme-magic)
 (package! explain-pause-mode
   :recipe (:host github
            :repo "lastquestion/explain-pause-mode"))
 (package! windower)
+(package! svg-tag-mode
+  :recipe (:host github
+           :repo "rougier/svg-tag-mode"))
 (package! counsel-spotify)
+(package! ivy-youtube)
 (package! ivy-yasnippet)
 (package! orderless)
 (package! solaire-mode :disable t)
@@ -262,6 +266,9 @@ This is my doom block. What it contains is pretty self explanatory.
            :files ("framemove.el")))
 (package! w3m)
 (package! evil-tutor)
+(package! pdf-continuous-scroll-mode
+  :recipe (:host github
+           :repo "dalanicolai/pdf-continuous-scroll-mode.el"))
 #+end_src
 
 * Theme
