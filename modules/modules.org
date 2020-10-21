@@ -143,17 +143,19 @@ visible, switch to the buffer in the current window. Finally, if
 the current buffer is already that of the program, bury the
 buffer (=minimizing in other WM/DE)"
     ;; check current buffer
-  (if (string= (buffer-name) program-buffer-name)
-      (bury-buffer)
-    ;; either switch to or launch program
-    (progn
-      (if (get-buffer program-buffer-name)
-          (progn
-            (if (get-buffer-window program-buffer-name)
-                (select-window (display-buffer program-buffer-name) nil)
-              (exwm-workspace-switch-to-buffer program-buffer-name)))
-        ;; start program
-        (my/exwm-async-run program)))))
+    (if (string= (buffer-name) program-buffer-name)
+        (bury-buffer)
+      ;; either switch to or launch program
+      (progn
+        (if (get-buffer program-buffer-name)
+            (progn
+              (if (get-buffer-window program-buffer-name)
+                  (select-window (display-buffer program-buffer-name) nil)
+                (exwm-workspace-switch-to-buffer program-buffer-name)))
+          ;; start program
+         (progn
+          (my/exwm-async-run program)
+          (message (format "Launching %s" program)))))))
 
   (defun my/run-or-raise-or-dismiss-firefox ()
     (interactive)
