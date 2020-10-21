@@ -80,7 +80,8 @@ EXWM has built in support for multi-monitor.
 (use-package! exwm-randr
   :config
   ;;(setq! exwm-randr-workspace-output-plist '(1 "VGA1"))
-  (setq! exwm-randr-workspace-output-plist '(1 "DP2"))
+  (setq! exwm-randr-workspace-output-plist '(1 "DP2" 2 "DP2"))
+  (setq! exwm-randr-screen-change-hook nil)
   (add-hook 'exwm-randr-screen-change-hook
             (lambda ()
               (start-process-shell-command
@@ -111,7 +112,7 @@ configure my window manager with emacs lisp. Life is good.
 #+begin_src emacs-lisp :tangle ./personal/exwm/config.el
 (use-package! exwm
   :init
-  (setq! exwm-firefox-buffer-name "Firefox-esr")
+  (setq! exwm-firefox-buffer-name "Firefox")
   (map!
    :map exwm-mode-map
    :localleader
