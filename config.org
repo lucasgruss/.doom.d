@@ -870,8 +870,37 @@ be necessary to check [[github:iv-org/invidious/wiki/Invidious-Instances][the av
 (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
 #+end_src
 * Browsing the internet
-** TODO Eww
-** w3m
+** Eww
+
+EWW stands for the Emacs Web Wowser, and it is a web browser written in emacs
+lisp. It relies on =shr= (simple html renderer), and is only capable of
+rendering /you guessed it/ : html. I find myself using it more and more, as it
+is really lightweight, and is a really nice interface to read online
+documentation, as you can easily copy and paste the snippets to your project.
+
+#+begin_src emacs-lisp :tangle config.el
+(use-package! eww
+  :commands (eww)
+  :init
+  (map! (:leader
+         :prefix ("o" . "open")
+         :desc "eww" "w" #'eww)
+        (:map eww-mode-map
+         "v" #'eww-mpv-video-at-point
+         "a" #'eww-mpv-audio-at-point
+         "C-j" #'eww-next-url
+         "C-k" #'eww-previous-url))
+  :config
+  (defun eww-mpv-video-at-point ()
+    "View video in url at point in mpv"
+    (interactive)
+    (mpv-v-open (thing-at-point 'url)))
+
+  (defun eww-mpv-audio-at-point ()
+    (interactive)
+    "View video in url at point in mpv"
+    (mpv-a-open (thing-at-point 'url))))
+#+end_src
 
 * Keybindings
 ** Evil mode
