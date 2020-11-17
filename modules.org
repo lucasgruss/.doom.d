@@ -62,7 +62,18 @@ Media keys need to be explicitely bound, as we might not use EXWM in a DE.
   (shell-command "xbacklight -inc 10"))
 #+end_src
 
-*** EXWM-randr
+** Mouse
+#+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
+;; (defun my/exwm-floating-resize (drag-event)
+;;   (interactive "e")
+;;   )
+(setq! exwm-input-resize-event )
+(map! "<mode-line> <double-mouse-3>" #'exwm-floating-toggle-floating)
+      ;;"<top-left-corner> <mouse-1>" #'exwm-)
+
+#+end_src
+
+** EXWM-randr
 
 EXWM has built in support for multi-monitor.
 #+begin_src emacs-lisp :tangle ./personal/exwm/config.el
