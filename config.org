@@ -356,7 +356,7 @@ This is my doom block. What it contains is pretty self explanatory.
 #+end_src
 
 ** Modeline
-
+*** Doom modeline
 #+begin_src emacs-lisp :tangle config.el
 (after! doom-modeline
   (progn
@@ -364,10 +364,12 @@ This is my doom block. What it contains is pretty self explanatory.
           doom-modeline-bar-width (frame-parameter nil 'left-fringe)
           doom-modeline-height 10
           doom-modeline-icon t
+          doom-modeline-major-mode-icon t
           all-the-icons-scale-factor 1
           display-time-format " %H:%M - %Y/%m/%d ")
     (display-time-mode +1)))
 #+end_src
+
 
 ** Theme magic
 
