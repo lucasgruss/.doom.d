@@ -267,9 +267,9 @@ This is my doom block. What it contains is pretty self explanatory.
   :recipe (:host github
            :repo "rougier/svg-tag-mode"))
 (package! counsel-spotify)
+(package! counsel-ffdata)
 (package! ivy-youtube)
 (package! ivy-yasnippet)
-(package! orderless)
 (package! solaire-mode :disable t)
 (package! rg)
 (package! zoom)
@@ -283,6 +283,7 @@ This is my doom block. What it contains is pretty self explanatory.
 (package! org-tree-slide)
 (package! org-superstar)
 (package! org-sidebar)
+(package! literate-calc-mode)
 (package! framemove
   :recipe (:host github
            :repo "emacsmirror/emacswiki.org"
@@ -292,6 +293,14 @@ This is my doom block. What it contains is pretty self explanatory.
 (package! pdf-continuous-scroll-mode
   :recipe (:host github
            :repo "dalanicolai/pdf-continuous-scroll-mode.el"))
+(package! emms)
+(package! ivy-emms)
+(package! org-emms)
+(package! ytel)
+(package! company-prescient)
+(package! spotify
+  :recipe (:host github
+           :repo "danielfm/spotify.el"))
 #+end_src
 
 * Theme
