@@ -10,17 +10,6 @@
   - [[#packagesel][packages.el]]
   - [[#configel][config.el]]
 
-* Introduction
-This file contains configuration for my personal doom modules. To recompile
-everything, use the following function :
-
-#+begin_src emacs-lisp :tangle no :results no
-(org-babel-tangle)
-#+end_src
-
-or if you're using doom Emacs w/ evil-mode simply type =RET= when your cursor is
-on the src block to evaluate it.
-
 * EXWM
 ** Packages
 #+begin_src emacs-lisp :tangle ./personal/exwm/packages.el
