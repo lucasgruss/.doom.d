@@ -552,21 +552,61 @@ Pretty org bullet.
 #+end_src
 
 ** Org-noter
-
 #+begin_src emacs-lisp :tangle config.el
-(after! org-noter
-  (progn
-    (map!
-     (:after (org-noter)
-      :map pdf-view-mode-map
-      :n "i" #'org-noter-insert-note))))
+(use-package! org-noter
+  :defer t
+  :preface
+  ;; Allow the user to preempt this and set the document search path
+  ;; If not set then use `org-directory'
+  (defvar org-noter-notes-search-path nil)
+  :config
+  (unless org-noter-notes-search-path
+    (setq org-noter-notes-search-path (list org-directory)))
+  (setq org-noter-auto-save-last-location t
+        org-noter-separate-notes-from-heading t
+        org-noter-always-create-frame nil)
+  (map!
+   (:after (org-noter)
+    :map pdf-view-mode-map
+    :n "i" #'org-noter-insert-note)))
+;; (after! org-noter
+;;   (progn
+;;     (setq org-noter-always-create-frame nil)
+;;     (map!
+;;      (:after (org-noter)
+;;       :map pdf-view-mode-map
+;;       :n "i" #'org-noter-insert-note))))
+#+end_src
+
+** Literal calc mode
+#+begin_src emacs-lisp :tangle config.el
+(use-package! literate-calc-mode
+  :after org
+  :config
+  (literate-calc-minor-mode -1))
 #+end_src
 
 * PDF
 ** pdf-tools
-
 #+begin_src emacs-lisp :tangle config.el
 (setq pdf-view-midnight-colors '("#ffffff" . "#000000"))
+#+end_src
+
+** Continuous scrolling
+#+begin_src emacs-lisp :tangle yes
+(use-package! pdf-continuous-scroll-mode
+  :after pdf-tools
+  :init
+  (setq pdf-continuous-scroll-mode-map (make-sparse-keymap))
+  ;; (map!
+  ;;  (:map pdf-view-mode-map
+  ;;   :n "j" #'pdf-continuous-scroll-forward
+  ;;   :n "k" #'pdf-continuous-scroll-backward))
+   (map!
+   (:map pdf-view-mode-map
+    :n "j" #'evil-collection-pdf-view-next-line-or-next-page
+    :n "k" #'evil-collection-pdf-view-previous-line-or-previous-page))
+  )
 #+end_src
 
 * Completions
@@ -575,9 +615,11 @@ Pretty org bullet.
 #+begin_src emacs-lisp :tangle config.el
 (after! ivy
   (progn
-    (map! (:map ivy-minibuffer-map
-           "M-<tab>" #'next-line
-           "<M-iso-lefttab>" #'previous-line))
+    (setq ivy-re-builders-alist
+          '((counsel-ffdata-firefox-history . +ivy-prescient-non-fuzzy)
+            (counsel-ffdata-firefox-bookmarks . +ivy-prescient-non-fuzzy)
+            (swiper . +ivy-prescient-non-fuzzy)
+            (t . ivy-prescient-re-builder)))
     (setq ivy-fixed-height-minibuffer nil
           ivy-add-newline-after-prompt nil)))
 #+end_src
