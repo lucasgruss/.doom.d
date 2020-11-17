@@ -662,43 +662,180 @@ Pretty org bullet.
    counsel-spotify-search-playlist)
   :init
   (defvar counsel-spotify-map (make-sparse-keymap))
-  (define-key! counsel-spotify-map
-    "a"  #'counsel-spotify-toggle-play-pause
-    "n"  #'counsel-spotify-next
-    "p"  #'counsel-spotify-previous
-    "j"  #'counsel-spotify-next
-    "k"  #'counsel-spotify-previous
-    "s"  nil
-    "sA" #'counsel-spotify-search-album
-    "sa" #'counsel-spotify-search-artist
-    "st" #'counsel-spotify-search-track
-    "sp" #'counsel-spotify-search-playlist)
   (map! (:leader
-         :desc "audio" "a" counsel-spotify-map))
+         (:prefix ("a" . "audio")
+          "a"  #'counsel-spotify-toggle-play-pause
+          "n"  #'counsel-spotify-next
+          "p"  #'counsel-spotify-previous
+          "j"  #'counsel-spotify-next
+          "k"  #'counsel-spotify-previous
+          "s"  nil
+          "sA" #'counsel-spotify-search-album
+          "sa" #'counsel-spotify-search-artist
+          "st" #'counsel-spotify-search-track
+          "sp" #'counsel-spotify-search-playlist)))
   :config
   (cl-defmethod counsel-spotify-do-play ((backend counsel-spotify-linux-backend) (something (eql nil)))
     nil))
 #+end_src
 
-** Ivy-yasnippet
-
-Snippets are cool, but being able to narrow, preview and discover snippets is
-even cooler !
-
+** Ivy-emms
 #+begin_src emacs-lisp :tangle config.el
-(use-package! ivy-yasnippet
-  :init
-  (map! (:leader
-         (:prefix ("i" . "insert")
-          :desc "Snippet" "s" #'ivy-yasnippet))))
+(use-package! ivy-emms
+  :after emms)
 #+end_src
 
-** Orderless
+Emms is a huge package that helps you manage your media files like movies,
+music, playlists and streams. You need an external player to play the media
+since Emacs is not capable of such feature. My player of choice is =mpv=, along
+with youtube-dl for content hosted on youtube.
 
-#+begin_src emacs-lisp :tangle no
-(use-package! orderless
+** Emms
+*** General configuration
+
+#+begin_src emacs-lisp :tangle config.el
+(use-package! emms
+  :commands (emms-streams)
+  :init
+  (setq! emms-source-file-default-directory "~/Musique/"
+         emms-streams-file "~/.doom.d/emms/streams.emms"
+         emms-playlist-buffer-name "*Music*"
+         emms-info-asynchronously t ; update tags asynchronously
+         emms-source-file-directory-tree-function 'emms-source-file-directory-tree-find)
+  (map!
+   (:map emms-playlist-mode-map
+    :n "q" #'emms-playlist-mode-bury-buffer)
+   (:leader
+         (:prefix ("a" . "audio")
+          "e" nil
+          "es" #'emms-stop
+          "ee" #'emms-pause
+          "eS" #'emms-shuffle
+          "ea" #'emms-show-all
+          :desc "radio / streams" "r" #'emms-streams
+          )))
   :config
-  (setq completion-styles '(orderless)))
+  (emms-all)
+  (emms-default-players))
+#+end_src
+
+*** Streams
+Here is the file that contains all the streams that I listen to (radios), all
+defined here and tangled to the right file.
+#+begin_src emacs-lisp :tangle emms/streams.emms
+;;; This is an EMMS playlist file
+;; This includes the built-in list of streams which come with Emms by
+;; default. Emms has no affiliation of any kind with the streaming
+;; audio stations listed below, nor is this an endorsement of these
+;; stations. Instead, this is a collection of stations submitted to
+;; the project over the years by people who enjoy Emms. We hope you
+;; will enjoy them too.
+
+((*track* (type . streamlist) (name . "http://www.somafm.com/beatblender.pls") (metadata "SomaFM: Beatblender" "http://www.somafm.com/beatblender.pls" 1 streamlist))
+(*track* (type . streamlist) (name . "http://www.somafm.com/secretagent.pls") (metadata "SomaFM: Secret Agent" "http://www.somafm.com/secretagent.pls" 1 streamlist))
+(*track* (type . streamlist) (name . "http://www.somafm.com/groovesalad.pls") (metadata "SomaFM: Groove Salad" "http://www.somafm.com/groovesalad.pls" 1 streamlist))
+(*track* (type . streamlist) (name . "http://www.somafm.com/dronezone.pls") (metadata "SomaFM: Drone Zone" "http://www.somafm.com/dronezone.pls" 1 streamlist))
+(*track* (type . streamlist) (name . "http://www.somafm.com/tagstrance.pls") (metadata "SomaFM: Tag's Trance" "http://www.somafm.com/tagstrance.pls" 1 streamlist))
+(*track* (type . streamlist) (name . "http://www.somafm.com/indiepop.pls") (metadata "SomaFM: Indie Pop Rocks" "http://www.somafm.com/indiepop.pls" 1 streamlist))
+(*track* (type . streamlist) (name . "http://www.somafm.com/doomed.pls") (metadata "SomaFM: Doomed" "http://www.somafm.com/doomed.pls" 1 streamlist))
+(*track* (type . url) (name . "http://listen.radionomy.com:80/-PHILOSOMATIKAPROGRESSIVE-") (metadata "P H I L O S O M A T I K A - Progressive Psytrance" "http://listen.radionomy.com:80/-PHILOSOMATIKAPROGRESSIVE-" 1 url))
+(*track* (type . streamlist) (name . "http://www.bassdrive.com/BassDrive.m3u") (metadata "Drum and Bass Radio, BassDrive" "http://www.bassdrive.com/BassDrive.m3u" 1 streamlist))
+(*track* (type . streamlist) (name . "http://www.ibiblio.org/wcpe/wcpe.pls") (metadata "WCPE, Classical Music" "http://www.ibiblio.org/wcpe/wcpe.pls" 1 streamlist))
+(*track* (type . streamlist) (name . "http://stream.nute.net/kohina/stream.ogg.m3u") (metadata "Kohina - Old school game and demo music" "http://stream.nute.net/kohina/stream.ogg.m3u" 1 streamlist))
+(*track* (type . streamlist) (name . "http://privat.is-by.us:8000/necta192.mp3.m3u") (metadata "Nectarine, Demoscene Radio, DE Continuum's relay 192 mp3" "http://privat.is-by.us:8000/necta192.mp3.m3u" 1 streamlist))
+(*track* (type . streamlist) (name . "http://nectarine.from-de.com/necta192.m3u") (metadata "Nectarine, Demoscene Radio, DE stream (High Bitrate)" "http://nectarine.from-de.com/necta192.m3u" 1 streamlist))
+(*track* (type . streamlist) (name . "http://www.wfmu.org/wfmu.pls") (metadata "WFMU, Freeform radio" "http://www.wfmu.org/wfmu.pls" 1 streamlist))
+(*track* (type . streamlist) (name . "http://wfmu.org/wfmu_rock.pls") (metadata "WFMU, Rock'n'Soul Ichiban!" "http://www.wfmu.org/wfmu.pls" 1 streamlist))
+(*track* (type . streamlist) (name . "http://wfmu.org/wfmu_drummer.pls") (metadata "WFMU, Give the Drummer Radio" "http://www.wfmu.org/wfmu.pls" 1 streamlist))
+(*track* (type . streamlist) (name . "http://wfmu.org/wfmu_sheena.pls") (metadata "WFMU, Sheena's Jungle Room" "http://www.wfmu.org/wfmu.pls" 1 streamlist))
+(*track* (type . streamlist) (name . "http://nyc01.egihosting.com:6232/listen.pls") (metadata "WBCR-LP - Berkshire Community Radio" "http://nyc01.egihosting.com:6232/listen.pls" 1 streamlist))
+(*track* (type . streamlist) (name . "http://199.244.85.125:8000/wxhq1") (metadata "WXHQ-LP - Newport Radio" "http://199.244.85.125:8000/wxhq1" 1 streamlist))
+(*track (type . url) (name . "http://direct.franceinter.fr/live/franceinter-lofi.mp3"))
+(*track (type . url) (name . "http://direct.franceinter.fr/live/franceinter-midfi.mp3")))
+#+end_src
+
+* Video
+Mpv helper functions
+#+BEGIN_SRC elisp :tangle config.el
+(defun mpv-v-open (url)
+  "Watch a video from URL in MPV"
+  (async-shell-command (format "mpv %s" url)
+                       (format "*mpv %s*" url))
+  (switch-to-buffer-other-window (format "*mpv %s*" url)))
+
+(defun mpv-a-open (url)
+  "Listen to a video from URL in MPV"
+  (async-shell-command (format "mpv %s --no-video" url)
+                       (format "*mpv %s*" url))
+  (switch-to-buffer-other-window (format "*mpv %s*" url)))
+
+;; (defun mpv-a-open (url)
+;;   "Listen to a video from URL in MPV"
+;;   (start-process "*mpv*"
+;;                  (format "*mpv %s*" url)
+;;                  "mpv"
+;;                  "--no-video"
+;;                  url
+;;                  ;(format "%s --no-video" url)
+;;                  )
+;;   (switch-to-buffer-other-window (format "*mpv %s*" url)))
+#+END_SRC
+
+* ytel
+Ytel is a youtube frontend for Emacs. It is a rather new tool as of writing
+these lines. It uses the invidious api (calling it through =curl=), and an
+instance of the API has to be chosen. Instances might come and go, so it might
+be necessary to check [[github:iv-org/invidious/wiki/Invidious-Instances][the available instances]].
+
+#+begin_src emacs-lisp :tangle config.el
+(use-package! ytel
+  :commands (ytel)
+  :hook (ytel-mode . (lambda () (interactive) (evil-snipe-local-mode -1)))
+  :init
+  (map! (:leader
+         (:prefix ("o" . "open")
+          :desc "ytel (youtube client)"  "y" #'ytel)))
+  (evil-define-key 'normal ytel-mode-map
+    "q" #'ytel-quit
+    "v" #'ytel-watch
+    "a" #'ytel-listen
+    "J" #'ytel-search-next-page
+    "K" #'ytel-search-next-page
+    "s" #'ytel-search
+    "Y" #'ytel-yank-channel-feed)
+  :config
+  (defun ytel-watch ()
+    "Stream video at point in mpv."
+    (interactive)
+    (let* ((video (ytel-get-current-video))
+           (id    (ytel-video-id video))
+           (video-api-url (mpv-v-open (concat "https://invidio.us/watch?v=" id))))))
+
+  (defun ytel-listen ()
+    "Stream video at point in mpv."
+    (interactive)
+    (let* ((video (ytel-get-current-video))
+           (id    (ytel-video-id video))
+           (video-api-url (mpv-a-open (concat "https://invidio.us/watch?v=" id))))))
+
+  (defun ytel-yank-channel-feed (&optional arg)
+    "Yank channel's Invidious RSS feed for the current video at point.
+          If ARG is given, format it as a Youtube RSS feed."
+    (interactive "P")
+    (let* ((author (ytel-video-author (ytel-get-current-video)))
+           (authorId (ytel-video-authorId (ytel-get-current-video)))
+           (url (if arg
+                    (concat "https://invidio.us/feed/channel/" authorId)
+                  (concat "https://www.youtube.com/feeds/videos.xml?channel_id=" authorId))))
+      (kill-new url)
+      (message "Copied RSS feed for: %s -- %s" author url)))
+
+  (setq! ytel-invidious-api-url "https://invidious.snopyta.org")
+  ;; (setq! ytel-invidious-api-url "https://invidious.fdn.fr")
+  ;; (setq! ytel-invidious-api-url "https://invidious.us")
+  ;; (setq! ytel-invidious-api-url "https://yewtu.be")
+  ;; (setq! ytel-invidious-api-url "https://tube.connect.cafe")
+  )
 #+end_src
 
 * Elfeed
