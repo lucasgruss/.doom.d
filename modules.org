@@ -321,11 +321,39 @@ firefox, it leaves fullscreen mode."
     (exwm-input--fake-key 'C-m)
     (exwm-firefox-evil-insert))
 
+  ;; go back to normal mode after pressing return
+  (defun exwm-firefox-intercept-next-ret ()
+    (interactive)
+    (setq-local exwm-firefox-next-ret-normal t))
+
+  (defun exwm-firefox-intercept-return ()
+    (interactive)
+    (exwm-input--fake-key (aref (kbd "<return>") 0))
+    (when (and (boundp 'exwm-firefox-next-ret-normal)
+               exwm-firefox-next-ret-normal)
+      (exwm-firefox-evil-normal)
+      (setq-local exwm-firefox-next-ret-normal nil)))
+
+  (advice-add #'exwm-firefox-core-tab-new :after #'exwm-firefox-intercept-next-ret)
+  (advice-add #'my/exwm-firefox-hint :after #'exwm-firefox-intercept-next-ret)
+  (advice-add #'exwm-firefox-core-focus-search-bar :after #'exwm-firefox-intercept-next-ret)
+  (advice-add #'exwm-firefox-core-quick-find :after #'exwm-firefox-intercept-next-ret)
+
+
   (define-key! 'normal exwm-firefox-evil-mode-map
     "f" #'my/exwm-firefox-hint
     "F" #'my/exwm-firefox-force-fullscreen
     "T" #'my/exwm-firefox-toggle-tree-tab
-    "q" #'exwm-input-send-next-key))
+    "q" #'exwm-input-send-next-key
+    "<return>" #'exwm-firefox-intercept-return)
+
+  (define-key! 'insert exwm-mode-map
+    "<return>" #'exwm-firefox-intercept-return
+    "C-h" #'exwm-firefox-core-left
+    "C-j" #'exwm-firefox-core-down
+    "C-k" #'exwm-firefox-core-up
+    "C-l" #'exwm-firefox-core-right)
+  )
 
 (use-package! exwm-firefox
   :after exwm-firefox-evil
