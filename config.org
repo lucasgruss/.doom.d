@@ -442,7 +442,10 @@ switching from screen to screen easier in EXWM.
 (setq! org-directory "~/org/"
        display-line-numbers-type `relative
        window-min-height 1
-       idle-update-delay 0.2)
+       idle-update-delay 0.2
+       x-select-enable-primary t
+       select-enable-clipboard t
+       x-select-enable-clipboard-manager t)
 
 (defun my/kill-this-buffer ()
   "Kill the current buffer without confirmation"
