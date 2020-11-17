@@ -52,12 +52,35 @@ with everything needed to set up Doom. Normally you customize Doom by editing
 three =.el= files, which are =config.el=, =packages.el= and =init.el=. Thanks to
 the =literate= config module, it is possible to have all three in the same org
 document and they get automatically tangled in the right place upon saving this
-file. Without having to set anything up!
+file.
 
-This is why I love Doom, I used to have an org configuration that was hell to
-maintain and that would never have been nearly as performant. But Doom allows me
-to keep the same workflow, and has saved me a /ton/ of time, and now my config
-file is about four times smaller than it was.
+- Doom Emacs ::
+  I use Doom Emacs as my configuration framework. I used to have a rather
+  lengthy hand-rolled literate configuration file. In a lot of cases, I was
+  reinventing the wheel by configuring stuff in a way that was similar to what
+  Doom has to offer (or other configuration frameworks for that matter). So I
+  just decided that I might as well use a configuration framework and have stuff
+  work out of the box. I chose Doom because it enables excellent evil support
+  across all the modules (so I don't have to go through the pain of configuring
+  everything to get a consistent evil experience). It's also very fast, and has
+  a very active community. I want to extend my thanks to Henrik Lissner who is
+  the maintainer of the framework, as well as all contributors to the project.
+
+- gcc emacs ::
+  I build Emacs from source and I am on the =native-comp= branch. Native
+  compilation helps me achieve better performances without headaches, and the
+  branch is now stable enough to be used without running into issues. It's most
+  likely going to be included in the next release of Emacs (Emacs 28) and I
+  would like to extend my thanks to Andrea Corallo who did a fantastic job on
+  this feature, as well as all the contributors to this feature.
+
+- The Emacs community ::
+  Thank you to all the community in making Emacs such great software. It is
+  really hard to express how much Emacs has impacted me. I really like how Emacs
+  behaves as a platform and I find it much more pleasant to use a computer
+  through Emacs. Thank you to the maintainers across the years, to contributors,
+  package developers and users as a whole that make this tool such a polyvalent
+  swiss-army kitchen sink.
 
 * Doom stuff
 ** init.el
