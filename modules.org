@@ -94,11 +94,11 @@ use it any longer.
   (exwm-systemtray-enable))
 #+end_src
 
-*** EXWM
+** EXWM
 EXWM is seriously awesome. Now I don't have to exit emacs *ever* and I get to
 configure my window manager with emacs lisp. Life is good.
 
-#+begin_src emacs-lisp :tangle ./personal/exwm/config.el
+#+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
 (use-package! exwm
   :init
   (setq! exwm-firefox-buffer-name "Firefox")
@@ -148,11 +148,16 @@ buffer (=minimizing in other WM/DE)"
 
   (defun my/run-or-raise-or-dismiss-firefox ()
     (interactive)
-    (my/run-or-raise-or-dismiss "firefox" "Firefox"))
+    (my/run-or-raise-or-dismiss "firefox" "Firefox")
+    (exwm-input--fake-key 'f11))
 
   (defun my/run-or-raise-or-dismiss-spotify ()
     (interactive)
     (my/run-or-raise-or-dismiss "spotify" "Spotify"))
+
+  (defun my/run-or-raise-or-dismiss-thunderbird ()
+    (interactive)
+    (my/run-or-raise-or-dismiss "thunderbird" "Thunderbird"))
 
   (defun my/toggle-line-char-modes ()
     "If on a EXWM buffer, toggle 'line' or 'char'"
@@ -180,7 +185,7 @@ buffer (=minimizing in other WM/DE)"
         `(;; EXWM
           ([S-s-backspace] . exwm-workspace-delete)
           ([?\s-f] . exwm-layout-set-fullscreen)
-          ([?\s-r] . exwm-reset)
+          ([?\s-R] . exwm-reset)
           ([?\s-w] . exwm-workspace-switch)
           ([?\s-W] . exwm-workspace-move-window)
           ;; Bind "s-0" to "s-9" to switch to a workspace by its index.
@@ -207,13 +212,17 @@ buffer (=minimizing in other WM/DE)"
           ([s-f2]  . my/lock-screen)
           ([?\s-d] . counsel-linux-app)
           ([?\s-i] . my/run-or-raise-or-dismiss-firefox)
-          ([?\s-m] . my/toggle-line-char-modes)
+          ([?\s-t] . my/run-or-raise-or-dismiss-thunderbird)
           ([?\s-s] . my/run-or-raise-or-dismiss-spotify)
+          ([?\s-m] . my/toggle-line-char-modes)
           ([s-return] . +vterm/toggle)
+          ([?\s-e] . +eshell/toggle)
           ([s-backspace] . my/kill-this-buffer)
+          ([s-escape] . my/kill-this-buffer)
           ;; Everything window
           ([?\s-q] . evil-window-delete)
           ([s-tab]  . windower-switch-to-last-buffer)
+          ([?\s-r]  . windower-switch-to-last-buffer)
           ([?\s-\\] . windower-toggle-split)
           ([?\s-o]  . windower-toggle-single)
           ([142606440] . windower-move-border-left) ; M-s-h
@@ -247,6 +256,7 @@ buffer (=minimizing in other WM/DE)"
             )))
 
   (push (aref (kbd "<escape>") 0) exwm-input-prefix-keys)
+  (push (aref (kbd "<return>") 0) exwm-input-prefix-keys)
   ;; (setq! exwm-input-simulation-keys
   ;;   '(([?\M-h] . [left])
   ;;     ([?\M-l] . [right])
