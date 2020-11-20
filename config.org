@@ -584,7 +584,7 @@ slowly. I want it to appear almost instantaneously.
 (setq deft-directory "~/org")
 #+END_SRC
 
-** Mouse support
+* Mouse support
 #+begin_src emacs-lisp :tangle config.el
 ;;; found at https://tsdh.wordpress.com/2015/03/03/swapping-emacs-windows-using-dragndrop/
 (defun th/swap-window-buffers-by-dnd (drag-event)
@@ -607,7 +607,16 @@ window."
 (map! "<mode-line> <s-drag-mouse-1>" #'th/swap-window-buffers-by-dnd
       "<mode-line> <double-mouse-1>" #'windower-toggle-single
       "<mode-line> <mouse-3>" nil
-      "<mode-line> <mouse-2>" #'mouse-delete-window)
+      "<mode-line> <mouse-2>" #'mouse-delete-window
+      "<mouse-8>" #'strokes-do-stroke
+      "<S-down-mouse-1>" #'strokes-do-stroke
+      "<s-down-mouse-1>" #'strokes-do-stroke)
+
+(use-package! strokes
+  :config
+  (setq! strokes-file "~/.doom.d/strokes")
+  (setq! strokes-use-strokes-buffer nil)
+  (strokes-mode +1))
 #+end_src
 
 * Hyperbole
