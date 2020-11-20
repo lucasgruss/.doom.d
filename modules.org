@@ -11,10 +11,14 @@
   - [[#exwm-systemtray][EXWM-Systemtray]]
   - [[#exwm-1][EXWM]]
   - [[#exwm-firefox][EXWM-Firefox]]
+  - [[#tab-line-fix][Tab-line fix]]
   - [[#terminal][Terminal]]
 - [[#selectrum][Selectrum]]
   - [[#packagesel][packages.el]]
   - [[#configel][config.el]]
+- [[#matlab][Matlab]]
+  - [[#packages-1][Packages]]
+  - [[#config-1][Config]]
 
 * EXWM
 ** Packages
