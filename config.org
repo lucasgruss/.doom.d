@@ -432,9 +432,118 @@ switching from screen to screen easier in EXWM.
         "s-M-k"   #'windower-move-border-above
         "s-M-l"   #'windower-move-border-right
         "s-<tab>" #'windower-switch-to-last-buffer
+        "s-r"     #'windower-switch-to-last-buffer
         "s-o"     #'windower-toggle-single
         "s-\\"    #'windower-toggle-split))
 #+end_src
+
+* Tabs
+Tabs are a relatively new feature in emacs. They come in two different flavors,
+=tab-bar-mode= and =tab-line-mode=. The first one is a great way to have
+different window layouts (what people would usually call workspaces) and the
+second is a way to display buffers that have been opened in a window (what
+people actually expect from tabs).
+
+The tab-bar, much like the tool bar or the menu bar, is related to the frame.
+The tab-line, much like the mode-line or header-line, is exclusive to the
+buffer.
+
+** Tab-bar-mode
+
+#+begin_src emacs-lisp :tangle config.el
+(use-package! tab-bar
+  :init
+  (map! :nvi "C-t" #'prot/tab-bar-select-tab-dwim
+        "s-<" #'tab-previous
+        "s->" #'tab-next
+        (:leader
+         :prefix ("t" . "toggle/tab")
+         :desc "new tab" "n" #'tab-new
+         :desc "delete tab" "d" #'tab-close
+         :desc "next tab" "j" #'tab-next
+         :desc "next tab" "k" #'tab-previous
+         :desc "toggle tab-bar mode" "t" #'tab-bar-mode))
+  :config
+  (setq tab-bar-close-button-show t)
+  (setq tab-bar-close-last-tab-choice 'tab-bar-mode-disable)
+  (setq tab-bar-close-tab-select 'recent)
+  (setq tab-bar-new-tab-choice t)
+  (setq tab-bar-new-tab-to 'right)
+  (setq tab-bar-position nil)
+  (setq tab-bar-show nil)
+  (setq tab-bar-tab-hints nil)
+  (setq tab-bar-tab-name-function 'tab-bar-tab-name-current-with-count)
+
+  (defun prot/tab-bar-select-tab-dwim ()
+    "Do-What-I-Mean function for getting to a `tab-bar-mode' tab.
+If no other tab exists, create one and switch to it.  If there is
+one other tab (so two in total) switch to it without further
+questions.  Else use completion to select the tab to switch to."
+    (interactive)
+    (let ((tabs (mapcar (lambda (tab)
+                          (alist-get 'name tab))
+                        (tab-bar--tabs-recent))))
+      (cond ((eq tabs nil)
+             (tab-new))
+            ((eq (length tabs) 1)
+             (tab-next))
+            (t
+             (call-interactively #'tab-bar-switch-to-tab)))))
+
+  (defun my/echo-tabs ()
+    "Echo all the tabs in use in the modeline"
+    (let ((message ""))
+      (echo message))
+    )
+
+  (tab-bar-mode -1))
+#+end_src
+
+** Centaur tabs
+#+begin_src emacs-lisp :tangle config.el
+(use-package! centaur-tabs
+  :init
+  (map! :n "gt" #'centaur-tabs-forward
+        :n "gT" #'centaur-tabs-backward
+        "s-," #'centaur-tabs-backward
+        "s-." #'centaur-tabs-forward)
+  :config
+  (setq! centaur-tabs-style "bar"
+         centaur-tabs-set-icons t
+         centaur-tabs-gray-out-icons t
+         centaur-tabs-set-bar 'under
+         centaur-tabs-show-navigation-buttons nil
+         centaur-tabs-height 25
+         centaur-tabs-cycle-scope 'tabs
+         centaur-tabs-plain-icons nil)
+  (centaur-tabs-mode +1)
+  ;; Natural Tab Close
+  (defun centaur-tabs-do-close (event)
+    "Given a mouse EVENT, close the tab at the mouse point."
+    (interactive "e")
+    (let ((window (posn-window (event-start event))))
+      (with-selected-window window
+        (select-window window)
+        (centaur-tabs-buffer-select-tab `,(centaur-tabs-get-tab-from-event event))
+
+        (let* ((buffer     (window-buffer window))
+               (window-num (length (get-buffer-window-list buffer))))
+          (if (> window-num 1)
+              (delete-window window)
+            (centaur-tabs-buffer-close-tab `,(centaur-tabs-get-tab-from-event event)))))))
+
+  (+popup-window-p) ; needed to prevent recursive auto-loading of popup
+  ;; Automatically turn off tabs in popups
+  (defun +fl/hide-tabs-in-popup ()
+    (if (+popup-window-p)
+        (centaur-tabs-local-mode)
+      (centaur-tabs-local-mode 0)))
+  (add-hook! 'buffer-list-update-hook '+fl/hide-tabs-in-popup)
+  )
+#+end_src
+
+#+RESULTS:
+: t
 
 * Convenience
 #+begin_src emacs-lisp :tangle config.el
