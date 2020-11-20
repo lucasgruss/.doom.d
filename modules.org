@@ -519,3 +519,29 @@ else launch it."
   :config
   (selectrum-prescient-mode +1))
 #+end_src
+
+* Matlab
+** Packages
+#+begin_src emacs-lisp :tangle ./modules/lang/matlab/packages.el
+(package! matlab-mode)
+#+end_src
+
+** Config
+#+begin_src emacs-lisp :tangle ./modules/lang/matlab/config.el
+;;;###autoload
+(defun +matlab/open-repl ()
+  "Open the Matlab REPL."
+  (interactive)
+  (if (string= (buffer-name) *MATLAB*)
+      (matlab-shell)
+    (pop-to-buffer *MATLAB*)))
+
+  (use-package! matlab-shell
+    :config
+    (setq matlab-shell-command "~/MATLAB/R2017a/bin/matlab")
+    (set-repl-handler! 'matlab-mode #'+matlab/open-repl :persist t))
+
+  (use-package! ob-octave
+    :config
+    (setq org-babel-matlab-shell-command "~/MATLAB/R2017a/bin/matlab -nosplash"))
+#+end_src
