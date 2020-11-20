@@ -800,16 +800,36 @@ Pretty org bullet.
 
 #+begin_src emacs-lisp :tangle config.el
 (after! counsel
-  (progn
-    (map! "M-<tab>" #'counsel-switch-buffer
-          (:leader
-           (:prefix ("b" . "buffer")
-            "b"   #'counsel-switch-buffer
-            "o"   #'counsel-switch-buffer-other-window
-            "C-b" #'counsel-switch-buffer-other-window)))))
+  (progn (map! "M-<tab>" #'counsel-switch-buffer
+               (:leader
+                (:prefix ("b" . "buffer") "b"
+                 #'counsel-switch-buffer "o"
+                 #'counsel-switch-buffer-other-window "C-b"
+                 #'counsel-switch-buffer-other-window)))))
 #+end_src
 
-** Ivy-posframe
+** Counsel-ffdata
+This package allows you to access your history and bookmarks from emacs, how awesome is that ?
+#+begin_src emacs-lisp :tangle yes
+(use-package! counsel-ffdata
+  :commands (counsel-ffdata-firefox-history
+             counsel-ffdata-firefox-bookmarks)
+  :init
+  (map! (:leader
+         (:prefix ("s" . "search")
+          :desc "Firefox history"   "h" #'counsel-ffdata-firefox-history
+          :desc "Firefox bookmarks" "B" #'counsel-ffdata-firefox-bookmarks))))
+#+end_src
+
+** Company-prescient
+#+begin_src emacs-lisp :tangle yes
+(use-package! company-prescient
+  :after company
+  :config
+  (company-prescient-mode))
+#+end_src
+
+* Ivy-posframe
 
 #+BEGIN_SRC emacs-lisp :tangle config.el
 (after! ivy-posframe
