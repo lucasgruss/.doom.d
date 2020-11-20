@@ -301,6 +301,7 @@ This is my doom block. What it contains is pretty self explanatory.
 (package! spotify
   :recipe (:host github
            :repo "danielfm/spotify.el"))
+(package! centaur-tabs)
 #+end_src
 
 * Theme
