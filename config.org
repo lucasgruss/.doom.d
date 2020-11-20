@@ -820,6 +820,28 @@ Pretty org bullet.
       (ivy-posframe-mode -1))))
 #+END_SRC
 
+** Ivy-youtube
+#+begin_src emacs-lisp :tangle config.el
+(use-package! ivy-youtube
+  :config
+  (map! :leader
+        (:prefix ("s" . "search")
+         "y" #'ivy-youtube))
+  (setq ivy-youtube-play-at "/usr/bin/mpv"))
+#+end_src
+
+** Ivy-yasnippet
+
+Snippets are cool, but being able to narrow, preview and discover snippets is
+even cooler !
+
+#+begin_src emacs-lisp :tangle config.el
+(use-package! ivy-yasnippet
+  :init
+  (map! (:leader
+         (:prefix ("i" . "insert")
+          :desc "Snippet" "s" #'ivy-yasnippet))))
+#+end_src
 ** Ivy-Spotify
 
 #+begin_src emacs-lisp :tangle config.el
@@ -1073,6 +1095,12 @@ be necessary to check [[github:iv-org/invidious/wiki/Invidious-Instances][the av
 #+begin_src emacs-lisp :tangle config.el
 (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
 #+end_src
+* SVG tags
+#+begin_src emacs-lisp :tangle config.el
+(use-package! svg-tag-mode
+  :config
+  (setq! svg-tag-vertical-offset -10))
+#+end_src
 * Browsing the internet
 ** Eww
 
@@ -1127,13 +1155,8 @@ documentation, as you can easily copy and paste the snippets to your project.
         "o"   #'find-file-other-window
         "C-f" #'find-file-other-window)
        (:prefix ("o" . "open")
-        :desc "Spotify"                "s" #'my/run-or-raise-or-dismiss-spotify
-        :desc "Firefox"                "i" #'my/run-or-raise-or-dismiss-firefox))
-      ;; (:map ivy-minibuffer-map
-      ;;  "M-<tab>" #'next-line
-      ;;  "<M-iso-lefttab>" #'previous-line)
+        :desc "Spotify" "s" #'my/run-or-raise-or-dismiss-spotify
+        :desc "Firefox" "i" #'my/run-or-raise-or-dismiss-firefox))
       (:n "gss" #'avy-goto-char-timer)
-      ;; "<s-return>" #'+term/toggle
-      ;; "<S-s-return>" #'+term/here
       "<s-backspace>" #'my/kill-this-buffer)
 #+end_src
