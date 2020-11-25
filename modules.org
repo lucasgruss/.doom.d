@@ -23,8 +23,8 @@
 * EXWM
 ** Packages
 #+begin_src emacs-lisp :tangle ./modules/personal/exwm/packages.el
-(package! xelb :recipe (:no-native-compile t))
-(package! exwm :recipe (:no-native-compile t))
+(package! xelb :recipe (:no-native-compile nil))
+(package! exwm :recipe (:no-native-compile nil))
 (package! exwm-firefox-core)
 (package! exwm-firefox-evil)
 (package! exwm-firefox
