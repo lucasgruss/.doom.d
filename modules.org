@@ -206,10 +206,10 @@ buffer (=minimizing in other WM/DE)"
   (setq exwm-input-global-keys
         `(;; EXWM
           ([S-s-backspace] . exwm-workspace-delete)
-          ([?\s-f] . exwm-layout-set-fullscreen)
+          ([?\s-f] . exwm-layout-toggle-fullscreen)
           ([?\s-R] . exwm-reset)
-          ([?\s-w] . exwm-workspace-switch)
-          ([?\s-W] . exwm-workspace-move-window)
+          ([?\s-w] . exwm-utils-workspace-switch-cyclically)
+          ([?\s-W] . exwm-utils-workspace-move-cyclically)
           ;; Bind "s-0" to "s-9" to switch to a workspace by its index.
           ,@(mapcar (lambda (i)
                       `(,(kbd (format "s-%d" i)) .
@@ -236,17 +236,19 @@ buffer (=minimizing in other WM/DE)"
           ([?\s-i] . my/run-or-raise-or-dismiss-firefox)
           ([?\s-t] . my/run-or-raise-or-dismiss-thunderbird)
           ([?\s-s] . my/run-or-raise-or-dismiss-spotify)
-          ([?\s-m] . my/toggle-line-char-modes)
-          ([s-return] . +vterm/toggle)
+          ([?\s-u] . my/toggle-line-char-modes)
+          ([s-return] . +eshell/toggle)
           ([?\s-e] . +eshell/toggle)
-          ([s-backspace] . my/kill-this-buffer)
+          ;([s-backspace] . my/kill-this-buffer)
           ([s-escape] . my/kill-this-buffer)
-          ([s-,]  . centaur-tabs-backward)
-          ([s-.]  . centaur-tabs-forward)
-          ([s-<]  . tab-previous)
-          ([s->]  . tab-next)
+          ([?\s-m]  . centaur-tabs-backward)
+          ([?\s-,]  . centaur-tabs-forward)
+          ([?\s-M]  . tab-previous)
+          ([?\s-<]  . tab-next)
           ;; Everything window
           ([?\s-q] . evil-window-delete)
+          ([?\s-v] . split-window-horizontally)
+          ([?\s-z] . split-window-vertically)
           ([s-tab]  . windower-switch-to-last-buffer)
           ([?\s-r]  . windower-switch-to-last-buffer)
           ([?\s-\\] . windower-toggle-split)
@@ -283,18 +285,9 @@ buffer (=minimizing in other WM/DE)"
 
   (push (aref (kbd "<escape>") 0) exwm-input-prefix-keys)
   (push (aref (kbd "<return>") 0) exwm-input-prefix-keys)
-  ;; (setq! exwm-input-simulation-keys
-  ;;   '(([?\M-h] . [left])
-  ;;     ([?\M-l] . [right])
-  ;;     ([?\C-k] . [up])
-  ;;     ([?\C-j] . [down])))
-      ;([?\C-a] . [home])
-      ;([?\C-e] . [end])
-      ;([?\M-v] . [prior])
-      ;([?\C-v] . [next])
-      ;([?\C-d] . [delete])
   (exwm-enable)
   ;; relaunch the panel so that it auto-hide correctly
+  (load "~/.doom.d/exwm-utils.el")
   (shell-command "xfce4-panel --restart"))
   #+end_src
 
@@ -390,7 +383,12 @@ firefox, it leaves fullscreen mode."
     "C-j" #'exwm-firefox-core-down
     "C-k" #'exwm-firefox-core-up
     "C-l" #'exwm-firefox-core-right)
-  )
+
+  (define-key! exwm-mode-map
+    "<return>" #'(lambda ()
+                 (interactive)
+                 (unless exwm-firefox-evil-mode
+                 (exwm-input--fake-key (aref (kbd "<return>") 0))))))
 
 (use-package! exwm-firefox
   :after exwm-firefox-evil
