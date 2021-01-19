@@ -763,7 +763,7 @@ slowly. I want it to appear almost instantaneously.
   ;; which-key-idle-delay must be set before enabling the mode
   ;; so we disable it, set the variable and re-enable it
   (which-key-mode -1)
-  (setq! which-key-idle-delay 0.05)
+  (setq! which-key-idle-delay 0.7)
   (which-key-mode +1))
 #+end_src
 
