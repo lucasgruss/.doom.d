@@ -793,7 +793,7 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
 
 * Convenience
 #+begin_src emacs-lisp :tangle config.el
-(server-start)
+;(server-start)
 (load! "private.el") ; credentials and private info
 (setq! org-directory "~/org/"
        display-line-numbers-type `relative
