@@ -1436,6 +1436,15 @@ be necessary to check [[github:iv-org/invidious/wiki/Invidious-Instances][the av
   :config
   (setq! svg-tag-vertical-offset -10))
 #+end_src
+* Olivetti mode
+  #+begin_src emacs-lisp :tangle config.el
+(use-package olivetti
+  :commands olivetti-mode
+  :config
+  (setq olivetti-body-width 0.5)
+  (setq olivetti-minimum-body-width 50))
+  #+end_src
+
 * Browsing the internet
 ** Eww
 
