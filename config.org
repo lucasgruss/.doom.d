@@ -912,17 +912,18 @@ window."
 (map! "<mode-line> <s-drag-mouse-1>" #'th/swap-window-buffers-by-dnd
       "<mode-line> <double-mouse-1>" #'windower-toggle-single
       "<mode-line> <mouse-3>" nil
-      "<mode-line> <mouse-2>" #'mouse-delete-window
-      "<mouse-8>" #'strokes-do-stroke
-      "<S-down-mouse-1>" #'strokes-do-stroke
-      "<s-down-mouse-1>" #'strokes-do-stroke)
+      "<mode-line> <mouse-2>" #'mouse-delete-window)
 
 (use-package! strokes
+  :if window-system
   :config
+  (map! "<mouse-8>" #'strokes-do-stroke
+        "<S-down-mouse-1>" #'strokes-do-stroke
+        "<s-down-mouse-1>" #'strokes-do-stroke)
   (setq! strokes-file "~/.doom.d/strokes")
   (setq! strokes-use-strokes-buffer nil)
   (strokes-mode +1))
-#+end_src
+      #+end_src
 
 * Hyperbole
 Hyperbole is basically hypertext everywhere. Hyperbole understands context and
