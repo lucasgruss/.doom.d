@@ -468,6 +468,9 @@ Framemove extends windmove and allows to move from frame to frame. It makes
 switching from screen to screen easier in EXWM.
 #+begin_src emacs-lisp :tangle config.el
 (use-package! framemove
+  :after exwm-randr
+  :init
+  (load! "framemove.el")
   :config
   (setq framemove-hook-into-windmove t))
 #+end_src
