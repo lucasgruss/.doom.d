@@ -823,6 +823,25 @@ slowly. I want it to appear almost instantaneously.
   (which-key-mode +1))
 #+end_src
 
+** Hercules
+Hercules is a hydra banisher. Hydra is an excellent package, but you have to
+declare them explicitely, which makes it cumbersome. Hercules leverages which
+key to provide similar features.
+#+begin_src emacs-lisp :tangle config.el
+(use-package hercules
+  :config
+  (hercules-def
+   :show-funs #'windresize
+   :hide-funs '(windresize-exit windresize-cancel-and-quit)
+   :keymap 'windresize-map))
+
+  (hercules-def
+   :show-funs #'lg/edwina-popup
+   :keymap 'edwina-mode-map
+   :transient t)
+  ;(define-key <map-symbol> (kbd "<key>") #'windresize))
+#+end_src
+
 ** Deft
 #+BEGIN_SRC emacs-lisp :tangle config.el
 (setq deft-directory "~/org")
