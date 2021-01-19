@@ -306,42 +306,39 @@ This is my doom block. What it contains is pretty self explanatory.
 #+end_src
 
 * Theme
+** modus themes
+#+begin_src emacs-lisp :tangle config.el
+(use-package modus-themes
+  :config
+   (setq modus-themes-slanted-constructs t)
+   (setq modus-themes-bold-constructs t)
+   (setq modus-themes-fringes 'subtle) ; {nil,'subtle,'intense})
+   (setq modus-themes-mode-line nil) ; {nil,'3d,'moody}
+   ;(setq modus-themes-faint-syntax nil)
+   (setq modus-themes-intense-hl-line t)
+   ;(setq modus-themes-intense-paren-match t)
+   ;(setq modus-themes-no-link-underline t)
+   (setq modus-themes-prompts 'intense) ; {nil,'subtle,'intense}
+   (setq modus-themes-completions 'moderate) ; {nil,'moderate,'opinionated})
+   ;(setq modus-themes-intense-standard-completions t)
+   (setq modus-themes-diffs nil) ; {nil,'desaturated,'fg-only})
+   (setq modus-themes-org-blocks 'greyscale) ; {nil,'greyscale,'rainbow}
+   (setq modus-themes-headings '((t . rainbow)))
+   (setq modus-themes-variable-pitch-headings nil)
+   (setq modus-themes-scale-headings t)
+   (setq modus-themes-scale-1 1.1)
+   (setq modus-themes-scale-2 1.15)
+   (setq modus-themes-scale-3 1.21)
+   (setq modus-themes-scale-4 1.27)
+   (setq modus-themes-scale-5 1.33))
+#+end_src
+
 ** Theme choice
 
 #+begin_src emacs-lisp :tangle config.el
-;; (run-at-time "9:00" nil (lambda () (setq! doom-theme 'modus-operandi)))
-;; (run-at-time "21:00" nil (lambda () (setq! doom-theme 'modus-vivendi)))
 (setq! doom-theme 'modus-vivendi)
+(setq! doom-font "Iosevka:pixelsize=15")
 
-(setq! doom-font "Iosevka")
-(set-face-attribute 'default nil :family "Iosevka")
-
-(defmacro modus-themes-format-sexp (sexp &rest objects)
-  `(eval (read (format ,(format "%S" sexp) ,@objects))))
-
-(dolist (theme '("operandi" "vivendi"))
-  (modus-themes-format-sexp
-   (setq modus-%1$s-theme-slanted-constructs t
-         modus-%1$s-theme-bold-constructs t
-         modus-%1$s-theme-fringes 'subtle ; {nil,'subtle,'intense}
-         modus-%1$s-theme-mode-line '3d ; {nil,'3d,'moody}
-         modus-%1$s-theme-faint-syntax nil
-         modus-%1$s-theme-intense-hl-line t
-         modus-%1$s-theme-intense-paren-match t
-         modus-%1$s-theme-no-link-underline t
-         modus-%1$s-theme-prompts nil ; {nil,'subtle,'intense}
-         modus-%1$s-theme-completions nil ; {nil,'moderate,'opinionated}
-         modus-%1$s-theme-diffs nil ; {nil,'desaturated,'fg-only}
-         modus-%1$s-theme-org-blocks 'greyscale ; {nil,'greyscale,'rainbow}
-         modus-%1$s-theme-rainbow-headings t
-         modus-%1$s-theme-variable-pitch-headings nil
-         modus-%1$s-theme-scale-headings t
-         modus-%1$s-theme-scale-1 1.1
-         modus-%1$s-theme-scale-2 1.15
-         modus-%1$s-theme-scale-3 1.21
-         modus-%1$s-theme-scale-4 1.27
-         modus-%1$s-theme-scale-5 1.33)
-   theme))
 
 (defun my/toggle-transparency ()
   "Toggle the transparency of Emacs on and off"
