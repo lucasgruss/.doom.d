@@ -263,9 +263,6 @@ This is my doom block. What it contains is pretty self explanatory.
 ;;   :recipe (:host github
 ;;            :repo "lastquestion/explain-pause-mode"))
 (package! windower)
-;; (package! svg-tag-mode
-;;   :recipe (:host github
-;;            :repo "rougier/svg-tag-mode"))
 (package! counsel-spotify)
 (package! counsel-ffdata)
 (package! ivy-youtube)
@@ -1456,12 +1453,6 @@ be necessary to check [[github:iv-org/invidious/wiki/Invidious-Instances][the av
   (global-fish-completion-mode))
    #+end_src
 
-* SVG tags
-#+begin_src emacs-lisp :tangle config.el
-(use-package! svg-tag-mode
-  :config
-  (setq! svg-tag-vertical-offset -10))
-#+end_src
 * Olivetti mode
   #+begin_src emacs-lisp :tangle config.el
 (use-package olivetti
