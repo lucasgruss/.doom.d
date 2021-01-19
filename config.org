@@ -925,6 +925,15 @@ can call the appropriate action on a piece of text.
 #+end_src
 
 * Org mode
+** Performance
+#+begin_src emacs-lisp :tangle config.el
+(after! org
+  (setq org-fontify-quote-and-verse-blocks nil
+        org-fontify-whole-heading-line nil
+        org-hide-leading-stars nil
+        org-startup-indented nil))
+#+end_src
+
 ** Latex
 
 #+begin_src emacs-lisp :tangle config.el
