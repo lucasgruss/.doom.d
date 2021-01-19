@@ -369,8 +369,7 @@ This is my doom block. What it contains is pretty self explanatory.
 (setq! doom-theme 'modus-vivendi)
 (setq! doom-font "Iosevka:pixelsize=15")
 
-
-(defun my/toggle-transparency ()
+(defun lg/toggle-transparency ()
   "Toggle the transparency of Emacs on and off"
   (interactive)
   (let ((alpha (frame-parameter nil 'alpha)))
@@ -746,7 +745,7 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
        select-enable-clipboard t
        x-select-enable-clipboard-manager t)
 
-(defun my/kill-this-buffer ()
+(defun lg/kill-this-buffer ()
   "Kill the current buffer without confirmation"
   (interactive)
   (kill-buffer (current-buffer)))
@@ -1372,8 +1371,7 @@ documentation, as you can easily copy and paste the snippets to your project.
         "o"   #'find-file-other-window
         "C-f" #'find-file-other-window)
        (:prefix ("o" . "open")
-        :desc "Spotify" "s" #'my/run-or-raise-or-dismiss-spotify
-        :desc "Firefox" "i" #'my/run-or-raise-or-dismiss-firefox))
-      (:n "gss" #'avy-goto-char-timer)
-      "<s-backspace>" #'my/kill-this-buffer)
+        :desc "Spotify" "s" #'lg/run-or-raise-or-dismiss-spotify
+        :desc "Firefox" "i" #'lg/run-or-raise-or-dismiss-firefox))
+      (:n "gss" #'avy-goto-char-timer))
 #+end_src
