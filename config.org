@@ -1427,9 +1427,35 @@ be necessary to check [[github:iv-org/invidious/wiki/Invidious-Instances][the av
 #+end_src
 
 * Terminal
+** Vterm
 #+begin_src emacs-lisp :tangle config.el
-(setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
+(use-package! vterm
+  :disabled
+  :init
+  (setq vterm-always-compile-module t)
+  (setq vterm-module-cmake-args "-DUSE_SYSTEM_VTERM=no"))
 #+end_src
+
+** eshell
+   In most cases, eshell is sufficient for all my needs. It works really well,
+   and another advantage is that it works cross platforms. I only have linux on
+   my computer but it's nice for emacs users on windows out there !
+
+   #+begin_src emacs-lisp :tangle config.el
+   (after! eshell
+     (setq eshell-kill-on-exit nil)
+     (setq eshell-kill-processes-on-exit nil))
+   #+end_src
+
+** fish completion
+   This package provide completion thanks to fish.
+   #+begin_src emacs-lisp :tangle config.el
+(use-package fish-completion
+  :after eshell
+  :config
+  (global-fish-completion-mode))
+   #+end_src
+
 * SVG tags
 #+begin_src emacs-lisp :tangle config.el
 (use-package! svg-tag-mode
