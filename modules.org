@@ -25,6 +25,10 @@
 #+begin_src emacs-lisp :tangle ./modules/personal/exwm/packages.el
 (package! xelb :recipe (:no-native-compile nil))
 (package! exwm :recipe (:no-native-compile nil))
+(package! exwm-outer-gaps
+  :recipe
+  (:host github
+   :repo "lucasgruss/exwm-outer-gaps"))
 (package! exwm-firefox-core)
 (package! exwm-firefox-evil)
 (package! exwm-firefox
@@ -117,8 +121,8 @@ configure my window manager with emacs lisp. Life is good.
 
 #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
 (use-package! exwm
+  :if window-system
   :init
-  (setq! exwm-firefox-buffer-name "Firefox")
   (map!
    :map exwm-mode-map
    :localleader
@@ -134,14 +138,13 @@ configure my window manager with emacs lisp. Life is good.
     :desc "Reset"                  "r" #'exwm-reset
     :desc "Toggle floating layout" "t" #'exwm-floating-toggle-floating
     :desc "Workspace move window"  "w" #'exwm-workspace-move-window))
-
   :config
-  (defun my/exwm-async-run (name)
+  (defun lg/exwm-async-run (name)
     "Run a process asynchronously"
     (interactive)
     (start-process name nil name))
 
-  (defun my/run-or-raise-or-dismiss (program program-buffer-name)
+  (defun lg/run-or-raise-or-dismiss (program program-buffer-name)
     "If no instance of the program is running, launch the program.
 If an instance already exists, and its corresponding buffer is
 displayed on the screen, move to the buffer. If the buffer is not
@@ -471,6 +474,7 @@ firefox, it leaves fullscreen mode."
           ;; edited here
           (when
               (and (not (bound-and-true-p centaur-tabs-local-mode))
+                   (not (exwm-layout--fullscreen-p))
                    (or (bound-and-true-p centaur-tabs-mode)
                        (bound-and-true-p tab-line-mode)))
             (setq y (+ y centaur-tabs-height)))
@@ -482,32 +486,7 @@ firefox, it leaves fullscreen mode."
                 (delq xcb:Atom:_NET_WM_STATE_HIDDEN exwm--ewmh-state))
           (exwm-layout--set-ewmh-state id)
           (exwm-layout--auto-iconify)))
-      (xcb:flush exwm--connection))))
-#+end_src
-
-** Terminal
-
-Ansi-term, eshell and vterm are pretty decent, but EXWM makes it possible to use
-an /actual/ terminal emulator, which usually works better for some programs
-(curses for instance).
-
-#+begin_src emacs-lisp :tangle no
-(setq exwm-x-terminal-emulator "gnome-terminal")
-(defun my/invoke-x-terminal-emulator ()
-  "If external terminal emulator exists, switch to its buffer or
-else launch it."
-  (interactive)
-  (if (string= (buffer-name) "Gnome-terminal")
-      (bury-buffer)
-    (if (get-buffer "Gnome-terminal")
-        (exwm-workspace-switch-to-buffer "Gnome-terminal")
-      (my/exwm-async-run exwm-x-terminal-emulator))))
-
-(set-popup-rules!
-  '(("Gnome-terminal"
-     :vslot -5 :size 0.35 :select t :modeline t :quit nil)))
-
-(map! "<s-return>" #'my/invoke-x-terminal-emulator)
+      (xcb:flush exwm--connection)))
 #+end_src
 
 * Selectrum
