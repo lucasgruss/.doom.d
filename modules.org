@@ -515,32 +515,111 @@ else launch it."
 
 #+begin_src emacs-lisp :tangle ./modules/personal/selectrum/packages.el
 (package! selectrum
-  :recipe
-  (:host github :repo "raxod502/selectrum"))
+  :recipe (:host github
+           :repo "raxod502/selectrum"))
+
+(package! prescient
+  :recipe (:host github
+           :repo "raxod502/prescient.el"))
+
 (package! selectrum-prescient
-  :recipe
-  (:host github
-   :repo "raxod502/prescient.el"
-   :files ("selectrum-prescient.el")))
+  :recipe (:host github
+           :repo "raxod502/prescient.el"
+           :files ("selectrum-prescient.el")))
+
+(package! consult
+  :recipe (:host github
+           :repo "minad/consult"))
+
+(package! marginalia
+  :recipe (:host github
+           :repo "minad/marginalia"))
+
+(package! consult-selectrum
+  :recipe (:host github
+           :repo "minad/consult"
+           :files ("consult-selectrum.el")))
+
+(package! embark
+  :recipe (:host github
+           :repo "oantolin/embark"))
 #+end_src
 
 ** config.el
 
 #+begin_src emacs-lisp :tangle ./modules/personal/selectrum/config.el
 (use-package! selectrum
+  :init
+  (setq projectile-completion-system 'default)
   :config
-  (map! :map selectrum-minibuffer-map
-        "C-j" #'next-line
-        "C-k" #'previous-line
-        "C-l" #'selectrum-insert-current-candidate
-        "<backspace>" #'doom/delete-backward-word
-        "<ESC>" #'exit-minibuffer)
+  (setq selectrum-num-candidates-displayed 10)
+  (setq selectrum-fix-minibuffer-height nil)
+  (setq selectrum-display-action nil)
   (selectrum-mode +1))
 
-(use-package! selectrum-prescient
+(use-package! prescient
   :after selectrum
   :config
-  (selectrum-prescient-mode +1))
+  (prescient-persist-mode +1))
+
+(use-package! selectrum-prescient
+  :after (selectrum prescient)
+  :config
+  (selectrum-prescient-mode +1)
+  (map! (:map selectrum-minibuffer-map
+         "C-j" #'selectrum-next-candidate
+         "C-k" #'selectrum-previous-candidate
+         "C-l" #'selectrum-insert-current-candidate
+         "<ESC>" #'exit-minibuffer)))
+
+(use-package! marginalia
+  :init
+  (marginalia-mode)
+  (setq marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light)))
+
+(use-package! consult
+  :init
+  (map! :leader
+        ;; (:prefix ("h" . "help")
+        ;;  "t" #'consult-theme)
+        (:prefix ("f" . "files")
+         :desc "Recent files" "r" #'consult-recent-file)
+        (:prefix ("s" . "search")
+         "s" #'consult-line))
+  :config
+  (consult-preview-mode -1))
+
+(use-package! consult-selectrum
+  :after consult)
+
+(use-package embark
+  :config
+  (map! "s-;" #'embark-act)
+  ;; For Selectrum users:
+  (setq embark-action-indicator
+      (lambda (map)
+        (which-key--show-keymap "Embark" map nil nil 'no-paging)
+        #'which-key--hide-popup-ignore-command)
+      embark-become-indicator embark-action-indicator)
+
+  (defun current-candidate+category ()
+    (when selectrum-active-p
+      (cons (selectrum--get-meta 'category)
+            (selectrum-get-current-candidate))))
+
+  (add-hook 'embark-target-finders #'current-candidate+category)
+
+  (defun current-candidates+category ()
+    (when selectrum-active-p
+      (cons (selectrum--get-meta 'category)
+            (selectrum-get-current-candidates
+             ;; Pass relative file names for dired.
+             minibuffer-completing-file-name))))
+
+  (add-hook 'embark-candidate-collectors #'current-candidates+category)
+
+  ;; No unnecessary computation delay after injection.
+  (add-hook 'embark-setup-hook 'selectrum-set-selected-candidate))
 #+end_src
 
 * Matlab
