@@ -1058,15 +1058,6 @@ Pretty org bullet.
 ;;       :n "i" #'org-noter-insert-note))))
 #+end_src
 
-** Literal calc mode
-#+begin_src emacs-lisp :tangle config.el
-;; (use-package! literate-calc-mode
-;;   :disabled
-;;   :after org
-;;   :config
-;;   (literate-calc-minor-mode -1))
-#+end_src
-
 ** ox-report
 Create nice report for meetings.
 #+begin_src emacs-lisp :tangle config.el
