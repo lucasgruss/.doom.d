@@ -97,36 +97,36 @@ This is my doom block. What it contains is pretty self explanatory.
        company           ; the ultimate code completion backend
        ;;(helm +fuzzy +icons +childframe)              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
-       (ivy +icons +prescient +fuzzy) ; a search engine for love and life
+       ;(ivy +icons +prescient) ; a search engine for love and life
 
        :ui
        deft              ; notational velocity for Emacs
        doom              ; what makes DOOM look the way it does
-       doom-dashboard    ; a nifty splash screen for Emacs
+       ;;doom-dashboard    ; a nifty splash screen for Emacs
        doom-quit         ; DOOM quit-message prompts when you quit Emacs
        ;;fill-column       ; a `fill-column' indicator
        hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
-       hydra
+       ;;hydra
        indent-guides     ; highlighted indent columns
-       modeline         ; snazzy, Atom-inspired modeline, plus API
+       modeline        ; snazzy, Atom-inspired modeline, plus API
        nav-flash         ; blink the current line after jumping
        ;;neotree           ; a project drawer, like NERDTree for vim
        ophints           ; highlight the region an operation acts on
-       (popup +defaults +hacks)   ; tame sudden yet inevitable temporary windows
+       (popup +hacks)   ; tame sudden yet inevitable temporary windows
        ;;ligatures       ; ligatures or substitute text with pretty symbols
        ;;tabs              ; an tab bar for Emacs
        treemacs          ; a project drawer, like neotree but cooler
        ;;unicode           ; extended unicode support for various languages
-       vc-gutter         ; vcs diff in the fringe
-       vi-tilde-fringe   ; fringe tildes to mark beyond EOB
+       ;;vc-gutter         ; vcs diff in the fringe
+       ;;vi-tilde-fringe   ; fringe tildes to mark beyond EOB
        ;;window-select     ; visually switch windows
        ;;workspaces        ; tab emulation, persistence & separate workspaces
-       zen               ; distraction-free coding or writing
+       ;;zen               ; distraction-free coding or writing
 
        :editor
        (evil +everywhere); come to the dark side, we have cookies
        file-templates    ; auto-snippets for empty files
-       fold              ; (nigh) universal code folding
+       ;;fold              ; (nigh) universal code folding
        ;;(format +onsave)  ; automated prettiness
        ;;god               ; run Emacs commands without modifier keys
        ;;lispy             ; vim for lisp, for people who don't like vim
@@ -138,7 +138,7 @@ This is my doom block. What it contains is pretty self explanatory.
        ;;word-wrap         ; soft wrapping with language-aware indent
 
        :emacs
-       (dired +ranger +icons)   ; making dired pretty [functional]
+       (dired +icons)   ; making dired pretty [functional]
        electric          ; smarter, keyword-based electric-indent
        ibuffer         ; interactive buffer management
        vc                ; version-control and Emacs, sitting in a tree
@@ -147,10 +147,10 @@ This is my doom block. What it contains is pretty self explanatory.
        eshell            ; a consistent, cross-platform shell (WIP)
        ;;shell             ; a terminal REPL for Emacs
        ;;term              ; terminals in Emacs
-       vterm             ; another terminals in Emacs
+       ;;vterm             ; another terminals in Emacs
 
        :checkers
-       syntax              ; tasing you for every semicolon you forget
+       ;syntax              ; tasing you for every semicolon you forget
        ;;spell             ; tasing you for misspelling mispelling
        ;;grammar           ; tasing grammar mistake every you make
 
@@ -168,7 +168,7 @@ This is my doom block. What it contains is pretty self explanatory.
        ;;macos             ; MacOS-specific commands
        magit             ; a git porcelain for Emacs
        make              ; run make tasks from Emacs
-       pass              ; password manager for nerds
+       ;;pass              ; password manager for nerds
        pdf               ; pdf enhancements
        ;;prodigy           ; FIXME managing external services & code builders
        ;;rgb               ; creating color strings
@@ -206,14 +206,14 @@ This is my doom block. What it contains is pretty self explanatory.
        latex             ; writing papers in Emacs has never been so fun
        ;;lean
        ;;factor
-       ;;ledger            ; an accounting system in Emacs
+       ledger            ; an accounting system in Emacs
        lua               ; one-based indices? one-based indices
        markdown          ; writing docs for people to ignore
        matlab
        ;;nim               ; python + lisp at the speed of c
        ;;nix               ; I hereby declare "nix geht mehr!"
        ;;ocaml             ; an objective camel
-       (org +roam +noter +present +pretty)               ; organize your plain life in plain text
+       (org +roam +noter +pretty)               ; organize your plain life in plain text
        ;;perl              ; write code no one else can comprehend
        ;;php               ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more
@@ -235,7 +235,7 @@ This is my doom block. What it contains is pretty self explanatory.
        ;;web               ; the tubes
 
        :email
-       (mu4e +gmail)
+       ;;(mu4e +gmail)
        ;;notmuch
        ;;(wanderlust +gmail)
 
@@ -251,61 +251,91 @@ This is my doom block. What it contains is pretty self explanatory.
 
        :personal
        exwm
-   ;;    selectrum
-       )
+       selectrum)
 #+end_src
 
 ** packages.el
 #+begin_src emacs-lisp :tangle packages.el
-;;(package! modus-vivendi-theme)
-;;(package! modus-operandi-theme)
+;; -*- no-byte-compile: t; -*-
+(package! modus-themes)
 (package! theme-magic)
-(package! explain-pause-mode
-  :recipe (:host github
-           :repo "lastquestion/explain-pause-mode"))
+;; (package! explain-pause-mode
+;;   :recipe (:host github
+;;            :repo "lastquestion/explain-pause-mode"))
 (package! windower)
-(package! svg-tag-mode
-  :recipe (:host github
-           :repo "rougier/svg-tag-mode"))
+;; (package! svg-tag-mode
+;;   :recipe (:host github
+;;            :repo "rougier/svg-tag-mode"))
 (package! counsel-spotify)
 (package! counsel-ffdata)
 (package! ivy-youtube)
 (package! ivy-yasnippet)
+(package! ivy-explorer)
 (package! solaire-mode :disable t)
 (package! rg)
 (package! zoom)
-(package! hyperbole)
-(package! calfw
-  :recipe (:host github
-           :repo "kiwanami/emacs-calfw"))
-(package! calfw-org
-  :recipe (:host github
-           :repo "kiwanami/emacs-calfw"))
+;; (package! hyperbole)
+;; (package! calfw
+;;   :recipe (:host github
+;;            :repo "kiwanami/emacs-calfw"))
+;; (package! calfw-org
+;;   :recipe (:host github
+;;            :repo "kiwanami/emacs-calfw"))
 (package! org-tree-slide)
 (package! org-superstar)
 (package! org-sidebar)
-(package! literate-calc-mode)
-(package! framemove
-  :recipe (:host github
-           :repo "emacsmirror/emacswiki.org"
-           :files ("framemove.el")))
-(package! w3m)
-(package! evil-tutor)
-(package! pdf-continuous-scroll-mode
-  :recipe (:host github
-           :repo "dalanicolai/pdf-continuous-scroll-mode.el"))
+(package! org-emms)
+;; (package! org-ref)
+(package! ox-report)
+;; (package! literate-calc-mode)
+;; (package! framemove
+;;   :recipe (:host github
+;;            :branch "master"
+;;            :repo "emacsmirror/emacswiki.org"
+;;            :files ("framemove.el")))
+;; (package! w3m)
+;; (package! pdf-continuous-scroll-mode
+;;   :recipe (:host github
+;;            :repo "dalanicolai/pdf-continuous-scroll-mode.el"))
 (package! emms)
 (package! ivy-emms)
-(package! org-emms)
-(package! ytel)
+;; (package! ytel)
 (package! company-prescient)
 (package! spotify
   :recipe (:host github
            :repo "danielfm/spotify.el"))
 (package! centaur-tabs)
+;; (package! minibuffer-statusbar
+;;   :recipe (:host github
+;;            :repo "akirakyle/minibuffer-statusbar"))
+(package! posframe)
+(package! fast-scroll
+  :recipe (:host github
+           :repo "ahungry/fast-scroll"))
+                                        ;(package! monkeytype)
+(package! hercules)
+(package! windresize)
+(package! edwina)
+(package! scroll-on-jump
+  :recipe (:host gitlab
+           :repo "ideasman42/emacs-scroll-on-jump"))
+(package! good-scroll
+  :recipe (:host github
+           :repo "io12/good-scroll.el"))
+(package! fish-completion
+  :recipe (:host gitlab
+           :repo "ambrevar/emacs-fish-completion"))
+(package! olivetti)
 #+end_src
 
 * Theme
+** All the icons
+#+begin_src emacs-lisp :tangle config.el :results no
+(after! all-the-icons
+  (add-to-list 'all-the-icons-mode-icon-alist
+               '(exwm-mode  all-the-icons-faicon "toggle-on"   :height 1.0 :v-adjust -0.2 :face all-the-icons-green)))
+#+end_src
+
 ** modus themes
 #+begin_src emacs-lisp :tangle config.el
 (use-package modus-themes
