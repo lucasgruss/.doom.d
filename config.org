@@ -8,41 +8,61 @@
   - [[#initel][init.el]]
   - [[#packagesel][packages.el]]
 - [[#theme][Theme]]
+  - [[#all-the-icons][All the icons]]
+  - [[#modus-themes][modus themes]]
   - [[#theme-choice][Theme choice]]
   - [[#modeline][Modeline]]
   - [[#theme-magic][Theme magic]]
+  - [[#fringes][fringes]]
 - [[#window-management][Window management]]
+  - [[#popups][Popups]]
   - [[#zoom-mode][Zoom mode]]
   - [[#windmove][Windmove]]
   - [[#framemove][Framemove]]
   - [[#windower][Windower]]
+  - [[#windresize][Windresize]]
+  - [[#edwina][Edwina]]
+- [[#tabs][Tabs]]
+  - [[#tab-bar-mode][Tab-bar-mode]]
+  - [[#centaur-tabs][Centaur tabs]]
 - [[#convenience][Convenience]]
   - [[#which-key][Which-key]]
+  - [[#hercules][Hercules]]
   - [[#deft][Deft]]
+  - [[#fast-scroll-mode][Fast scroll mode]]
+  - [[#scroll-on-jump][Scroll on jump]]
+  - [[#good-scroll][good scroll]]
+- [[#mouse-support][Mouse support]]
 - [[#hyperbole][Hyperbole]]
 - [[#org-mode][Org mode]]
+  - [[#performance][Performance]]
   - [[#latex][Latex]]
-  - [[#calfw][Calfw]]
   - [[#org-sidebar][Org-sidebar]]
   - [[#org-superstar][Org-superstar]]
   - [[#presentation-mode][Presentation mode]]
   - [[#org-noter][Org-noter]]
+  - [[#ox-report][ox-report]]
+  - [[#org-ref][org-ref]]
 - [[#pdf][PDF]]
   - [[#pdf-tools][pdf-tools]]
+  - [[#continuous-scrolling][Continuous scrolling]]
 - [[#completions][Completions]]
+  - [[#company][Company]]
   - [[#ivy][Ivy]]
-  - [[#counsel][Counsel]]
-  - [[#ivy-posframe][Ivy-posframe]]
-  - [[#ivy-spotify][Ivy-Spotify]]
-  - [[#ivy-yasnippet][Ivy-yasnippet]]
-  - [[#orderless][Orderless]]
+- [[#multimedia][Multimedia]]
+  - [[#emms][Emms]]
+  - [[#video][Video]]
+  - [[#ytel][ytel]]
 - [[#elfeed][Elfeed]]
 - [[#ripgrep][Ripgrep]]
 - [[#treemacs][Treemacs]]
 - [[#terminal][Terminal]]
+  - [[#vterm][Vterm]]
+  - [[#eshell][eshell]]
+  - [[#fish-completion][fish completion]]
+- [[#olivetti-mode][Olivetti mode]]
 - [[#browsing-the-internet][Browsing the internet]]
   - [[#eww][Eww]]
-  - [[#w3m][w3m]]
 - [[#keybindings][Keybindings]]
   - [[#evil-mode][Evil mode]]
   - [[#misc][Misc]]
@@ -1300,26 +1320,16 @@ even cooler !
   (async-shell-command (format "mpv %s --no-video" url)
                        (format "*mpv %s*" url))
   (switch-to-buffer-other-window (format "*mpv %s*" url)))
+ #+END_SRC
 
-;; (defun mpv-a-open (url)
-;;   "Listen to a video from URL in MPV"
-;;   (start-process "*mpv*"
-;;                  (format "*mpv %s*" url)
-;;                  "mpv"
-;;                  "--no-video"
-;;                  url
-;;                  ;(format "%s --no-video" url)
-;;                  )
-;;   (switch-to-buffer-other-window (format "*mpv %s*" url)))
-#+END_SRC
+** ytel
 
-* ytel
-Ytel is a youtube frontend for Emacs. It is a rather new tool as of writing
-these lines. It uses the invidious api (calling it through =curl=), and an
-instance of the API has to be chosen. Instances might come and go, so it might
-be necessary to check [[github:iv-org/invidious/wiki/Invidious-Instances][the available instances]].
+ Ytel is a youtube frontend for Emacs. It is a rather new tool as of writing
+ these lines. It uses the invidious api (calling it through =curl=), and an
+ instance of the API has to be chosen. Instances might come and go, so it might
+ be necessary to check [[github:iv-org/invidious/wiki/Invidious-Instances][the available instances]].
 
-#+begin_src emacs-lisp :tangle config.el
+ #+begin_src emacs-lisp :tangle config.el
 (use-package! ytel
   :commands (ytel)
   :hook (ytel-mode . (lambda () (interactive) (evil-snipe-local-mode -1)))
