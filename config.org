@@ -268,40 +268,18 @@ This is my doom block. What it contains is pretty self explanatory.
 (package! solaire-mode :disable t)
 (package! rg)
 (package! zoom)
-;; (package! hyperbole)
-;; (package! calfw
-;;   :recipe (:host github
-;;            :repo "kiwanami/emacs-calfw"))
-;; (package! calfw-org
-;;   :recipe (:host github
-;;            :repo "kiwanami/emacs-calfw"))
 (package! org-tree-slide)
 (package! org-superstar)
 (package! org-sidebar)
 (package! org-emms)
-;; (package! org-ref)
 (package! ox-report)
-;; (package! literate-calc-mode)
-;; (package! framemove
-;;   :recipe (:host github
-;;            :branch "master"
-;;            :repo "emacsmirror/emacswiki.org"
-;;            :files ("framemove.el")))
-;; (package! w3m)
-;; (package! pdf-continuous-scroll-mode
-;;   :recipe (:host github
-;;            :repo "dalanicolai/pdf-continuous-scroll-mode.el"))
 (package! emms)
 (package! ivy-emms)
-;; (package! ytel)
 (package! company-prescient)
 (package! spotify
   :recipe (:host github
            :repo "danielfm/spotify.el"))
 (package! centaur-tabs)
-;; (package! minibuffer-statusbar
-;;   :recipe (:host github
-;;            :repo "akirakyle/minibuffer-statusbar"))
 (package! posframe)
 (package! fast-scroll
   :recipe (:host github
@@ -923,7 +901,8 @@ Hyperbole is basically hypertext everywhere. Hyperbole understands context and
 can call the appropriate action on a piece of text.
 
 #+begin_src emacs-lisp :tangle config.el
-(use-package! hyperbole)
+(use-package! hyperbole
+  :disabled)
 #+end_src
 
 * Org mode
@@ -944,19 +923,11 @@ can call the appropriate action on a piece of text.
 ;;                                     ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 #+end_src
 
-** Calfw
-
-#+begin_src emacs-lisp :tangle no
-(use-package! calfw
-  :after org)
-(use-package! calfw-org
-  :after calfw)
-#+end_src
-
 ** Org-sidebar
 
 #+begin_src emacs-lisp :tangle no
 (use-package! org-sidebar
+  :disabled
   :after org)
 #+end_src
 
@@ -966,6 +937,7 @@ Pretty org bullet.
 #+begin_src emacs-lisp :tangle config.el
 (use-package! org-superstar              ; supersedes `org-bullets'
   :after org
+  :disabled
   :config
   (setq org-superstar-remove-leading-stars t)
   (setq org-superstar-headline-bullets-list
@@ -1060,10 +1032,25 @@ Pretty org bullet.
 
 ** Literal calc mode
 #+begin_src emacs-lisp :tangle config.el
-(use-package! literate-calc-mode
-  :after org
-  :config
-  (literate-calc-minor-mode -1))
+;; (use-package! literate-calc-mode
+;;   :disabled
+;;   :after org
+;;   :config
+;;   (literate-calc-minor-mode -1))
+#+end_src
+
+** ox-report
+Create nice report for meetings.
+#+begin_src emacs-lisp :tangle config.el
+(use-package! ox-report
+  :disabled)
+#+end_src
+
+** org-ref
+#+begin_src emacs-lisp :tangle config.el
+(use-package! org-ref
+  :disabled
+  :after org)
 #+end_src
 
 * PDF
@@ -1073,9 +1060,10 @@ Pretty org bullet.
 #+end_src
 
 ** Continuous scrolling
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
 (use-package! pdf-continuous-scroll-mode
   :after pdf-tools
+  :disabled
   :init
   (setq pdf-continuous-scroll-mode-map (make-sparse-keymap))
   ;; (map!
@@ -1199,23 +1187,24 @@ even cooler !
   :config
   (cl-defmethod counsel-spotify-do-play ((backend counsel-spotify-linux-backend) (something (eql nil)))
     nil))
-#+end_src
+ #+end_src
 
-** Ivy-emms
-#+begin_src emacs-lisp :tangle config.el
+*** Ivy-emms
+ #+begin_src emacs-lisp :tangle config.el
 (use-package! ivy-emms
+  :disabled
   :after emms)
-#+end_src
+ #+end_src
 
-Emms is a huge package that helps you manage your media files like movies,
-music, playlists and streams. You need an external player to play the media
-since Emacs is not capable of such feature. My player of choice is =mpv=, along
-with youtube-dl for content hosted on youtube.
-
+* Multimedia
 ** Emms
+ Emms is a huge package that helps you manage your media files like movies,
+ music, playlists and streams. You need an external player to play the media
+ since Emacs is not capable of such feature. My player of choice is =mpv=, along
+ with youtube-dl for content hosted on youtube.
 *** General configuration
 
-#+begin_src emacs-lisp :tangle config.el
+ #+begin_src emacs-lisp :tangle config.el
 (use-package! emms
   :commands (emms-streams)
   :init
@@ -1239,12 +1228,12 @@ with youtube-dl for content hosted on youtube.
   :config
   (emms-all)
   (emms-default-players))
-#+end_src
+ #+end_src
 
 *** Streams
-Here is the file that contains all the streams that I listen to (radios), all
-defined here and tangled to the right file.
-#+begin_src emacs-lisp :tangle emms/streams.emms
+ Here is the file that contains all the streams that I listen to (radios), all
+ defined here and tangled to the right file.
+ #+begin_src emacs-lisp :tangle emms/streams.emms
 ;;; This is an EMMS playlist file
 ;; This includes the built-in list of streams which come with Emms by
 ;; default. Emms has no affiliation of any kind with the streaming
@@ -1274,11 +1263,11 @@ defined here and tangled to the right file.
 (*track* (type . streamlist) (name . "http://199.244.85.125:8000/wxhq1") (metadata "WXHQ-LP - Newport Radio" "http://199.244.85.125:8000/wxhq1" 1 streamlist))
 (*track (type . url) (name . "http://direct.franceinter.fr/live/franceinter-lofi.mp3"))
 (*track (type . url) (name . "http://direct.franceinter.fr/live/franceinter-midfi.mp3")))
-#+end_src
+ #+end_src
 
-* Video
-Mpv helper functions
-#+BEGIN_SRC elisp :tangle config.el
+** Video
+ Mpv helper functions
+ #+BEGIN_SRC elisp :tangle config.el
 (defun mpv-v-open (url)
   "Watch a video from URL in MPV"
   (async-shell-command (format "mpv %s" url)
