@@ -1471,13 +1471,10 @@ documentation, as you can easily copy and paste the snippets to your project.
 
 * Keybindings
 ** Evil mode
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle config.el
 (after! evil
-  (progn
-    (map! :n
-          "C-e" #'end-of-line)))
-
-(use-package! evil-tutor)
+  (map! :n
+        "C-e" #'end-of-line))
 #+end_src
 
 ** Misc
