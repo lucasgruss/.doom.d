@@ -298,6 +298,7 @@ This is my doom block. What it contains is pretty self explanatory.
   :recipe (:host gitlab
            :repo "ambrevar/emacs-fish-completion"))
 (package! olivetti)
+(package! ytel)
 #+end_src
 
 * Theme
@@ -1360,13 +1361,8 @@ be necessary to check [[github:iv-org/invidious/wiki/Invidious-Instances][the av
       (kill-new url)
       (message "Copied RSS feed for: %s -- %s" author url)))
 
-  (setq! ytel-invidious-api-url "https://invidious.snopyta.org")
-  ;; (setq! ytel-invidious-api-url "https://invidious.fdn.fr")
-  ;; (setq! ytel-invidious-api-url "https://invidious.us")
-  ;; (setq! ytel-invidious-api-url "https://yewtu.be")
-  ;; (setq! ytel-invidious-api-url "https://tube.connect.cafe")
-  )
-#+end_src
+  (setq! ytel-invidious-api-url "https://invidious.snopyta.org"))
+ #+end_src
 
 * Elfeed
 
