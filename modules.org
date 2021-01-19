@@ -51,22 +51,22 @@ Type=application
 
 Media keys need to be explicitely bound, as we might not use EXWM in a DE.
 #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
-(defun my/volume-down ()
+(defun lg/volume-down ()
   "Lower volume of the computer"
   (interactive)
   (shell-command "~/scripts/volume.sh down"))
 
-(defun my/volume-up ()
+(defun lg/volume-up ()
   "Increase volume of the computer"
   (interactive)
   (shell-command "~/scripts/volume.sh up"))
 
-(defun my/brightness-down ()
+(defun lg/brightness-down ()
   "Lower brightness of the screen"
   (interactive)
   (shell-command "xbacklight -dec 10"))
 
-(defun my/brightness-up ()
+(defun lg/brightness-up ()
   "Increase brightness of the screen"
   (interactive)
   (shell-command "xbacklight -inc 10"))
@@ -74,10 +74,9 @@ Media keys need to be explicitely bound, as we might not use EXWM in a DE.
 
 ** Mouse
 #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
-;; (defun my/exwm-floating-resize (drag-event)
+;; (defun lg/exwm-floating-resize (drag-event)
 ;;   (interactive "e")
 ;;   )
-(setq! exwm-input-resize-event )
 (map! "<mode-line> <double-mouse-3>" #'exwm-floating-toggle-floating)
       ;;"<top-left-corner> <mouse-1>" #'exwm-)
 
@@ -90,29 +89,25 @@ EXWM has built in support for multi-monitor.
 (use-package! exwm-randr
   :config
   ;;(setq! exwm-randr-workspace-output-plist '(1 "VGA1"))
-  (setq! exwm-randr-workspace-output-plist '(1 "DP2" 2 "DP2"))
+  (setq! exwm-randr-workspace-monitor-plist '(0 "eDP-1" 1 "DP-2"))
   (setq! exwm-randr-screen-change-hook nil)
-  (add-hook 'exwm-randr-screen-change-hook
-            (lambda ()
-              (start-process-shell-command
-               "xrandr" nil "xrandr --output DP2 --left-of eDP1")))
-               ;;"xrandr" nil "xrandr --output VGA1 --left-of LVDS1")))
+  (defun lg/setup-screens ()
+    (start-process-shell-command
+     "xrandr" nil "sh ~/.screenlayout/arandr.layout.sh"))
+ ;; xrandr --output DP2 --left-of eDP1"))
+  (add-hook 'exwm-randr-screen-change-hook #'lg/setup-screens)
   (exwm-randr-enable))
 #+end_src
 
 ** EXWM-Systemtray
 
-It's nice to have a systray, and there is nothing wrong with exwm-systray, but
-since I am using XFCE and the XFCE-panel is just [insert chef's kiss], I don't
-use it any longer.
-
 #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
 (use-package! exwm-systemtray
   :disabled
   :config
-  (setq! exwm-systemtray-height 15)
-  ;;exwm-systemtray-icon-gap 3)
-  ;;exwm-systemtray-background-color 'black)
+  (setq! exwm-systemtray-height 18
+         exwm-systemtray-icon-gap 3
+         exwm-systemtray-background-color "black")
   (exwm-systemtray-enable))
 #+end_src
 
@@ -164,24 +159,23 @@ buffer (=minimizing in other WM/DE)"
                   (select-window (display-buffer program-buffer-name) nil)
                 (exwm-workspace-switch-to-buffer program-buffer-name)))
           ;; start program
-         (progn
-          (my/exwm-async-run program)
-          (message (format "Launching %s" program)))))))
+          (progn
+            (lg/exwm-async-run program)
+            (message (format "Launching %s" program)))))))
 
-  (defun my/run-or-raise-or-dismiss-firefox ()
+  (defun lg/run-or-raise-or-dismiss-firefox ()
     (interactive)
-    (my/run-or-raise-or-dismiss "firefox" "Firefox")
-    (exwm-input--fake-key 'f11))
+    (lg/run-or-raise-or-dismiss "firefox" "Firefox-esr"))
 
-  (defun my/run-or-raise-or-dismiss-spotify ()
+  (defun lg/run-or-raise-or-dismiss-spotify ()
     (interactive)
-    (my/run-or-raise-or-dismiss "spotify" "Spotify"))
+    (lg/run-or-raise-or-dismiss "spotify" "Spotify"))
 
-  (defun my/run-or-raise-or-dismiss-thunderbird ()
+  (defun lg/run-or-raise-or-dismiss-thunderbird ()
     (interactive)
-    (my/run-or-raise-or-dismiss "thunderbird" "Thunderbird"))
+    (lg/run-or-raise-or-dismiss "thunderbird" "thunderbird"))
 
-  (defun my/toggle-line-char-modes ()
+  (defun lg/toggle-line-char-modes ()
     "If on a EXWM buffer, toggle 'line' or 'char'"
     (interactive)
     (if exwm-window-type
@@ -189,62 +183,81 @@ buffer (=minimizing in other WM/DE)"
             (call-interactively #'exwm-input-release-keyboard) ; switch to char mode
           (call-interactively #'exwm-input-grab-keyboard)))) ; switch to line mode
 
-  (defun my/toggle-panel ()
-    (interactive)
-    (shell-command "cd && pgrep xfce4-panel && xfce4-panel -q || xfce4-panel &"))
-
-  (defun my/lock-screen ()
+  (defun lg/lock-screen ()
     "Lock screen with slock"
     (interactive)
     (start-process "" nil "/usr/local/bin/slock"))
 
-  (add-hook 'exwm-update-class-hook
+  (defun efs/run-in-background (command)
+    (let ((command-parts (split-string command "[ ]+")))
+      (apply #'call-process `(,(car command-parts) nil 0 nil ,@(cdr command-parts)))))
+
+  (defvar efs/polybar-process nil
+    "Holds the process of the running Polybar instance, if any")
+
+  (defun efs/kill-panel ()
+    (interactive)
+    (when efs/polybar-process
+      (ignore-errors
+        (kill-process efs/polybar-process)))
+    (setq efs/polybar-process nil))
+
+  (defun efs/start-panel ()
+    (interactive)
+    (efs/kill-panel)
+    (setq efs/polybar-process (start-process-shell-command "polybar" nil "polybar panel")))
+
+  (defun lg/exwm-init-hook ()
+    (shell-command "setxkbmap gb -variant extd -option ctrl:nocaps")
+    (shell-command "xset r rate 300 40")
+    (shell-command "killall pasystray")
+    (shell-command "killall compton")
+    (efs/run-in-background "pasystray")
+    (efs/run-in-background "compton")
+    (efs/start-panel))
+
+  (add-hook 'exwm-init-hook #'lg/exwm-init-hook)
+
+  (defun lg/exwm-update-title-hook ()
+    "Hook to be ran when window title is updated"
+    (exwm-workspace-rename-buffer exwm-class-name))
+
+  (add-hook 'exwm-update-title-hook #'lg/exwm-update-title-hook)
+
+  ;; disable tab bar for floating frames
+  (add-hook 'exwm-floating-setup-hook
             (lambda ()
-              (exwm-workspace-rename-buffer exwm-class-name)))
-                                        ;(add-hook 'exwm-manage-finish-hook 'exwm-layout-hide-mode-line)
+              (toggle-tab-bar-mode-from-frame -1)))
 
   (setq exwm-input-global-keys
-        `(;; EXWM
-          ([S-s-backspace] . exwm-workspace-delete)
+        `(([S-s-backspace] . exwm-workspace-delete)
           ([?\s-f] . exwm-layout-toggle-fullscreen)
           ([?\s-R] . exwm-reset)
           ([?\s-w] . exwm-utils-workspace-switch-cyclically)
           ([?\s-W] . exwm-utils-workspace-move-cyclically)
-          ;; Bind "s-0" to "s-9" to switch to a workspace by its index.
-          ,@(mapcar (lambda (i)
-                      `(,(kbd (format "s-%d" i)) .
-                        (lambda ()
-                          (interactive)
-                          (exwm-workspace-switch-create ,i))))
-                    (number-sequence 0 9))
-          ([?\s-!] . (lambda () (interactive) (exwm-workspace-move-window 1)))
-          ([?\s-\"] . (lambda () (interactive) (exwm-workspace-move-window 2)))
-          ([?\s-£] . (lambda () (interactive) (exwm-workspace-move-window 3)))
-          ([?\s-$] . (lambda () (interactive) (exwm-workspace-move-window 4)))
-          ([?\s-%] . (lambda () (interactive) (exwm-workspace-move-window 5)))
-          ([?\s-^] . (lambda () (interactive) (exwm-workspace-move-window 6)))
-          ([?\s-&] . (lambda () (interactive) (exwm-workspace-move-window 7)))
-          ([?\s-*] . (lambda () (interactive) (exwm-workspace-move-window 8)))
-          ([?\s-\(] . (lambda () (interactive) (exwm-workspace-move-window 9)))
-          ([?\s-\)] . (lambda () (interactive) (exwm-workspace-move-window 0)))
-          ([?\s-b] . counsel-switch-buffer)
-          ([?\s-B] . bury-buffer)
-          ([?\s-&] . (lambda (command) (interactive (list (read-shell-command "$ ")))
+          ([?\s-\'] . consult-buffer)
+          ([?\s-\@] . ibuffer)
+          ([?\s-b] . bury-buffer)
+          ([?\s-&] . (lambda (command)
+                       (interactive (list (read-shell-command "Run a command: ")))
                        (start-process-shell-command command nil command)))
-          ([s-f2]  . my/lock-screen)
+          ([s-f2]  . lg/lock-screen)
           ([?\s-d] . counsel-linux-app)
-          ([?\s-i] . my/run-or-raise-or-dismiss-firefox)
-          ([?\s-t] . my/run-or-raise-or-dismiss-thunderbird)
-          ([?\s-s] . my/run-or-raise-or-dismiss-spotify)
-          ([?\s-u] . my/toggle-line-char-modes)
+          ([?\s-i] . lg/run-or-raise-or-dismiss-firefox)
+          ([?\s-t] . lg/run-or-raise-or-dismiss-thunderbird)
+          ([?\s-s] . lg/run-or-raise-or-dismiss-spotify)
+          ([?\s-u] . lg/toggle-line-char-modes)
           ([s-return] . +eshell/toggle)
-          ([?\s-e] . +eshell/toggle)
-          ;([s-backspace] . my/kill-this-buffer)
-          ([s-escape] . my/kill-this-buffer)
+          ([s-escape] . lg/kill-this-buffer)
+          ([?\s-/]  . centaur-tabs-mode)
           ([?\s-m]  . centaur-tabs-backward)
           ([?\s-,]  . centaur-tabs-forward)
+          ([?\s-?]  . tab-bar-mode)
           ([?\s-M]  . tab-previous)
           ([?\s-<]  . tab-next)
+          ([?\s-O]  . exwm-outer-gaps-mode)
+          ([?\s-p]  . exwm-outer-gaps-increment)
+          ([?\s-y]  . exwm-outer-gaps-decrement)
           ;; Everything window
           ([?\s-q] . evil-window-delete)
           ([?\s-v] . split-window-horizontally)
@@ -262,34 +275,41 @@ buffer (=minimizing in other WM/DE)"
           ([?\s-k] . windmove-up)    ([?\s-K] . windower-swap-above)
           ([?\s-l] . windmove-right) ([?\s-L] . windower-swap-right)
           ;; Media keys
-          ([XF86MonBrightnessUp]   . my/brightness-up)
-          ([XF86MonBrightnessDown] . my/brightness-down)
-          ([XF86AudioRaiseVolume]  . my/volume-up)
-          ([XF86AudioLowerVolume]  . my/volume-down))
+          ([XF86MonBrightnessUp]   . lg/brightness-up)
+          ([XF86MonBrightnessDown] . lg/brightness-down)
+          ([XF86AudioRaiseVolume]  . lg/volume-up)
+          ([XF86AudioLowerVolume]  . lg/volume-down))
         exwm-workspace-show-all-buffers t
-        exwm-workspace-number 1
+        exwm-layout-show-all-buffers t
+        exwm-workspace-number 2
         exwm-workspace-minibuffer-position nil
         exwm-workspace-display-echo-area-timeout 1)
 
-  (setq! exwm-manage-configurations
-         '(((equal "Whisker Menu" exwm-title)
-            ;;floating t
-            x 0
-            y 0
-            width 300
-            height 400
-            fullscreen nil
-            ;;char-mode t
-            managed t
-            )))
+  ;; (setq! exwm-manage-configurations
+  ;;        '(((equal "Firefox-esr" exwm-class-name)
+  ;;           ;;floating t
+  ;;           fullscreen nil
+  ;;           tiling-mode-line nil
+  ;;           ;;char-mode t
+  ;;           managed t)))
 
   (push (aref (kbd "<escape>") 0) exwm-input-prefix-keys)
   (push (aref (kbd "<return>") 0) exwm-input-prefix-keys)
-  (exwm-enable)
+
   ;; relaunch the panel so that it auto-hide correctly
   (load "~/.doom.d/exwm-utils.el")
-  (shell-command "xfce4-panel --restart"))
+                                        ;(shell-command "xfce4-panel --restart")
+  (exwm-enable))
   #+end_src
+
+** EXWM-outer-gaps
+
+ #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
+(use-package exwm-outer-gaps
+  :after (exwm xelb)
+  :config
+  (exwm-outer-gaps-mode +1))
+#+end_src
 
 ** EXWM-Firefox
 
@@ -301,10 +321,11 @@ enabling new tabs within new windows and have emacs handle all windows with iBuf
 #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
 (use-package! exwm-firefox-evil
   :hook ((exwm-manage-finish . exwm-firefox-evil-activate-if-firefox)
-         ;; (exwm-manage-finish . my/exwm-firefox-force-fullscreen)
-         (exwm-firefox-evil-mode . my/exwm-firefox-hook))
+         ;; (exwm-manage-finish . lg/exwm-firefox-force-fullscreen)
+         (exwm-firefox-evil-mode . lg/exwm-firefox-hook))
+  :init
+  (setq exwm-firefox-evil-firefox-class-name '("Firefox" "Firefox-esr" "Nightly" "Iceweasel" "Icecat"))
   :config
-  (setq exwm-firefox-evil-class-name '("Firefox" "Firefox-esr"))
   (defun exwm-input--on-ButtonPress-line-mode (buffer button-event)
     "Handle button events in line mode.
 BUFFER is the `exwm-mode' buffer the event was generated
@@ -326,7 +347,7 @@ button event."
           ;; The event should be replayed
           xcb:Allow:ReplayPointer))))
 
-  (defun my/exwm-firefox-force-fullscreen ()
+  (defun lg/exwm-firefox-force-fullscreen ()
     "Send F11 to firefox to always be in full screen.
 
 Whenever you switch to another window and then come back to
@@ -334,18 +355,18 @@ firefox, it leaves fullscreen mode."
     (interactive)
     (exwm-input--fake-key 'f11))
 
-  (defun my/exwm-firefox-toggle-tree-tab ()
+  (defun lg/exwm-firefox-toggle-tree-tab ()
     "Toggle the tree tab extension"
     (interactive)
     (exwm-input--fake-key 'f1))
 
-  (defun my/exwm-firefox-hook ()
+  (defun lg/exwm-firefox-hook ()
     "Sets firefox how I like it"
     (interactive)
     (when exwm-firefox-evil-mode
-      (my/exwm-firefox-toggle-tree-tab)))
+      (lg/exwm-firefox-toggle-tree-tab)))
 
-  (defun my/exwm-firefox-hint ()
+  (defun lg/exwm-firefox-hint ()
     "Highlights hints on the page."
     (interactive)
     (exwm-input--fake-key 'C-m)
@@ -365,15 +386,16 @@ firefox, it leaves fullscreen mode."
       (setq-local exwm-firefox-next-ret-normal nil)))
 
   (advice-add #'exwm-firefox-core-tab-new :after #'exwm-firefox-intercept-next-ret)
-  (advice-add #'my/exwm-firefox-hint :after #'exwm-firefox-intercept-next-ret)
+  (advice-add #'lg/exwm-firefox-hint :after #'exwm-firefox-intercept-next-ret)
   (advice-add #'exwm-firefox-core-focus-search-bar :after #'exwm-firefox-intercept-next-ret)
   (advice-add #'exwm-firefox-core-quick-find :after #'exwm-firefox-intercept-next-ret)
 
 
   (define-key! 'normal exwm-firefox-evil-mode-map
-    "f" #'my/exwm-firefox-hint
-    "F" #'my/exwm-firefox-force-fullscreen
-    "T" #'my/exwm-firefox-toggle-tree-tab
+    "t" #'exwm-firefox-core-tab-new
+    "f" #'lg/exwm-firefox-hint
+    "F" #'lg/exwm-firefox-force-fullscreen
+    "T" #'lg/exwm-firefox-toggle-tree-tab
     "q" #'exwm-input-send-next-key
     "<return>" #'exwm-firefox-intercept-return)
 
@@ -394,7 +416,7 @@ firefox, it leaves fullscreen mode."
   :after exwm-firefox-evil
   :config
   ;; I have different keybinding in firefox for tabdetach-attach : M-S-t
-  (defun my/exwm-firefox-attach ()
+  (defun lg/exwm-firefox-attach ()
     "Attach the current tab into its parent window.
 
    This requires the tabdetach extension to work."
@@ -402,17 +424,16 @@ firefox, it leaves fullscreen mode."
     (exwm-input--fake-key ?\M-\S-T))
 
   (define-key! 'normal exwm-firefox-evil-mode-map
-    "A" #'my/exwm-firefox-attach
+    "A" #'lg/exwm-firefox-attach
     "D" #'exwm-firefox-split-detach
     "M" #'exwm-firefox-merge)
   ;; I don't like renaming the name of the firefox window
   (remove-hook 'exwm-update-title-hook 'exwm-firefox--update-title))
 #+end_src
 
-** Tab-line fix
+** Tab-line/Centaur-tabs fix
 #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
-(after! exwm-layout
-  (progn
+(after! exwm
     (defun exwm-layout--show (id &optional window)
       "Show window ID exactly fit in the Emacs window WINDOW."
       (exwm--log "Show #x%x in %s" id window)
