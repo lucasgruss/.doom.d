@@ -808,9 +808,6 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
   (centaur-tabs-mode +1))
 #+end_src
 
-#+RESULTS:
-: t
-
 * Convenience
 #+begin_src emacs-lisp :tangle config.el
 ;(server-start)
@@ -1116,36 +1113,51 @@ Create nice report for meetings.
 #+end_src
 
 * Completions
+** Company
+*** Company-prescient
+    #+begin_src emacs-lisp :tangle config.el
+     (use-package! company-prescient
+       :after company
+       :config
+       (company-prescient-mode +1))
+    #+end_src
 ** Ivy
 
-#+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle no
 (after! ivy
-  (progn
-    (setq ivy-re-builders-alist
-          '((counsel-ffdata-firefox-history . +ivy-prescient-non-fuzzy)
-            (counsel-ffdata-firefox-bookmarks . +ivy-prescient-non-fuzzy)
-            (swiper . +ivy-prescient-non-fuzzy)
-            (t . ivy-prescient-re-builder)))
-    (setq ivy-fixed-height-minibuffer nil
-          ivy-add-newline-after-prompt nil)))
+  (setq ivy-re-builders-alist
+        '((counsel-ffdata-firefox-history . +ivy-prescient-non-fuzzy)
+          (counsel-ffdata-firefox-bookmarks . +ivy-prescient-non-fuzzy)
+          (swiper . +ivy-prescient-non-fuzzy)
+          (t . ivy-prescient-re-builder)))
+  (setq ivy-fixed-height-minibuffer nil)
+  (setq ivy-read-action-function #'ivy-hydra-read-action)
+  (setq ivy-add-newline-after-prompt nil))
 #+end_src
 
-** Counsel
+*** Ivy-explorer
+ #+begin_src emacs-lisp :tangle config.el
+(use-package ivy-explorer
+  :disabled)
+ #+end_src
 
-#+begin_src emacs-lisp :tangle config.el
-(after! counsel
-  (progn (map! "M-<tab>" #'counsel-switch-buffer
-               (:leader
-                (:prefix ("b" . "buffer") "b"
-                 #'counsel-switch-buffer "o"
-                 #'counsel-switch-buffer-other-window "C-b"
-                 #'counsel-switch-buffer-other-window)))))
-#+end_src
+*** Counsel
 
-** Counsel-ffdata
-This package allows you to access your history and bookmarks from emacs, how awesome is that ?
-#+begin_src emacs-lisp :tangle yes
+ #+begin_src emacs-lisp :tangle config.el
+;; (after! counsel
+;;   (progn (map! "M-<tab>" #'counsel-switch-buffer
+;;                (:leader
+;;                 (:prefix ("b" . "buffer") "b"
+;;                  #'counsel-switch-buffer "o"
+;;                  #'counsel-switch-buffer-other-window "C-b"
+;;                  #'counsel-switch-buffer-other-window)))))
+ #+end_src
+
+*** Counsel-ffdata
+ This package allows you to access your history and bookmarks from emacs, how awesome is that ?
+ #+begin_src emacs-lisp :tangle no
 (use-package! counsel-ffdata
+  :disabled
   :commands (counsel-ffdata-firefox-history
              counsel-ffdata-firefox-bookmarks)
   :init
@@ -1153,53 +1165,38 @@ This package allows you to access your history and bookmarks from emacs, how awe
          (:prefix ("s" . "search")
           :desc "Firefox history"   "h" #'counsel-ffdata-firefox-history
           :desc "Firefox bookmarks" "B" #'counsel-ffdata-firefox-bookmarks))))
-#+end_src
+ #+end_src
 
-** Company-prescient
-#+begin_src emacs-lisp :tangle yes
-(use-package! company-prescient
-  :after company
-  :config
-  (company-prescient-mode))
-#+end_src
-
-* Ivy-posframe
-
-#+BEGIN_SRC emacs-lisp :tangle config.el
-(after! ivy-posframe
-  (progn
-    (setq ivy-posframe-border-width 1)
-    (setq ivy-posframe-parameters nil)
-    (when (featurep! :personal exwm)
-      (ivy-posframe-mode -1))))
-#+END_SRC
-
-** Ivy-youtube
-#+begin_src emacs-lisp :tangle config.el
+*** Ivy-youtube
+ #+begin_src emacs-lisp :tangle config.el
 (use-package! ivy-youtube
+  :disabled
   :config
   (map! :leader
         (:prefix ("s" . "search")
          "y" #'ivy-youtube))
   (setq ivy-youtube-play-at "/usr/bin/mpv"))
-#+end_src
+ #+end_src
 
-** Ivy-yasnippet
+*** Ivy-yasnippet
 
-Snippets are cool, but being able to narrow, preview and discover snippets is
-even cooler !
+ Snippets are cool, but being able to narrow, preview and discover snippets is
+ even cooler !
 
-#+begin_src emacs-lisp :tangle config.el
+ #+begin_src emacs-lisp :tangle config.el
 (use-package! ivy-yasnippet
+  :disabled
   :init
   (map! (:leader
          (:prefix ("i" . "insert")
           :desc "Snippet" "s" #'ivy-yasnippet))))
-#+end_src
-** Ivy-Spotify
+ #+end_src
 
-#+begin_src emacs-lisp :tangle config.el
+*** Ivy-Spotify
+
+ #+begin_src emacs-lisp :tangle config.el
 (use-package! counsel-spotify
+  :disabled
   :commands
   (counsel-spotify-next
    counsel-spotify-previous
@@ -1236,10 +1233,12 @@ even cooler !
 
 * Multimedia
 ** Emms
+
  Emms is a huge package that helps you manage your media files like movies,
  music, playlists and streams. You need an external player to play the media
  since Emacs is not capable of such feature. My player of choice is =mpv=, along
  with youtube-dl for content hosted on youtube.
+
 *** General configuration
 
  #+begin_src emacs-lisp :tangle config.el
@@ -1269,8 +1268,10 @@ even cooler !
  #+end_src
 
 *** Streams
+
  Here is the file that contains all the streams that I listen to (radios), all
  defined here and tangled to the right file.
+
  #+begin_src emacs-lisp :tangle emms/streams.emms
 ;;; This is an EMMS playlist file
 ;; This includes the built-in list of streams which come with Emms by
@@ -1304,7 +1305,9 @@ even cooler !
  #+end_src
 
 ** Video
- Mpv helper functions
+
+ Mpv helper functions.
+
  #+BEGIN_SRC elisp :tangle config.el
 (defun mpv-v-open (url)
   "Watch a video from URL in MPV"
