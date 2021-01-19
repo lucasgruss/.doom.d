@@ -1,5 +1,6 @@
 #+TITLE: Doom modules
 #+Author: Lucas Gruss
+#+STARTUP: overview
 
 * Table of content :TOC:
 - [[#exwm][EXWM]]
