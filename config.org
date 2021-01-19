@@ -535,6 +535,50 @@ switching from screen to screen easier in EXWM.
         "s-\\"    #'windower-toggle-split))
 #+end_src
 
+** Windresize
+
+#+begin_src emacs-lisp :tangle config.el
+(use-package windresize)
+#+end_src
+
+** Edwina
+
+   #+begin_src emacs-lisp :tangle config.el
+(use-package edwina
+  :commands (edwina-mode lg/edwina-popup)
+  :hook (edwina-mode . lg/edwina-remove-or-restore-buffer-behaviour)
+  :init
+  (defun lg/edwina-popup ()
+    "Dummy function to access edwina-mode-map with Hercules"
+    (interactive))
+  :config
+  (defvar display-buffer-alist-save nil)
+  (defvar display-buffer-base-action-save nil)
+
+  (defun lg/edwina-remove-or-restore-buffer-behaviour ()
+    "If edwina-mode is active, save and set to nil the following variables:
+
+       - display-buffer-alist
+       - display-buffer-base-action
+
+ or restore it if edwina mode is inactive."
+    (if edwina-mode
+        (progn
+          (setq display-buffer-base-action-save display-buffer-base-action)
+          (setq display-buffer-base-action '(display-buffer-below-selected))
+          (setq display-buffer-alist-save display-buffer-alist)
+          (setq display-buffer-alist nil))
+      (setq display-buffer-base-action display-buffer-base-action-save)
+      (setq display-buffer-alist display-buffer-alist-save)))
+
+  (setq edwina-mode-map (make-sparse-keymap))
+  (map! (:map edwina-mode-map
+         "k" #'edwina-inc-nmaster
+         "j" #'edwina-dec-nmaster
+         "h" #'edwina-dec-mfact
+         "l" #'edwina-inc-mfact)))
+   #+end_src
+
 * Tabs
 Tabs are a relatively new feature in emacs. They come in two different flavors,
 =tab-bar-mode= and =tab-line-mode=. The first one is a great way to have
