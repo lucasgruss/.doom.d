@@ -352,7 +352,7 @@ This is my doom block. What it contains is pretty self explanatory.
                     ;; Also handle undocumented (<active> <inactive>) form.
                     ((numberp (cadr alpha)) (cadr alpha)))
               100)
-         '(91 . 80) '(100 . 100)))))
+         '(80 . 80) '(100 . 100)))))
 #+end_src
 
 ** Modeline
