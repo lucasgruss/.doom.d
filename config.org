@@ -434,6 +434,11 @@ through Xressources.
   (theme-magic-export-theme-mode +1))
 #+end_src
 
+** fringes
+   #+begin_src emacs-lisp :tangle config.el
+(fringe-mode -1)
+   #+end_src
+
 * Window management
 ** Zoom mode
 Zoom is a nice package for window management in emacs. It enlarges the window
