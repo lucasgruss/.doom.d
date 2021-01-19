@@ -480,8 +480,9 @@ buffer.
 (use-package! tab-bar
   :init
   (map! :nvi "C-t" #'prot/tab-bar-select-tab-dwim
-        "s-<" #'tab-previous
-        "s->" #'tab-next
+        "s-<" #'lg/tab-previous-and-hide-maybe
+        "s->" #'lg/tab-next-and-hide-maybe
+        "s-?" #'lg/tab-bar-mode-toggle
         (:leader
          :prefix ("t" . "toggle/tab")
          :desc "new tab" "n" #'tab-new
@@ -490,15 +491,18 @@ buffer.
          :desc "next tab" "k" #'tab-previous
          :desc "toggle tab-bar mode" "t" #'tab-bar-mode))
   :config
-  (setq tab-bar-close-button-show t)
+  (setq tab-bar-close-button-show nil)
+  (setq tab-bar-new-button "+")
+  (setq tab-bar-new-button-show nil)
   (setq tab-bar-close-last-tab-choice 'tab-bar-mode-disable)
   (setq tab-bar-close-tab-select 'recent)
   (setq tab-bar-new-tab-choice t)
   (setq tab-bar-new-tab-to 'right)
   (setq tab-bar-position nil)
-  (setq tab-bar-show nil)
+  (setq tab-bar-show t)
+  (setq tab-bar-separator nil)
   (setq tab-bar-tab-hints nil)
-  (setq tab-bar-tab-name-function 'tab-bar-tab-name-current-with-count)
+  (setq tab-bar-tab-name-function 'tab-bar-tab-name-truncated)
 
   (defun prot/tab-bar-select-tab-dwim ()
     "Do-What-I-Mean function for getting to a `tab-bar-mode' tab.
@@ -516,11 +520,49 @@ questions.  Else use completion to select the tab to switch to."
             (t
              (call-interactively #'tab-bar-switch-to-tab)))))
 
-  (defun my/echo-tabs ()
-    "Echo all the tabs in use in the modeline"
-    (let ((message ""))
-      (echo message))
-    )
+  ;; auto-hide the bar, inspired by https://github.com/ema2159/centaur-tabs/issues/129
+  ;; and adapted for the tab-bar
+  (defvar tab-bar-timer nil)
+  (defun tab-bar-timer-initialize ()
+    (setq tab-bar-timer (run-with-timer 3 nil (lambda () (tab-bar-mode -1)))))
+
+  (add-hook 'window-setup-hook 'tab-bar-timer-initialize)
+
+  (defun lg/tab-change-and-hide (arg)
+    "Change to next tab and hide"
+    (cancel-timer tab-bar-timer)
+                                        ;(tab-bar-mode -1)
+    (if arg
+        (tab-next)
+      (tab-previous))
+    (tab-bar-mode +1)
+    (setq tab-bar-timer (run-with-timer 1 nil (lambda () (tab-bar-mode -1)))))
+
+  (defvar tab-bar-mode-force-display nil)
+
+  (defun lg/tab-bar-mode-toggle ()
+    "Toggle the tab bar and don't hide it with tab-change-and-hide"
+    (interactive)
+    (if tab-bar-mode
+        (progn
+          (tab-bar-mode -1)
+          (setq tab-bar-mode-force-display nil))
+      (tab-bar-mode +1)
+      (setq tab-bar-mode-force-display t)))
+
+  (defun lg/tab-next-and-hide-maybe ()
+    "Show tab-bar, switch to next tab and hide"
+    (interactive)
+    (if (not tab-bar-mode-force-display)
+        (lg/tab-change-and-hide t)
+      (tab-next)))
+
+  (defun lg/tab-previous-and-hide-maybe ()
+    "Show tab-bar, switch to next tab and hide"
+    (interactive)
+    (if (not tab-bar-mode-force-display)
+        (lg/tab-change-and-hide nil)
+      (tab-previous)))
 
   (tab-bar-mode -1))
 #+end_src
