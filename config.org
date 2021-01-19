@@ -259,9 +259,6 @@ This is my doom block. What it contains is pretty self explanatory.
 ;; -*- no-byte-compile: t; -*-
 (package! modus-themes)
 (package! theme-magic)
-;; (package! explain-pause-mode
-;;   :recipe (:host github
-;;            :repo "lastquestion/explain-pause-mode"))
 (package! windower)
 (package! counsel-spotify)
 (package! counsel-ffdata)
@@ -818,7 +815,6 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
 
 * Convenience
 #+begin_src emacs-lisp :tangle config.el
-(explain-pause-mode -1)
 (server-start)
 (load! "private.el") ; credentials and private info
 (setq! org-directory "~/org/"
