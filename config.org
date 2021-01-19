@@ -797,8 +797,7 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
 (load! "private.el") ; credentials and private info
 (setq! org-directory "~/org/"
        display-line-numbers-type `relative
-       window-min-height 1
-       idle-update-delay 0.2
+       idle-update-delay 0.3
        x-select-enable-primary t
        select-enable-clipboard t
        x-select-enable-clipboard-manager t)
