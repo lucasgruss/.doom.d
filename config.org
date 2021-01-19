@@ -493,6 +493,7 @@ switching from screen to screen easier in EXWM.
 #+begin_src emacs-lisp :tangle config.el
 (use-package! windower
   :init
+  (setq windower-border-move-distance 1)
   (map! "s-H"     #'windower-swap-left
         "s-J"     #'windower-swap-below
         "s-K"     #'windower-swap-above
