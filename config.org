@@ -858,6 +858,37 @@ slowly. I want it to appear almost instantaneously.
 (setq deft-directory "~/org")
 #+END_SRC
 
+** Fast scroll mode
+#+begin_src emacs-lisp :tangle config.el
+(use-package fast-scroll
+  :config
+  (fast-scroll-mode +1))
+#+end_src
+
+** Scroll on jump
+  #+begin_src emacs-lisp :tangle config.el
+(use-package scroll-on-jump
+  :after evil
+  :config
+  (scroll-on-jump-advice-add evil-undo)
+  (scroll-on-jump-advice-add evil-redo)
+  (scroll-on-jump-advice-add evil-jump-item)
+  (scroll-on-jump-advice-add evil-jump-forward)
+  (scroll-on-jump-advice-add evil-jump-backward)
+  (scroll-on-jump-advice-add evil-ex-search-next)
+  (scroll-on-jump-advice-add evil-ex-search-previous)
+  (scroll-on-jump-advice-add evil-forward-paragraph)
+  (scroll-on-jump-advice-add evil-backward-paragraph)
+  (setq scroll-on-jump-duration 0.2))
+  #+end_src
+
+** good scroll
+   #+begin_src emacs-lisp :tangle config.el
+   (use-package good-scroll
+     :config
+     (good-scroll-mode +1))
+   #+end_src
+
 * Mouse support
 #+begin_src emacs-lisp :tangle config.el
 ;;; found at https://tsdh.wordpress.com/2015/03/03/swapping-emacs-windows-using-dragndrop/
