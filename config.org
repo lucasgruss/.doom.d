@@ -1,5 +1,6 @@
 #+TITLE:  Configuration for my kitchen sink
 #+AUTHOR: Lucas Gruss
+#+STARTUP: overview
 
 * Table of content :TOC:
 - [[#introduction][Introduction]]
