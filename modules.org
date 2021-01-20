@@ -13,6 +13,7 @@
   - [[#exwm-1][EXWM]]
   - [[#exwm-outer-gaps][EXWM-outer-gaps]]
   - [[#exwm-firefox][EXWM-Firefox]]
+  - [[#exwm-background][EXWM-background]]
   - [[#tab-linecentaur-tabs-fix][Tab-line/Centaur-tabs fix]]
 - [[#selectrum][Selectrum]]
   - [[#packagesel][packages.el]]
@@ -36,6 +37,10 @@
   :recipe
   (:host github
    :repo "ieure/exwm-firefox"))
+(package! exwm-background
+  :recipe
+  (:host github
+   :repo "pestctrl/exwm-background"))
 #+end_src
 
 ** Config
@@ -434,6 +439,11 @@ firefox, it leaves fullscreen mode."
   ;; I don't like renaming the name of the firefox window
   (remove-hook 'exwm-update-title-hook 'exwm-firefox--update-title))
 #+end_src
+
+** EXWM-background
+   #+begin_src emacs-lisp :tangle no
+(use-package exwm-background)
+   #+end_src
 
 ** Tab-line/Centaur-tabs fix
 #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
