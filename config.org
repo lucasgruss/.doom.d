@@ -504,7 +504,7 @@ switching from screen to screen easier in EXWM.
 (use-package! framemove
   :after exwm-randr
   :init
-  (load! "framemove.el")
+  (load! "lisp/framemove.el")
   :config
   (setq framemove-hook-into-windmove t))
 #+end_src
