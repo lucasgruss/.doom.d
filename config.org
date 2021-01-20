@@ -256,7 +256,7 @@ This is my doom block. What it contains is pretty self explanatory.
        ;;web               ; the tubes
 
        :email
-       ;;(mu4e +gmail)
+       (mu4e +gmail)
        ;;notmuch
        ;;(wanderlust +gmail)
 
@@ -294,6 +294,7 @@ This is my doom block. What it contains is pretty self explanatory.
 (package! org-sidebar)
 (package! org-emms)
 (package! ox-report)
+(package! org-msg)
 (package! emms)
 (package! ivy-emms)
 (package! company-prescient)
@@ -1077,8 +1078,7 @@ Pretty org bullet.
 ** ox-report
 Create nice report for meetings.
 #+begin_src emacs-lisp :tangle config.el
-(use-package! ox-report
-  :disabled)
+(use-package! ox-report)
 #+end_src
 
 ** org-ref
