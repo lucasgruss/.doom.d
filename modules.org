@@ -445,6 +445,18 @@ firefox, it leaves fullscreen mode."
 (use-package exwm-background)
    #+end_src
 
+** Polybar
+
+   #+begin_src emacs-lisp :tangle yes
+(defun lg/polybar-minibuffer-hide ()
+  (call-process "polybar-msg" nil 0 nil "cmd" "hide"))
+(defun lg/polybar-minibuffer-show ()
+  (call-process "polybar-msg" nil 0 nil "cmd" "show"))
+
+(add-hook 'minibuffer-setup-hook #'lg/polybar-minibuffer-hide)
+(add-hook 'minibuffer-exit-hook #'lg/polybar-minibuffer-show)
+   #+end_src
+
 ** Tab-line/Centaur-tabs fix
 #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
 (after! exwm
