@@ -11,6 +11,7 @@
   - [[#all-the-icons][All the icons]]
   - [[#modus-themes][modus themes]]
   - [[#theme-choice][Theme choice]]
+  - [[#transparency][Transparency]]
   - [[#modeline][Modeline]]
   - [[#theme-magic][Theme magic]]
   - [[#fringes][fringes]]
@@ -22,6 +23,7 @@
   - [[#windower][Windower]]
   - [[#windresize][Windresize]]
   - [[#edwina][Edwina]]
+  - [[#exwm][EXWM]]
 - [[#tabs][Tabs]]
   - [[#tab-bar-mode][Tab-bar-mode]]
   - [[#centaur-tabs][Centaur tabs]]
@@ -49,6 +51,7 @@
 - [[#completions][Completions]]
   - [[#company][Company]]
   - [[#ivy][Ivy]]
+  - [[#selectrum][Selectrum]]
 - [[#multimedia][Multimedia]]
   - [[#emms][Emms]]
   - [[#video][Video]]
@@ -63,6 +66,10 @@
 - [[#olivetti-mode][Olivetti mode]]
 - [[#browsing-the-internet][Browsing the internet]]
   - [[#eww][Eww]]
+- [[#system-administration][System administration]]
+- [[#matlab][Matlab]]
+  - [[#packages][Packages]]
+  - [[#config][Config]]
 - [[#keybindings][Keybindings]]
   - [[#evil-mode][Evil mode]]
   - [[#misc][Misc]]
@@ -123,7 +130,7 @@ This is my doom block. What it contains is pretty self explanatory.
        :ui
        deft              ; notational velocity for Emacs
        doom              ; what makes DOOM look the way it does
-       ;;doom-dashboard    ; a nifty splash screen for Emacs
+       doom-dashboard    ; a nifty splash screen for Emacs
        doom-quit         ; DOOM quit-message prompts when you quit Emacs
        ;;fill-column       ; a `fill-column' indicator
        hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
@@ -286,7 +293,7 @@ This is my doom block. What it contains is pretty self explanatory.
 (package! ivy-youtube)
 (package! ivy-yasnippet)
 (package! ivy-explorer)
-(package! solaire-mode :disable t)
+;(package! solaire-mode :disable t)
 (package! rg)
 (package! zoom)
 (package! org-tree-slide)
@@ -321,6 +328,7 @@ This is my doom block. What it contains is pretty self explanatory.
            :repo "ambrevar/emacs-fish-completion"))
 (package! olivetti)
 (package! ytel)
+(package! guix)
 #+end_src
 
 * Theme
@@ -343,8 +351,8 @@ This is my doom block. What it contains is pretty self explanatory.
    (setq modus-themes-intense-hl-line t)
    ;(setq modus-themes-intense-paren-match t)
    ;(setq modus-themes-no-link-underline t)
-   (setq modus-themes-prompts 'intense) ; {nil,'subtle,'intense}
-   (setq modus-themes-completions 'moderate) ; {nil,'moderate,'opinionated})
+   (setq modus-themes-prompts nil) ; {nil,'subtle,'intense}
+   (setq modus-themes-completions 'opinionated) ; {nil,'moderate,'opinionated})
    ;(setq modus-themes-intense-standard-completions t)
    (setq modus-themes-diffs nil) ; {nil,'desaturated,'fg-only})
    (setq modus-themes-org-blocks 'greyscale) ; {nil,'greyscale,'rainbow}
@@ -361,8 +369,15 @@ This is my doom block. What it contains is pretty self explanatory.
 ** Theme choice
 
 #+begin_src emacs-lisp :tangle config.el
-(setq! doom-theme 'modus-vivendi)
+(setq! doom-theme 'modus-operandi)
 (setq! doom-font "Iosevka:pixelsize=15")
+(setq frame-alpha-lower-limit 1)
+#+end_src
+
+** Transparency
+  #+begin_src emacs-lisp :tangle config.el
+(defvar lg/transparency-alpha 80
+  "Transparency of all frames.")
 
 (defun lg/toggle-transparency ()
   "Toggle the transparency of Emacs on and off"
@@ -375,8 +390,26 @@ This is my doom block. What it contains is pretty self explanatory.
                     ;; Also handle undocumented (<active> <inactive>) form.
                     ((numberp (cadr alpha)) (cadr alpha)))
               100)
-         '(80 . 80) '(100 . 100)))))
-#+end_src
+         lg/transparency-alpha '(100 . 100)))))
+
+(defun lg/transparency-increase (arg)
+  "Increase transparency of the frame"
+  (interactive "P")
+  (setq lg/transparency-alpha (+ lg/transparency-alpha arg))
+  (lg/transparency-apply))
+
+(defun lg/transparency-decrease (arg)
+  "Increase transparency of the frame"
+  (interactive "P")
+  (setq lg/transparency-alpha (- lg/transparency-alpha arg))
+  (lg/transparency-apply))
+
+(defun lg/transparency-apply ()
+  "Apply the transparency parameter to the frame"
+  (interactive)
+    (set-frame-parameter
+     nil 'alpha lg/transparency-alpha))
+  #+end_src
 
 ** Modeline
 
@@ -572,6 +605,594 @@ switching from screen to screen easier in EXWM.
          "l" #'edwina-inc-mfact)))
    #+end_src
 
+** EXWM
+*** Packages
+ #+begin_src emacs-lisp :tangle ./modules/personal/exwm/packages.el
+(package! xelb :recipe (:no-native-compile nil))
+(package! exwm :recipe (:no-native-compile nil))
+
+(package! exwm-outer-gaps
+  :recipe
+  (:host github
+   :repo "lucasgruss/exwm-outer-gaps"))
+
+(package! exwm-firefox-core)
+(package! exwm-firefox-evil)
+
+(package! exwm-firefox
+  :recipe
+  (:host github
+   :repo "ieure/exwm-firefox"))
+
+(package! exwm-background
+  :recipe
+  (:host github
+   :repo "pestctrl/exwm-background"))
+
+(package! exwm-x
+  :recipe
+  (:host github
+   :repo "tumashu/exwm-x"))
+ #+end_src
+
+*** Config
+
+ The following snippet should go into the file
+ =/usr/share/xsessions/emacs.desktop= to make EXWM a possible choice in the
+ display manager.
+
+ #+begin_src conf :tangle no
+[Desktop Entry]
+Name=EXWM
+Comment=Emacs is awesome!
+Exec=emacs
+Type=application
+ #+end_src
+
+*** Media keys
+
+ Media keys need to be explicitely bound, as we might not use EXWM in a DE.
+ #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
+(defun lg/volume-down ()
+  "Lower volume of the computer"
+  (interactive)
+  (shell-command "~/scripts/volume.sh down"))
+
+(defun lg/volume-up ()
+  "Increase volume of the computer"
+  (interactive)
+  (shell-command "~/scripts/volume.sh up"))
+
+(defun lg/brightness-down ()
+  "Lower brightness of the screen"
+  (interactive)
+  (shell-command "xbacklight -dec 10"))
+
+(defun lg/brightness-up ()
+  "Increase brightness of the screen"
+  (interactive)
+  (shell-command "xbacklight -inc 10"))
+ #+end_src
+
+*** Mouse
+ #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
+;; (defun lg/exwm-floating-resize (drag-event)
+;;   (interactive "e")
+;;   )
+(map! "<mode-line> <double-mouse-3>" #'exwm-floating-toggle-floating)
+      ;;"<top-left-corner> <mouse-1>" #'exwm-)
+
+ #+end_src
+
+*** EXWM-randr
+
+ EXWM has built in support for multi-monitor.
+ #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
+(use-package! exwm-randr
+  :config
+  ;;(setq! exwm-randr-workspace-output-plist '(1 "VGA1"))
+  (setq! exwm-randr-workspace-monitor-plist '(0 "eDP-1" 1 "DP-2"))
+  (setq! exwm-randr-screen-change-hook nil)
+  (defun lg/setup-screens ()
+    (start-process-shell-command
+     "xrandr" nil "sh ~/.screenlayout/arandr.layout.sh"))
+ ;; xrandr --output DP2 --left-of eDP1"))
+  (add-hook 'exwm-randr-screen-change-hook #'lg/setup-screens)
+  (exwm-randr-enable))
+ #+end_src
+
+*** EXWM-Systemtray
+
+ #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
+(use-package! exwm-systemtray
+  :disabled
+  :config
+  (setq! exwm-systemtray-height 18
+         exwm-systemtray-icon-gap 3
+         exwm-systemtray-background-color "black")
+  (exwm-systemtray-enable))
+ #+end_src
+
+*** EXWM
+ EXWM is seriously awesome. Now I don't have to exit emacs *ever* and I get to
+ configure my window manager with emacs lisp. Life is good.
+
+ #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
+(use-package! exwm
+  :if window-system
+  :init
+  (map!
+   :map exwm-mode-map
+   :localleader
+   :desc "Toggle mode-line"       "m" #'exwm-layout-toggle-mode-line
+   :leader
+   (:prefix ("e" . "EXWM")
+    :desc "Attach minibuffer"      "a" #'exwm-workspace-attach-minibuffer
+    :desc "Detach minibuffer"      "d" #'exwm-workspace-detach-minibuffer
+    :desc "Fullscreen"             "f" #'exwm-layout-set-fullscreen
+    :desc "Floating hide"          "h" #'exwm-layout-set-fullscreen
+    :desc "Release keyboard"       "k" #'exwm-input-release-keyboard
+    :desc "Send next key"          "q" #'exwm-input-send-next-key
+    :desc "Reset"                  "r" #'exwm-reset
+    :desc "Toggle floating layout" "t" #'exwm-floating-toggle-floating
+    :desc "Workspace move window"  "w" #'exwm-workspace-move-window))
+  :config
+  (defun lg/exwm-async-run (name)
+    "Run a process asynchronously"
+    (interactive)
+    (start-process name nil name))
+
+  (defun lg/run-or-raise-or-dismiss (program program-buffer-name)
+    "If no instance of the program is running, launch the program.
+If an instance already exists, and its corresponding buffer is
+displayed on the screen, move to the buffer. If the buffer is not
+visible, switch to the buffer in the current window. Finally, if
+the current buffer is already that of the program, bury the
+buffer (=minimizing in other WM/DE)"
+    ;; check current buffer
+    (if (string= (buffer-name) program-buffer-name)
+        (bury-buffer)
+      ;; either switch to or launch program
+      (progn
+        (if (get-buffer program-buffer-name)
+            (progn
+              (if (get-buffer-window program-buffer-name)
+                  (select-window (display-buffer program-buffer-name) nil)
+                (exwm-workspace-switch-to-buffer program-buffer-name)))
+          ;; start program
+          (progn
+            (lg/exwm-async-run program)
+            (message (format "Launching %s" program)))))))
+
+  (defun lg/run-or-raise-or-dismiss-firefox ()
+    (interactive)
+    (lg/run-or-raise-or-dismiss "firefox" "Firefox-esr"))
+
+  (defun lg/run-or-raise-or-dismiss-spotify ()
+    (interactive)
+    (lg/run-or-raise-or-dismiss "spotify" "Spotify"))
+
+  (defun lg/run-or-raise-or-dismiss-thunderbird ()
+    (interactive)
+    (lg/run-or-raise-or-dismiss "thunderbird" "thunderbird"))
+
+  (defun lg/toggle-line-char-modes ()
+    "If on a EXWM buffer, toggle 'line' or 'char'"
+    (interactive)
+    (if exwm-window-type
+        (if (string= exwm--input-mode "line-mode")
+            (call-interactively #'exwm-input-release-keyboard) ; switch to char mode
+          (call-interactively #'exwm-input-grab-keyboard)))) ; switch to line mode
+
+  (defun lg/lock-screen ()
+    "Lock screen with slock"
+    (interactive)
+    (start-process "" nil "/usr/local/bin/slock"))
+
+  (defun efs/run-in-background (command)
+    (let ((command-parts (split-string command "[ ]+")))
+      (apply #'call-process `(,(car command-parts) nil 0 nil ,@(cdr command-parts)))))
+
+  (defvar efs/polybar-process nil
+    "Holds the process of the running Polybar instance, if any")
+
+  (defun efs/kill-panel ()
+    (interactive)
+    (when efs/polybar-process
+      (ignore-errors
+        (kill-process efs/polybar-process)))
+    (setq efs/polybar-process nil))
+
+  (defun efs/start-panel ()
+    (interactive)
+    (efs/kill-panel)
+    (setq efs/polybar-process (start-process-shell-command "polybar" nil "polybar -r panel")))
+
+  (defun lg/exwm-init-hook ()
+    (shell-command "setxkbmap gb -variant extd -option ctrl:nocaps")
+    (shell-command "xset r rate 300 40")
+    (shell-command "killall pasystray")
+    (shell-command "killall blueman-applet")
+    (shell-command "killall nm-applet")
+    (shell-command "killall compton")
+    (shell-command "feh --bg-fill ~/Images/Wallpaper/anime-garden.jpg")
+    (efs/run-in-background "pasystray")
+    (efs/run-in-background "compton")
+    (efs/run-in-background "xfce4-panel")
+    (efs/run-in-background "blueman-applet")
+    (efs/run-in-background "nm-applet")
+    (efs/start-panel))
+
+  (add-hook 'exwm-init-hook #'lg/exwm-init-hook)
+
+  (defun lg/exwm-update-title-hook ()
+    "Hook to be ran when window title is updated"
+    (exwm-workspace-rename-buffer exwm-class-name))
+
+  (add-hook 'exwm-update-title-hook #'lg/exwm-update-title-hook)
+
+  ;; disable tab bar for floating frames
+  (add-hook 'exwm-floating-setup-hook
+            (lambda ()
+              (toggle-tab-bar-mode-from-frame -1)))
+
+  (setq exwm-input-global-keys
+        `(([S-s-backspace] . exwm-workspace-delete)
+          ([?\s-f] . exwm-layout-toggle-fullscreen)
+          ([?\s-F] . exwm-floating-toggle-floating)
+          ([?\s-R] . exwm-reset)
+          ([?\s-w] . exwm-utils-workspace-switch-cyclically)
+          ([?\s-W] . exwm-utils-workspace-move-cyclically)
+          ([?\s-\'] . consult-buffer)
+          ([?\s-\@] . ibuffer)
+          ([?\s-b] . bury-buffer)
+          ([?\s-&] . (lambda (command)
+                       (interactive (list (read-shell-command "Run a command: ")))
+                       (start-process-shell-command command nil command)))
+          ([s-f2]  . lg/lock-screen)
+          ([?\s-d] . counsel-linux-app)
+          ([?\s-i] . lg/run-or-raise-or-dismiss-firefox)
+          ([?\s-t] . lg/run-or-raise-or-dismiss-thunderbird)
+          ([?\s-s] . lg/run-or-raise-or-dismiss-spotify)
+          ([?\s-u] . lg/toggle-line-char-modes)
+          ([s-return] . +eshell/toggle)
+          ([s-escape] . lg/kill-this-buffer)
+          ([?\s-/]  . centaur-tabs-mode)
+          ([?\s-m]  . centaur-tabs-backward)
+          ([?\s-,]  . centaur-tabs-forward)
+          ([?\s-?]  . tab-bar-mode)
+          ([?\s-M]  . lg/tab-previous-and-hide-maybe)
+          ([?\s-<]  . lg/tab-next-and-hide-maybe)
+          ([?\s-O]  . exwm-outer-gaps-mode)
+          ([?\s-y]  . exwm-outer-gaps-increment)
+          ([?\s-p]  . exwm-outer-gaps-decrement)
+          ;; Everything window
+          ([?\s-q] . evil-window-delete)
+          ([?\s-v] . split-window-horizontally)
+          ([?\s-z] . split-window-vertically)
+          ([s-tab]  . windower-switch-to-last-buffer)
+          ([?\s-r]  . windower-switch-to-last-buffer)
+          ([?\s-\\] . windower-toggle-split)
+          ([?\s-o]  . windower-toggle-single)
+          ([142606440] . windower-move-border-left) ; M-s-h
+          ([142606442] . windower-move-border-below); M-s-j
+          ([142606443] . windower-move-border-above); M-s-k
+          ([142606444] . windower-move-border-right); M-s-l
+          ([?\s-h] . windmove-left)  ([?\s-H] . windower-swap-left)
+          ([?\s-j] . windmove-down)  ([?\s-J] . windower-swap-below)
+          ([?\s-k] . windmove-up)    ([?\s-K] . windower-swap-above)
+          ([?\s-l] . windmove-right) ([?\s-L] . windower-swap-right)
+          ;; Media keys
+          ([XF86MonBrightnessUp]   . lg/brightness-up)
+          ([XF86MonBrightnessDown] . lg/brightness-down)
+          ([XF86AudioRaiseVolume]  . lg/volume-up)
+          ([XF86AudioLowerVolume]  . lg/volume-down))
+        exwm-workspace-show-all-buffers t
+        exwm-layout-show-all-buffers t
+        exwm-workspace-number 2
+        exwm-workspace-minibuffer-position nil
+        exwm-workspace-display-echo-area-timeout 1)
+
+  (setq! exwm-manage-configurations
+         '(((or (equal "hl2-linux" exwm-class-name)
+                (equal "hl2-linux" exwm-title))
+            ;;floating t
+            fullscreen nil
+            tiling-mode-line nil
+            ;;char-mode t
+            managed t)))
+
+  (push (aref (kbd "<escape>") 0) exwm-input-prefix-keys)
+  (push (aref (kbd "<return>") 0) exwm-input-prefix-keys)
+
+  ;; relaunch the panel so that it auto-hide correctly
+  (load "~/.doom.d/exwm-utils.el")
+                                        ;(shell-command "xfce4-panel --restart")
+  (exwm-enable))
+   #+end_src
+
+*** EXWM-outer-gaps
+
+  #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
+(use-package exwm-outer-gaps
+  :after (xelb exwm hercules)
+  :init
+  (defvar exwm-outer-gaps-polybar-timer nil
+    "Timer to trigger redisplay of polybar on the minibuffer")
+  (setq exwm-outer-gaps-polybar-timer
+        (run-with-timer 1 nil (lambda () (efs/start-panel))))
+  :config
+  (setq exwm-outer-gaps-increment-step 10)
+  (defvar exwm-outer-gaps-keymap nil
+    "keymap to resize gaps")
+  (setq exwm-outer-gaps-keymap (make-sparse-keymap))
+  (map! (:map exwm-outer-gaps-keymap
+         :desc "Decrease left" "h" (lambda () (interactive) (exwm-outer-gaps-decrement 0))
+         :desc "Increase left" "H" (lambda () (interactive) (exwm-outer-gaps-increment 0))
+         :desc "Decrease right" "l" (lambda () (interactive) (exwm-outer-gaps-decrement 1))
+         :desc "Increase right" "L" (lambda () (interactive) (exwm-outer-gaps-increment 1))
+         :desc "Decrease top" "k" (lambda () (interactive) (exwm-outer-gaps-decrement 2))
+         :desc "Increase top" "K" (lambda () (interactive) (exwm-outer-gaps-increment 2))
+         :desc "Decrease bottom" "j" (lambda () (interactive) (exwm-outer-gaps-decrement 3))
+         :desc "Increase bottom" "J" (lambda () (interactive) (exwm-outer-gaps-increment 3))
+         :desc "Shift frame left" "y" (lambda () (interactive)
+                                       (exwm-outer-gaps-increment 1)
+                                       (exwm-outer-gaps-decrement 0))
+         :desc "Shift frame right" "o" (lambda () (interactive)
+                                       (exwm-outer-gaps-increment 0)
+                                       (exwm-outer-gaps-decrement 1))
+         :desc "Shift frame down" "u" (lambda () (interactive)
+                                       (exwm-outer-gaps-increment 2)
+                                       (exwm-outer-gaps-decrement 3))
+         :desc "Shift frame up" "i" (lambda () (interactive)
+                                       (exwm-outer-gaps-increment 3)
+                                       (exwm-outer-gaps-decrement 2))
+         ))
+
+  (defun lg/exwm-outer-gaps-hercules ()
+    (interactive))
+
+  (hercules-def
+   :toggle-funs #'lg/exwm-outer-gaps-hercules
+   :keymap 'exwm-outer-gaps-keymap
+   :transient t)
+
+  (defun lg/exwm-outer-gaps-setenv-and-polybar ()
+    "Set environment variables that are used by polybar to overlay
+  the minibuffer, and restart polybar after a timer."
+    (setenv "GAP_RIGHT" "50%")
+    (setenv "GAP_BOTTOM" (number-to-string
+                          (if exwm-outer-gaps-mode
+                              (aref exwm-outer-gaps-width 3)
+                            0)))
+    (setenv "PANEL_WIDTH" (concat "50%:-"
+                                  (number-to-string
+                                   (if exwm-outer-gaps-mode
+                                       (aref exwm-outer-gaps-width 0)
+                                     0))))
+    (cancel-timer exwm-outer-gaps-polybar-timer)
+    (setq exwm-outer-gaps-polybar-timer
+          (run-with-timer 1 nil (lambda () (efs/start-panel)))))
+
+  (advice-add #'exwm-outer-gaps-apply :before #'lg/exwm-outer-gaps-setenv-and-polybar)
+  (exwm-outer-gaps-mode +1))
+  #+end_src
+
+*** EXWM-Firefox
+
+ With EXWM emulation keys, you can have vi-style keybindings within firefox,
+ without having to install anything on the browser. Have I mentioned how awesome EXWM
+ is? My next objective will probably be to bring firefox even closer to emacs by
+ enabling new tabs within new windows and have emacs handle all windows with iBuffer.
+
+ #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
+(use-package! exwm-firefox-evil
+  :hook ((exwm-manage-finish . exwm-firefox-evil-activate-if-firefox)
+         ;; (exwm-manage-finish . lg/exwm-firefox-force-fullscreen)
+         (exwm-firefox-evil-mode . lg/exwm-firefox-hook))
+  :init
+  (setq exwm-firefox-evil-firefox-class-name '("Firefox" "Firefox-esr" "Nightly" "Iceweasel" "Icecat"))
+  :config
+  (defun exwm-input--on-ButtonPress-line-mode (buffer button-event)
+    "Handle button events in line mode.
+BUFFER is the `exwm-mode' buffer the event was generated
+on. BUTTON-EVENT is the X event converted into an Emacs event.
+
+The return value is used as event_mode to release the original
+button event."
+    (with-current-buffer buffer
+      (let ((read-event (exwm-input--mimic-read-event button-event)))
+        (exwm--log "%s" read-event)
+        (if (and read-event
+                 (exwm-input--event-passthrough-p read-event))
+            ;; The event should be forwarded to emacs
+            (progn
+              (exwm-input--cache-event read-event)
+              (exwm-input--unread-event button-event)
+              xcb:Allow:ReplayPointer)
+          ;; xcb:Allow:SyncPointer)
+          ;; The event should be replayed
+          xcb:Allow:ReplayPointer))))
+
+  (defun lg/exwm-firefox-force-fullscreen ()
+    "Send F11 to firefox to always be in full screen.
+
+Whenever you switch to another window and then come back to
+firefox, it leaves fullscreen mode."
+    (interactive)
+    (exwm-input--fake-key 'f11))
+
+  (defun lg/exwm-firefox-toggle-tree-tab ()
+    "Toggle the tree tab extension"
+    (interactive)
+    (exwm-input--fake-key 'f1))
+
+  (defun lg/exwm-firefox-hook ()
+    "Sets firefox how I like it"
+    (interactive)
+    (when exwm-firefox-evil-mode
+      (lg/exwm-firefox-toggle-tree-tab)))
+
+  (defun lg/exwm-firefox-hint ()
+    "Highlights hints on the page."
+    (interactive)
+    (exwm-input--fake-key 'C-m)
+    (exwm-firefox-evil-insert))
+
+  ;; go back to normal mode after pressing return
+  (defun exwm-firefox-intercept-next-ret ()
+    (interactive)
+    (setq-local exwm-firefox-next-ret-normal t))
+
+  (defun exwm-firefox-intercept-return ()
+    (interactive)
+    (exwm-input--fake-key (aref (kbd "<return>") 0))
+    (when (and (boundp 'exwm-firefox-next-ret-normal)
+               exwm-firefox-next-ret-normal)
+      (exwm-firefox-evil-normal)
+      (setq-local exwm-firefox-next-ret-normal nil)))
+
+  (advice-add #'exwm-firefox-core-tab-new :after #'exwm-firefox-intercept-next-ret)
+  (advice-add #'lg/exwm-firefox-hint :after #'exwm-firefox-intercept-next-ret)
+  (advice-add #'exwm-firefox-core-focus-search-bar :after #'exwm-firefox-intercept-next-ret)
+  (advice-add #'exwm-firefox-core-quick-find :after #'exwm-firefox-intercept-next-ret)
+
+
+  (define-key! 'normal exwm-firefox-evil-mode-map
+    "t" #'exwm-firefox-core-tab-new
+    "f" #'lg/exwm-firefox-hint
+    "F" #'lg/exwm-firefox-force-fullscreen
+    "T" #'lg/exwm-firefox-toggle-tree-tab
+    "q" #'exwm-input-send-next-key
+    "<return>" #'exwm-firefox-intercept-return)
+
+  (define-key! 'insert exwm-mode-map
+    "<return>" #'exwm-firefox-intercept-return
+    "C-h" #'exwm-firefox-core-left
+    "C-j" #'exwm-firefox-core-down
+    "C-k" #'exwm-firefox-core-up
+    "C-l" #'exwm-firefox-core-right)
+
+  (define-key! exwm-mode-map
+    "<return>" #'(lambda ()
+                 (interactive)
+                 (unless exwm-firefox-evil-mode
+                 (exwm-input--fake-key (aref (kbd "<return>") 0))))))
+
+(use-package! exwm-firefox
+  :after exwm-firefox-evil
+  :config
+  ;; I have different keybinding in firefox for tabdetach-attach : M-S-t
+  (defun lg/exwm-firefox-attach ()
+    "Attach the current tab into its parent window.
+
+   This requires the tabdetach extension to work."
+    (interactive)
+    (exwm-input--fake-key ?\M-\S-T))
+
+  (define-key! 'normal exwm-firefox-evil-mode-map
+    "A" #'lg/exwm-firefox-attach
+    "D" #'exwm-firefox-split-detach
+    "M" #'exwm-firefox-merge)
+  ;; I don't like renaming the name of the firefox window
+  (remove-hook 'exwm-update-title-hook 'exwm-firefox--update-title))
+ #+end_src
+
+*** EXWM-background
+    #+begin_src emacs-lisp :tangle no
+(use-package exwm-background)
+    #+end_src
+
+*** EXWM-x
+    EXWM-x is a package that extends EXWM to bring interesting features, like
+    enhanced mouse control, buttons for your X-applications, etc. I don't use all
+    of its features, but rather cherry pick those I find interesting.
+
+**** Buttons
+
+     #+begin_src emacs-lisp :tangle no
+(use-package exwmx-button
+  :config
+  (exwmx-button-enable)
+  (defun exwmx-button-disable ()
+    "Disable exmwx-button"
+    (remove-hook 'exwm-update-class-hook #'exwmx-button--update-button-line)
+    (remove-hook 'exwm-update-title-hook #'exwmx-button--update-button-line)
+    (remove-hook 'buffer-list-update-hook #'exwmx-button--update-button-line))
+     #+end_src
+
+**** Floating frames
+     #+begin_src emacs-lisp :tangle no
+(use-package exwmx-floating)
+     #+end_src
+
+*** Polybar
+
+    #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
+  (defun lg/polybar-minibuffer-hide ()
+    (call-process "polybar-msg" nil 0 nil "cmd" "hide"))
+  (defun lg/polybar-minibuffer-show ()
+    (call-process "polybar-msg" nil 0 nil "cmd" "show"))
+
+  (add-hook 'minibuffer-setup-hook #'lg/polybar-minibuffer-hide)
+  (add-hook 'minibuffer-exit-hook #'lg/polybar-minibuffer-show)
+    #+end_src
+
+*** Tab-line/Centaur-tabs fix
+ #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
+(after! exwm
+    (defun exwm-layout--show (id &optional window)
+      "Show window ID exactly fit in the Emacs window WINDOW."
+      (exwm--log "Show #x%x in %s" id window)
+      (let* ((edges (window-inside-absolute-pixel-edges window))
+             (x (pop edges))
+             (y (pop edges))
+             (width (- (pop edges) x))
+             (height (- (pop edges) y))
+             frame-x frame-y frame-width frame-height)
+        (with-current-buffer (exwm--id->buffer id)
+          (when exwm--floating-frame
+            (setq frame-width (frame-pixel-width exwm--floating-frame)
+                  frame-height (+ (frame-pixel-height exwm--floating-frame)
+                                  ;; Use `frame-outer-height' in the future.
+                                  exwm-workspace--frame-y-offset))
+            (when exwm--floating-frame-position
+              (setq frame-x (elt exwm--floating-frame-position 0)
+                    frame-y (elt exwm--floating-frame-position 1)
+                    x (+ x frame-x (- exwm-layout--floating-hidden-position))
+                    y (+ y frame-y (- exwm-layout--floating-hidden-position)))
+              (setq exwm--floating-frame-position nil))
+            (exwm--set-geometry (frame-parameter exwm--floating-frame
+                                                 'exwm-container)
+                                frame-x frame-y frame-width frame-height))
+          (when (exwm-layout--fullscreen-p)
+            (with-slots ((x* x)
+                         (y* y)
+                         (width* width)
+                         (height* height))
+                (exwm-workspace--get-geometry exwm--frame)
+              (setq x x*
+                    y y*
+                    width width*
+                    height height*)))
+          ;; edited here
+          (when
+              (and (not (bound-and-true-p centaur-tabs-local-mode))
+                   (not (exwm-layout--fullscreen-p))
+                   (or (bound-and-true-p centaur-tabs-mode)
+                       (bound-and-true-p tab-line-mode)))
+            (setq y (+ y centaur-tabs-height)))
+          ;; edited here
+          (exwm--set-geometry id x y width height)
+          (xcb:+request exwm--connection (make-instance 'xcb:MapWindow :window id))
+          (exwm-layout--set-state id xcb:icccm:WM_STATE:NormalState)
+          (setq exwm--ewmh-state
+                (delq xcb:Atom:_NET_WM_STATE_HIDDEN exwm--ewmh-state))
+          (exwm-layout--set-ewmh-state id)
+          (exwm-layout--auto-iconify)))
+      (xcb:flush exwm--connection)))
+ #+end_src
+
 * Tabs
 Tabs are a relatively new feature in emacs. They come in two different flavors,
 =tab-bar-mode= and =tab-line-mode=. The first one is a great way to have
@@ -589,8 +1210,8 @@ buffer.
 (use-package! tab-bar
   :init
   (map! :nvi "C-t" #'prot/tab-bar-select-tab-dwim
-        "s-<" #'lg/tab-previous-and-hide-maybe
-        "s->" #'lg/tab-next-and-hide-maybe
+        "s-M" #'lg/tab-previous-and-hide-maybe
+        "s-<" #'lg/tab-next-and-hide-maybe
         "s-?" #'lg/tab-bar-mode-toggle
         (:leader
          :prefix ("t" . "toggle/tab")
@@ -640,7 +1261,6 @@ questions.  Else use completion to select the tab to switch to."
   (defun lg/tab-change-and-hide (arg)
     "Change to next tab and hide"
     (cancel-timer tab-bar-timer)
-                                        ;(tab-bar-mode -1)
     (if arg
         (tab-next)
       (tab-previous))
@@ -806,7 +1426,7 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
   ;;   (select-window (posn-window (event-start event)))
   ;;   (centaur-tabs-forward-group))
 
-  (centaur-tabs-mode +1))
+  (centaur-tabs-mode -1))
 #+end_src
 
 * Convenience
@@ -1231,6 +1851,118 @@ Create nice report for meetings.
   :after emms)
  #+end_src
 
+** Selectrum
+*** packages.el
+
+ #+begin_src emacs-lisp :tangle ./modules/personal/selectrum/packages.el
+(package! selectrum
+  :recipe (:host github
+           :repo "raxod502/selectrum"))
+
+(package! prescient
+  :recipe (:host github
+           :repo "raxod502/prescient.el"))
+
+(package! selectrum-prescient
+  :recipe (:host github
+           :repo "raxod502/prescient.el"
+           :files ("selectrum-prescient.el")))
+
+(package! consult
+  :recipe (:host github
+           :repo "minad/consult"))
+
+(package! marginalia
+  :recipe (:host github
+           :repo "minad/marginalia"))
+
+(package! consult-selectrum
+  :recipe (:host github
+           :repo "minad/consult"
+           :files ("consult-selectrum.el")))
+
+(package! embark
+  :recipe (:host github
+           :repo "oantolin/embark"))
+ #+end_src
+
+*** config.el
+
+ #+begin_src emacs-lisp :tangle ./modules/personal/selectrum/config.el
+(use-package! selectrum
+  :init
+  (setq projectile-completion-system 'default)
+  :config
+  (setq selectrum-num-candidates-displayed 10)
+  (setq selectrum-fix-minibuffer-height nil)
+  (setq selectrum-display-action nil)
+  (selectrum-mode +1))
+
+(use-package! prescient
+  :after selectrum
+  :config
+  (prescient-persist-mode +1))
+
+(use-package! selectrum-prescient
+  :after (selectrum prescient)
+  :config
+  (selectrum-prescient-mode +1)
+  (map! (:map selectrum-minibuffer-map
+         "C-j" #'selectrum-next-candidate
+         "C-k" #'selectrum-previous-candidate
+         "C-l" #'selectrum-insert-current-candidate
+         "<ESC>" #'exit-minibuffer)))
+
+(use-package! marginalia
+  :init
+  (marginalia-mode)
+  (setq marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light)))
+
+(use-package! consult
+  :init
+  (map! :leader
+        ;; (:prefix ("h" . "help")
+        ;;  "t" #'consult-theme)
+        (:prefix ("f" . "files")
+         :desc "Recent files" "r" #'consult-recent-file)
+        (:prefix ("s" . "search")
+         "s" #'consult-line))
+  :config
+  (setq consult-preview-key nil))
+
+(use-package! consult-selectrum
+  :after consult)
+
+(use-package embark
+  :config
+  (map! "s-;" #'embark-act)
+  ;; For Selectrum users:
+  (setq embark-action-indicator
+      (lambda (map)
+        (which-key--show-keymap "Embark" map nil nil 'no-paging)
+        #'which-key--hide-popup-ignore-command)
+      embark-become-indicator embark-action-indicator)
+
+  (defun current-candidate+category ()
+    (when selectrum-active-p
+      (cons (selectrum--get-meta 'category)
+            (selectrum-get-current-candidate))))
+
+  (add-hook 'embark-target-finders #'current-candidate+category)
+
+  (defun current-candidates+category ()
+    (when selectrum-active-p
+      (cons (selectrum--get-meta 'category)
+            (selectrum-get-current-candidates
+             ;; Pass relative file names for dired.
+             minibuffer-completing-file-name))))
+
+  (add-hook 'embark-candidate-collectors #'current-candidates+category)
+
+  ;; No unnecessary computation delay after injection.
+  (add-hook 'embark-setup-hook 'selectrum-set-selected-candidate))
+ #+end_src
+
 * Multimedia
 ** Emms
 
@@ -1459,6 +2191,7 @@ Create nice report for meetings.
    This package provide completion thanks to fish.
    #+begin_src emacs-lisp :tangle config.el
 (use-package fish-completion
+  :disabled
   :after eshell
   :config
   (global-fish-completion-mode))
@@ -1506,6 +2239,46 @@ documentation, as you can easily copy and paste the snippets to your project.
     (mpv-a-open (thing-at-point 'url))))
 #+end_src
 
+* System administration
+  Emacs is a fantastic tool, that we can use to help manage our system in better
+  ways. I use guix on Debian at the moment, but I plan on migrating most of the
+  package management to guix once I get more comfortable using it.
+  #+begin_src emacs-lisp :tangle config.el
+(use-package! guix-emacs)
+  #+end_src
+
+* Matlab
+** Packages
+#+begin_src emacs-lisp :tangle ./modules/lang/matlab/packages.el
+(package! matlab-mode)
+#+end_src
+
+** Config
+#+begin_src emacs-lisp :tangle ./modules/lang/matlab/config.el
+;;;###autoload
+(defun +matlab/open-repl ()
+  "Open the Matlab REPL."
+  (interactive)
+                                        ;(if (is-buffer))
+  (if (string= (buffer-name) *MATLAB*)
+      (matlab-shell)
+    (pop-to-buffer *MATLAB*)))
+
+(use-package! matlab-shell
+  :config
+  (setq matlab-shell-command "~/MATLAB/R2017a/bin/matlab")
+  (set-repl-handler! 'matlab-mode #'+matlab/open-repl :persist t))
+
+(use-package! ob-octave
+  :config
+  (setq org-babel-matlab-shell-command "~/MATLAB/R2017a/bin/matlab -nosplash"))
+
+(use-package! matlab
+  :config
+  (map! :map matlab-mode-map
+        :v "gr" #'matlab-shell-run-region-or-line
+        :n "gr" #'matlab-shell-run-region-or-line))
+#+end_src
 * Keybindings
 ** Evil mode
 #+begin_src emacs-lisp :tangle config.el
