@@ -608,8 +608,8 @@ switching from screen to screen easier in EXWM.
 ** EXWM
 *** Packages
  #+begin_src emacs-lisp :tangle ./modules/personal/exwm/packages.el
-(package! xelb :recipe (:no-native-compile nil))
-(package! exwm :recipe (:no-native-compile nil))
+(package! xelb)
+(package! exwm)
 
 (package! exwm-outer-gaps
   :recipe
