@@ -900,7 +900,9 @@ buffer (=minimizing in other WM/DE)"
             fullscreen nil
             tiling-mode-line nil
             ;;char-mode t
-            managed t)))
+            managed t)
+           ((equal exwm-class-name "Firefox-esr")
+            floating-mode-line nil)))
 
   (push (aref (kbd "<escape>") 0) exwm-input-prefix-keys)
   (push (aref (kbd "<return>") 0) exwm-input-prefix-keys)
