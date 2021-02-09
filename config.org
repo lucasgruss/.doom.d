@@ -928,6 +928,33 @@ buffer (=minimizing in other WM/DE)"
   (defvar exwm-outer-gaps-keymap nil
     "keymap to resize gaps")
   (setq exwm-outer-gaps-keymap (make-sparse-keymap))
+
+  (defvar lg/exwm-outer-gaps--is-minibuffer-shown t
+    "Whether minibuffer is hidden away or not")
+
+  (defun lg/exwm-outer-gaps-toggle-minibuffer ()
+    (interactive)
+    (lg/exwm-outer-gaps-hide-show-minibuffer lg/exwm-outer-gaps--is-minibuffer-shown)
+    (setq lg/exwm-outer-gaps--is-minibuffer-shown
+          (not lg/exwm-outer-gaps--is-minibuffer-shown)))
+
+  (defun lg/exwm-outer-gaps-hide-show-minibuffer (hide)
+    "Hide or show the minibuffer by ajusting the bottom gap.
+Argument hide is t if minibuffer should be hidden, true if shown."
+    (if hide
+        (setq exwm-outer-gaps-width [0 0 0 -20])
+      (setq exwm-outer-gaps-width [0 0 0 0]))
+    (exwm-outer-gaps-apply))
+
+  (defun lg/exwm-outer-gaps-show-minibuffer ()
+    "Show the minibuffer"
+    (interactive)
+    (lg/exwm-outer-gaps-hide-show-minibuffer nil))
+
+  (defun lg/exwm-outer-gaps-show-minibuffer ()
+    "Hide the minibuffer"
+    (interactive)
+    (lg/exwm-outer-gaps-hide-show-minibuffer nil))
   (map! (:map exwm-outer-gaps-keymap
          :desc "Decrease left" "h" (lambda () (interactive) (exwm-outer-gaps-decrement 0))
          :desc "Increase left" "H" (lambda () (interactive) (exwm-outer-gaps-increment 0))
