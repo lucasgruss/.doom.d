@@ -75,46 +75,46 @@
   - [[#misc][Misc]]
 
 * Introduction
-This is my configuration file for Doom Emacs. It is a self contained document
-with everything needed to set up Doom. Normally you customize Doom by editing
-three =.el= files, which are =config.el=, =packages.el= and =init.el=. Thanks to
-the =literate= config module, it is possible to have all three in the same org
-document and they get automatically tangled in the right place upon saving this
-file.
+  This is my configuration file for Doom Emacs. It is a self contained document
+  with everything needed to set up Doom. Normally you customize Doom by editing
+  three =.el= files, which are =config.el=, =packages.el= and =init.el=. Thanks to
+  the =literate= config module, it is possible to have all three in the same org
+  document and they get automatically tangled in the right place upon saving this
+  file.
 
-- Doom Emacs ::
-  I use Doom Emacs as my configuration framework. I used to have a rather
-  lengthy hand-rolled literate configuration file. In a lot of cases, I was
-  reinventing the wheel by configuring stuff in a way that was similar to what
-  Doom has to offer (or other configuration frameworks for that matter). So I
-  just decided that I might as well use a configuration framework and have stuff
-  work out of the box. I chose Doom because it enables excellent evil support
-  across all the modules (so I don't have to go through the pain of configuring
-  everything to get a consistent evil experience). It's also very fast, and has
-  a very active community. I want to extend my thanks to Henrik Lissner who is
-  the maintainer of the framework, as well as all contributors to the project.
+  - Doom Emacs ::
+    I use Doom Emacs as my configuration framework. I used to have a rather
+    lengthy hand-rolled literate configuration file. In a lot of cases, I was
+    reinventing the wheel by configuring stuff in a way that was similar to what
+    Doom has to offer (or other configuration frameworks for that matter). So I
+    just decided that I might as well use a configuration framework and have stuff
+    work out of the box. I chose Doom because it enables excellent evil support
+    across all the modules (so I don't have to go through the pain of configuring
+    everything to get a consistent evil experience). It's also very fast, and has
+    a very active community. I want to extend my thanks to Henrik Lissner who is
+    the maintainer of the framework, as well as all contributors to the project.
 
-- gcc emacs ::
-  I build Emacs from source and I am on the =native-comp= branch. Native
-  compilation helps me achieve better performances without headaches, and the
-  branch is now stable enough to be used without running into issues. It's most
-  likely going to be included in the next release of Emacs (Emacs 28) and I
-  would like to extend my thanks to Andrea Corallo who did a fantastic job on
-  this feature, as well as all the contributors to this feature.
+  - gcc emacs ::
+    I build Emacs from source and I am on the =native-comp= branch. Native
+    compilation helps me achieve better performances without headaches, and the
+    branch is now stable enough to be used without running into issues. It's most
+    likely going to be included in the next release of Emacs (Emacs 28) and I
+    would like to extend my thanks to Andrea Corallo who did a fantastic job on
+    this feature, as well as all the contributors to this feature.
 
-- The Emacs community ::
-  Thank you to all the community in making Emacs such great software. It is
-  really hard to express how much Emacs has impacted me. I really like how Emacs
-  behaves as a platform and I find it much more pleasant to use a computer
-  through Emacs. Thank you to the maintainers across the years, to contributors,
-  package developers and users as a whole that make this tool such a polyvalent
-  swiss-army kitchen sink.
+  - The Emacs community ::
+    Thank you to all the community in making Emacs such great software. It is
+    really hard to express how much Emacs has impacted me. I really like how Emacs
+    behaves as a platform and I find it much more pleasant to use a computer
+    through Emacs. Thank you to the maintainers across the years, to contributors,
+    package developers and users as a whole that make this tool such a polyvalent
+    swiss-army kitchen sink.
 
 * Doom stuff
 ** init.el
-This is my doom block. What it contains is pretty self explanatory.
+   This is my doom block. What it contains is pretty self explanatory.
 
-#+begin_src emacs-lisp :tangle init.el
+   #+begin_src emacs-lisp :tangle init.el
 ;;; init.el -*- lexical-binding: t; -*-
 
 (doom! :input
@@ -125,7 +125,7 @@ This is my doom block. What it contains is pretty self explanatory.
        company           ; the ultimate code completion backend
        ;;(helm +fuzzy +icons +childframe)              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
-       ;(ivy +icons +prescient) ; a search engine for love and life
+                                        ;(ivy +icons +prescient) ; a search engine for love and life
 
        :ui
        deft              ; notational velocity for Emacs
@@ -178,7 +178,7 @@ This is my doom block. What it contains is pretty self explanatory.
        ;;vterm             ; another terminals in Emacs
 
        :checkers
-       ;syntax              ; tasing you for every semicolon you forget
+                                        ;syntax              ; tasing you for every semicolon you forget
        ;;spell             ; tasing you for misspelling mispelling
        ;;grammar           ; tasing grammar mistake every you make
 
@@ -280,10 +280,10 @@ This is my doom block. What it contains is pretty self explanatory.
        :personal
        exwm
        selectrum)
-#+end_src
+   #+end_src
 
 ** packages.el
-#+begin_src emacs-lisp :tangle packages.el
+   #+begin_src emacs-lisp :tangle packages.el
 ;; -*- no-byte-compile: t; -*-
 (package! modus-themes)
 (package! theme-magic)
@@ -293,7 +293,7 @@ This is my doom block. What it contains is pretty self explanatory.
 (package! ivy-youtube)
 (package! ivy-yasnippet)
 (package! ivy-explorer)
-;(package! solaire-mode :disable t)
+                                        ;(package! solaire-mode :disable t)
 (package! rg)
 (package! zoom)
 (package! org-tree-slide)
@@ -329,55 +329,58 @@ This is my doom block. What it contains is pretty self explanatory.
 (package! olivetti)
 (package! ytel)
 (package! guix)
-#+end_src
+   #+end_src
 
 * Theme
 ** All the icons
-#+begin_src emacs-lisp :tangle config.el :results no
+   #+begin_src emacs-lisp :tangle config.el :results no
 (after! all-the-icons
   (add-to-list 'all-the-icons-mode-icon-alist
                '(exwm-mode  all-the-icons-faicon "toggle-on"   :height 1.0 :v-adjust -0.2 :face all-the-icons-green)))
-#+end_src
+   #+end_src
 
 ** modus themes
-#+begin_src emacs-lisp :tangle config.el
+   #+begin_src emacs-lisp :tangle config.el
 (use-package modus-themes
   :config
-   (setq modus-themes-slanted-constructs t)
-   (setq modus-themes-bold-constructs t)
-   (setq modus-themes-fringes 'subtle) ; {nil,'subtle,'intense})
-   (setq modus-themes-mode-line nil) ; {nil,'3d,'moody}
-   ;(setq modus-themes-faint-syntax nil)
-   (setq modus-themes-intense-hl-line t)
-   ;(setq modus-themes-intense-paren-match t)
-   ;(setq modus-themes-no-link-underline t)
-   (setq modus-themes-prompts nil) ; {nil,'subtle,'intense}
-   (setq modus-themes-completions 'opinionated) ; {nil,'moderate,'opinionated})
-   ;(setq modus-themes-intense-standard-completions t)
-   (setq modus-themes-diffs nil) ; {nil,'desaturated,'fg-only})
-   (setq modus-themes-org-blocks 'greyscale) ; {nil,'greyscale,'rainbow}
-   (setq modus-themes-headings '((t . rainbow)))
-   (setq modus-themes-variable-pitch-headings nil)
-   (setq modus-themes-scale-headings t)
-   (setq modus-themes-scale-1 1.1)
-   (setq modus-themes-scale-2 1.15)
-   (setq modus-themes-scale-3 1.21)
-   (setq modus-themes-scale-4 1.27)
-   (setq modus-themes-scale-5 1.33))
-#+end_src
+  (setq modus-themes-slanted-constructs t)
+  (setq modus-themes-bold-constructs t)
+  (setq modus-themes-fringes 'subtle) ; {nil,'subtle,'intense})
+  (setq modus-themes-mode-line nil) ; {nil,'3d,'moody}
+                                        ;(setq modus-themes-faint-syntax nil)
+  (setq modus-themes-intense-hl-line t)
+                                        ;(setq modus-themes-intense-paren-match t)
+                                        ;(setq modus-themes-no-link-underline t)
+  (setq modus-themes-prompts nil) ; {nil,'subtle,'intense}
+  (setq modus-themes-completions 'opinionated) ; {nil,'moderate,'opinionated})
+                                        ;(setq modus-themes-intense-standard-completions t)
+  (setq modus-themes-diffs nil) ; {nil,'desaturated,'fg-only})
+  (setq modus-themes-org-blocks 'greyscale) ; {nil,'greyscale,'rainbow}
+  (setq modus-themes-headings '((t . rainbow)))
+  (setq modus-themes-variable-pitch-headings nil)
+  (setq modus-themes-scale-headings t)
+  (setq modus-themes-scale-1 1.1)
+  (setq modus-themes-scale-2 1.15)
+  (setq modus-themes-scale-3 1.21)
+  (setq modus-themes-scale-4 1.27)
+  (setq modus-themes-scale-5 1.33))
+   #+end_src
 
 ** Theme choice
 
-#+begin_src emacs-lisp :tangle config.el
+   #+begin_src emacs-lisp :tangle config.el
 (setq! doom-theme 'modus-operandi)
 (setq! doom-font "Iosevka:pixelsize=15")
 (setq frame-alpha-lower-limit 1)
-#+end_src
+   #+end_src
 
 ** Transparency
-  #+begin_src emacs-lisp :tangle config.el
+   #+begin_src emacs-lisp :tangle config.el
 (defvar lg/transparency-alpha 80
   "Transparency of all frames.")
+
+(defvar lg/transparency-default-increment 5
+  "Default {in, de}-crement value for the transparency alpha")
 
 (defun lg/toggle-transparency ()
   "Toggle the transparency of Emacs on and off"
@@ -392,28 +395,32 @@ This is my doom block. What it contains is pretty self explanatory.
               100)
          lg/transparency-alpha '(100 . 100)))))
 
-(defun lg/transparency-increase (arg)
+(defun lg/transparency-alpha-increase (arg)
   "Increase transparency of the frame"
   (interactive "P")
-  (setq lg/transparency-alpha (+ lg/transparency-alpha arg))
+  (let ((inc (if arg arg lg/transparency-default-increment)))
+    (setq lg/transparency-alpha (+ lg/transparency-alpha inc)))
   (lg/transparency-apply))
 
-(defun lg/transparency-decrease (arg)
+(defun lg/transparency-alpha-decrease (arg)
   "Increase transparency of the frame"
   (interactive "P")
-  (setq lg/transparency-alpha (- lg/transparency-alpha arg))
+  (let ((inc (if arg arg lg/transparency-default-increment)))
+    (setq lg/transparency-alpha (- lg/transparency-alpha inc)))
   (lg/transparency-apply))
 
 (defun lg/transparency-apply ()
   "Apply the transparency parameter to the frame"
   (interactive)
-    (set-frame-parameter
-     nil 'alpha lg/transparency-alpha))
-  #+end_src
+  (when (< 100 lg/transparency-alpha) (setq lg/transparency-alpha 100))
+  (when (> 0 lg/transparency-alpha) (setq lg/transparency-alpha 0))
+  (set-frame-parameter
+   nil 'alpha lg/transparency-alpha))
+   #+end_src
 
 ** Modeline
 
-#+begin_src emacs-lisp :tangle config.el
+   #+begin_src emacs-lisp :tangle config.el
 (after! doom-modeline
   (setq doom-modeline-buffer-file-name-style 'auto)
   (setq doom-modeline-bar-width (frame-parameter nil 'left-fringe))
@@ -447,17 +454,17 @@ Requires `eyebrowse-mode' or `tab-bar-mode' to be enabled."
                         'doom-modeline-buffer-major-mode
                       'mode-line-inactive)))))
   (display-time-mode -1))
-#+end_src
+   #+end_src
 
 ** Theme magic
 
    We can export the theme the we are using in emacs for other programs, like polybar, terminals, etc.
 
-#+begin_src emacs-lisp :tangle config.el
+   #+begin_src emacs-lisp :tangle config.el
 (use-package! theme-magic
   :config
   (theme-magic-export-theme-mode +1))
-#+end_src
+   #+end_src
 
 ** fringes
    #+begin_src emacs-lisp :tangle config.el
@@ -466,47 +473,47 @@ Requires `eyebrowse-mode' or `tab-bar-mode' to be enabled."
 
 * Window management
 ** Popups
-  #+begin_src emacs-lisp :tangle config.el
+   #+begin_src emacs-lisp :tangle config.el
 (set-popup-rules!
-    '(("^\\*Completions" :ignore t)
-      ("^\\*Local variables\\*$"
-       :vslot -1 :slot 1 :size +popup-shrink-to-fit)
-      ("^\\*\\(?:[Cc]ompil\\(?:ation\\|e-Log\\)\\|Messages\\)"
-       :vslot -2 :size 0.3  :autosave t :quit t :ttl nil)
-      ;; ("^\\*\\(?:doom \\|Pp E\\)"  ; transient buffers (no interaction required)
-      ;;  :vslot -3 :size +popup-shrink-to-fit :autosave t :select ignore :quit t :ttl 0)
-      ;; ("^\\*doom:"  ; editing buffers (interaction required)
-      ;;  :vslot -4 :size 0.35 :autosave t :select t :modeline t :quit nil :ttl t)
-      ("^\\*doom:\\(?:v?term\\|e?shell\\)-popup"  ; editing buffers (interaction required)
-       :ignore t)
-      ;;  :vslot -5 :size 0.35 :select t :modeline nil :quit nil :ttl nil)
-      ("^\\*\\(?:Wo\\)?Man "
-       :vslot -6 :size 0.45 :select t :quit t :ttl 0)
-      ("^\\*Calc"
-       :vslot -7 :side bottom :size 0.4 :select t :quit nil :ttl 0)
-      ("^\\*Customize"
-       :slot 2 :side right :size 0.5 :select t :quit nil)
-      ("^ \\*undo-tree\\*"
-       :slot 2 :side left :size 20 :select t :quit t)
-      ;; `help-mode', `helpful-mode'
-      ("^\\*[Hh]elp"
-      ;;  :slot 2 :vslot -8 :size 0.35 :select t)
-      ;; ("^\\*eww\\*"  ; `eww' (and used by dash docsets)
-       :vslot -11 :size 0.35 :select t)
-      ("^\\*info\\*$"  ; `Info-mode'
-       :slot 2 :vslot 2 :size 0.45 :select t)
-      ("^\\*Warnings" :vslot 99 :size 0.25)
-      ("^\\*Backtrace" :vslot 99 :size 0.4 :quit nil)
-      ("^\\*CPU-Profiler-Report "    :side bottom :vslot 100 :slot 1 :height 0.4 :width 0.5 :quit nil)
-      ("^\\*Memory-Profiler-Report " :side bottom :vslot 100 :slot 2 :height 0.4 :width 0.5 :quit nil)
-      ("^\\*Process List\\*" :side bottom :vslot 101 :size 0.25 :select t :quit t)
-      ("^\\*\\(?:Proced\\|timer-list\\|Abbrevs\\|Output\\|Occur\\|unsent mail\\)\\*" :ignore t)))
-  #+end_src
+  '(("^\\*Completions" :ignore t)
+    ("^\\*Local variables\\*$"
+     :vslot -1 :slot 1 :size +popup-shrink-to-fit)
+    ("^\\*\\(?:[Cc]ompil\\(?:ation\\|e-Log\\)\\|Messages\\)"
+     :vslot -2 :size 0.3  :autosave t :quit t :ttl nil)
+    ;; ("^\\*\\(?:doom \\|Pp E\\)"  ; transient buffers (no interaction required)
+    ;;  :vslot -3 :size +popup-shrink-to-fit :autosave t :select ignore :quit t :ttl 0)
+    ;; ("^\\*doom:"  ; editing buffers (interaction required)
+    ;;  :vslot -4 :size 0.35 :autosave t :select t :modeline t :quit nil :ttl t)
+    ("^\\*doom:\\(?:v?term\\|e?shell\\)-popup"  ; editing buffers (interaction required)
+     :ignore t)
+    ;;  :vslot -5 :size 0.35 :select t :modeline nil :quit nil :ttl nil)
+    ("^\\*\\(?:Wo\\)?Man "
+     :vslot -6 :size 0.45 :select t :quit t :ttl 0)
+    ("^\\*Calc"
+     :vslot -7 :side bottom :size 0.4 :select t :quit nil :ttl 0)
+    ("^\\*Customize"
+     :slot 2 :side right :size 0.5 :select t :quit nil)
+    ("^ \\*undo-tree\\*"
+     :slot 2 :side left :size 20 :select t :quit t)
+    ;; `help-mode', `helpful-mode'
+    ("^\\*[Hh]elp"
+     ;;  :slot 2 :vslot -8 :size 0.35 :select t)
+     ;; ("^\\*eww\\*"  ; `eww' (and used by dash docsets)
+     :vslot -11 :size 0.35 :select t)
+    ("^\\*info\\*$"  ; `Info-mode'
+     :slot 2 :vslot 2 :size 0.45 :select t)
+    ("^\\*Warnings" :vslot 99 :size 0.25)
+    ("^\\*Backtrace" :vslot 99 :size 0.4 :quit nil)
+    ("^\\*CPU-Profiler-Report "    :side bottom :vslot 100 :slot 1 :height 0.4 :width 0.5 :quit nil)
+    ("^\\*Memory-Profiler-Report " :side bottom :vslot 100 :slot 2 :height 0.4 :width 0.5 :quit nil)
+    ("^\\*Process List\\*" :side bottom :vslot 101 :size 0.25 :select t :quit t)
+    ("^\\*\\(?:Proced\\|timer-list\\|Abbrevs\\|Output\\|Occur\\|unsent mail\\)\\*" :ignore t)))
+   #+end_src
 
 ** Zoom mode
-Zoom is a nice package for window management in emacs. It enlarges the window
-that has focus.
-#+begin_src emacs-lisp :tangle config.el
+   Zoom is a nice package for window management in emacs. It enlarges the window
+   that has focus.
+   #+begin_src emacs-lisp :tangle config.el
 (use-package! zoom
   :config
   (map!
@@ -514,10 +521,10 @@ that has focus.
    (:prefix ("t" . "toggle")
     :desc "Zoom mode" "Z" #'zoom-mode))
   (zoom-mode -1))
-#+end_src
+   #+end_src
 
 ** Windmove
-#+begin_src emacs-lisp :tangle config.el
+   #+begin_src emacs-lisp :tangle config.el
 (use-package! windmove
   :init
   (map! "s-h" #'windmove-left
@@ -527,23 +534,23 @@ that has focus.
   :config
   (setq! windmove-wrap-around nil
          windmove-window-distance-delta 1))
-#+end_src
+   #+end_src
 
 ** Framemove
 
-Framemove extends windmove and allows to move from frame to frame. It makes
-switching from screen to screen easier in EXWM.
-#+begin_src emacs-lisp :tangle config.el
+   Framemove extends windmove and allows to move from frame to frame. It makes
+   switching from screen to screen easier in EXWM.
+   #+begin_src emacs-lisp :tangle config.el
 (use-package! framemove
   :after exwm-randr
   :init
   (load! "lisp/framemove.el")
   :config
   (setq framemove-hook-into-windmove t))
-#+end_src
+   #+end_src
 
 ** Windower
-#+begin_src emacs-lisp :tangle config.el
+   #+begin_src emacs-lisp :tangle config.el
 (use-package! windower
   :init
   (setq windower-border-move-distance 1)
@@ -559,13 +566,13 @@ switching from screen to screen easier in EXWM.
         "s-r"     #'windower-switch-to-last-buffer
         "s-o"     #'windower-toggle-single
         "s-\\"    #'windower-toggle-split))
-#+end_src
+   #+end_src
 
 ** Windresize
 
-#+begin_src emacs-lisp :tangle config.el
+   #+begin_src emacs-lisp :tangle config.el
 (use-package windresize)
-#+end_src
+   #+end_src
 
 ** Edwina
 
@@ -607,7 +614,7 @@ switching from screen to screen easier in EXWM.
 
 ** EXWM
 *** Packages
- #+begin_src emacs-lisp :tangle ./modules/personal/exwm/packages.el
+    #+begin_src emacs-lisp :tangle ./modules/personal/exwm/packages.el
 (package! xelb)
 (package! exwm)
 
@@ -633,26 +640,26 @@ switching from screen to screen easier in EXWM.
   :recipe
   (:host github
    :repo "tumashu/exwm-x"))
- #+end_src
+    #+end_src
 
 *** Config
 
- The following snippet should go into the file
- =/usr/share/xsessions/emacs.desktop= to make EXWM a possible choice in the
- display manager.
+    The following snippet should go into the file
+    =/usr/share/xsessions/emacs.desktop= to make EXWM a possible choice in the
+    display manager.
 
- #+begin_src conf :tangle no
+    #+begin_src conf :tangle no
 [Desktop Entry]
 Name=EXWM
 Comment=Emacs is awesome!
 Exec=emacs
 Type=application
- #+end_src
+    #+end_src
 
 *** Media keys
 
- Media keys need to be explicitely bound, as we might not use EXWM in a DE.
- #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
+    Media keys need to be explicitely bound, as we might not use EXWM in a DE.
+    #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
 (defun lg/volume-down ()
   "Lower volume of the computer"
   (interactive)
@@ -672,22 +679,22 @@ Type=application
   "Increase brightness of the screen"
   (interactive)
   (shell-command "xbacklight -inc 10"))
- #+end_src
+    #+end_src
 
 *** Mouse
- #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
+    #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
 ;; (defun lg/exwm-floating-resize (drag-event)
 ;;   (interactive "e")
 ;;   )
 (map! "<mode-line> <double-mouse-3>" #'exwm-floating-toggle-floating)
-      ;;"<top-left-corner> <mouse-1>" #'exwm-)
+;;"<top-left-corner> <mouse-1>" #'exwm-)
 
- #+end_src
+    #+end_src
 
 *** EXWM-randr
 
- EXWM has built in support for multi-monitor.
- #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
+    EXWM has built in support for multi-monitor.
+    #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
 (use-package! exwm-randr
   :config
   ;;(setq! exwm-randr-workspace-output-plist '(1 "VGA1"))
@@ -696,14 +703,14 @@ Type=application
   (defun lg/setup-screens ()
     (start-process-shell-command
      "xrandr" nil "sh ~/.screenlayout/arandr.layout.sh"))
- ;; xrandr --output DP2 --left-of eDP1"))
+  ;; xrandr --output DP2 --left-of eDP1"))
   (add-hook 'exwm-randr-screen-change-hook #'lg/setup-screens)
   (exwm-randr-enable))
- #+end_src
+    #+end_src
 
 *** EXWM-Systemtray
 
- #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
+    #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
 (use-package! exwm-systemtray
   :disabled
   :config
@@ -711,13 +718,13 @@ Type=application
          exwm-systemtray-icon-gap 3
          exwm-systemtray-background-color "black")
   (exwm-systemtray-enable))
- #+end_src
+    #+end_src
 
 *** EXWM
- EXWM is seriously awesome. Now I don't have to exit emacs *ever* and I get to
- configure my window manager with emacs lisp. Life is good.
+    EXWM is seriously awesome. Now I don't have to exit emacs *ever* and I get to
+    configure my window manager with emacs lisp. Life is good.
 
- #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
+    #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
 (use-package! exwm
   :if window-system
   :init
@@ -911,11 +918,11 @@ buffer (=minimizing in other WM/DE)"
   (load "~/.doom.d/exwm-utils.el")
                                         ;(shell-command "xfce4-panel --restart")
   (exwm-enable))
-   #+end_src
+    #+end_src
 
 *** EXWM-outer-gaps
 
-  #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
+    #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
 (use-package exwm-outer-gaps
   :after (xelb exwm hercules)
   :init
@@ -965,17 +972,17 @@ Argument hide is t if minibuffer should be hidden, true if shown."
          :desc "Decrease bottom" "j" (lambda () (interactive) (exwm-outer-gaps-decrement 3))
          :desc "Increase bottom" "J" (lambda () (interactive) (exwm-outer-gaps-increment 3))
          :desc "Shift frame left" "y" (lambda () (interactive)
-                                       (exwm-outer-gaps-increment 1)
-                                       (exwm-outer-gaps-decrement 0))
+                                        (exwm-outer-gaps-increment 1)
+                                        (exwm-outer-gaps-decrement 0))
          :desc "Shift frame right" "o" (lambda () (interactive)
-                                       (exwm-outer-gaps-increment 0)
-                                       (exwm-outer-gaps-decrement 1))
+                                         (exwm-outer-gaps-increment 0)
+                                         (exwm-outer-gaps-decrement 1))
          :desc "Shift frame down" "u" (lambda () (interactive)
-                                       (exwm-outer-gaps-increment 2)
-                                       (exwm-outer-gaps-decrement 3))
+                                        (exwm-outer-gaps-increment 2)
+                                        (exwm-outer-gaps-decrement 3))
          :desc "Shift frame up" "i" (lambda () (interactive)
-                                       (exwm-outer-gaps-increment 3)
-                                       (exwm-outer-gaps-decrement 2))
+                                      (exwm-outer-gaps-increment 3)
+                                      (exwm-outer-gaps-decrement 2))
          ))
 
   (defun lg/exwm-outer-gaps-hercules ()
@@ -1004,17 +1011,18 @@ Argument hide is t if minibuffer should be hidden, true if shown."
           (run-with-timer 1 nil (lambda () (efs/start-panel)))))
 
   (advice-add #'exwm-outer-gaps-apply :before #'lg/exwm-outer-gaps-setenv-and-polybar)
+
   (exwm-outer-gaps-mode +1))
-  #+end_src
+    #+end_src
 
 *** EXWM-Firefox
 
- With EXWM emulation keys, you can have vi-style keybindings within firefox,
- without having to install anything on the browser. Have I mentioned how awesome EXWM
- is? My next objective will probably be to bring firefox even closer to emacs by
- enabling new tabs within new windows and have emacs handle all windows with iBuffer.
+    With EXWM emulation keys, you can have vi-style keybindings within firefox,
+    without having to install anything on the browser. Have I mentioned how awesome EXWM
+    is? My next objective will probably be to bring firefox even closer to emacs by
+    enabling new tabs within new windows and have emacs handle all windows with iBuffer.
 
- #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
+    #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
 (use-package! exwm-firefox-evil
   :hook ((exwm-manage-finish . exwm-firefox-evil-activate-if-firefox)
          ;; (exwm-manage-finish . lg/exwm-firefox-force-fullscreen)
@@ -1104,9 +1112,9 @@ firefox, it leaves fullscreen mode."
 
   (define-key! exwm-mode-map
     "<return>" #'(lambda ()
-                 (interactive)
-                 (unless exwm-firefox-evil-mode
-                 (exwm-input--fake-key (aref (kbd "<return>") 0))))))
+                   (interactive)
+                   (unless exwm-firefox-evil-mode
+                     (exwm-input--fake-key (aref (kbd "<return>") 0))))))
 
 (use-package! exwm-firefox
   :after exwm-firefox-evil
@@ -1125,7 +1133,7 @@ firefox, it leaves fullscreen mode."
     "M" #'exwm-firefox-merge)
   ;; I don't like renaming the name of the firefox window
   (remove-hook 'exwm-update-title-hook 'exwm-firefox--update-title))
- #+end_src
+    #+end_src
 
 *** EXWM-background
     #+begin_src emacs-lisp :tangle no
@@ -1158,84 +1166,84 @@ firefox, it leaves fullscreen mode."
 *** Polybar
 
     #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
-  (defun lg/polybar-minibuffer-hide ()
-    (call-process "polybar-msg" nil 0 nil "cmd" "hide"))
-  (defun lg/polybar-minibuffer-show ()
-    (call-process "polybar-msg" nil 0 nil "cmd" "show"))
+(defun lg/polybar-minibuffer-hide ()
+  (call-process "polybar-msg" nil 0 nil "cmd" "hide"))
+(defun lg/polybar-minibuffer-show ()
+  (call-process "polybar-msg" nil 0 nil "cmd" "show"))
 
-  (add-hook 'minibuffer-setup-hook #'lg/polybar-minibuffer-hide)
-  (add-hook 'minibuffer-exit-hook #'lg/polybar-minibuffer-show)
+(add-hook 'minibuffer-setup-hook #'lg/polybar-minibuffer-hide)
+(add-hook 'minibuffer-exit-hook #'lg/polybar-minibuffer-show)
     #+end_src
 
 *** Tab-line/Centaur-tabs fix
- #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
+    #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
 (after! exwm
-    (defun exwm-layout--show (id &optional window)
-      "Show window ID exactly fit in the Emacs window WINDOW."
-      (exwm--log "Show #x%x in %s" id window)
-      (let* ((edges (window-inside-absolute-pixel-edges window))
-             (x (pop edges))
-             (y (pop edges))
-             (width (- (pop edges) x))
-             (height (- (pop edges) y))
-             frame-x frame-y frame-width frame-height)
-        (with-current-buffer (exwm--id->buffer id)
-          (when exwm--floating-frame
-            (setq frame-width (frame-pixel-width exwm--floating-frame)
-                  frame-height (+ (frame-pixel-height exwm--floating-frame)
-                                  ;; Use `frame-outer-height' in the future.
-                                  exwm-workspace--frame-y-offset))
-            (when exwm--floating-frame-position
-              (setq frame-x (elt exwm--floating-frame-position 0)
-                    frame-y (elt exwm--floating-frame-position 1)
-                    x (+ x frame-x (- exwm-layout--floating-hidden-position))
-                    y (+ y frame-y (- exwm-layout--floating-hidden-position)))
-              (setq exwm--floating-frame-position nil))
-            (exwm--set-geometry (frame-parameter exwm--floating-frame
-                                                 'exwm-container)
-                                frame-x frame-y frame-width frame-height))
-          (when (exwm-layout--fullscreen-p)
-            (with-slots ((x* x)
-                         (y* y)
-                         (width* width)
-                         (height* height))
-                (exwm-workspace--get-geometry exwm--frame)
-              (setq x x*
-                    y y*
-                    width width*
-                    height height*)))
-          ;; edited here
-          (when
-              (and (not (bound-and-true-p centaur-tabs-local-mode))
-                   (not (exwm-layout--fullscreen-p))
-                   (or (bound-and-true-p centaur-tabs-mode)
-                       (bound-and-true-p tab-line-mode)))
-            (setq y (+ y centaur-tabs-height)))
-          ;; edited here
-          (exwm--set-geometry id x y width height)
-          (xcb:+request exwm--connection (make-instance 'xcb:MapWindow :window id))
-          (exwm-layout--set-state id xcb:icccm:WM_STATE:NormalState)
-          (setq exwm--ewmh-state
-                (delq xcb:Atom:_NET_WM_STATE_HIDDEN exwm--ewmh-state))
-          (exwm-layout--set-ewmh-state id)
-          (exwm-layout--auto-iconify)))
-      (xcb:flush exwm--connection)))
- #+end_src
+  (defun exwm-layout--show (id &optional window)
+    "Show window ID exactly fit in the Emacs window WINDOW."
+    (exwm--log "Show #x%x in %s" id window)
+    (let* ((edges (window-inside-absolute-pixel-edges window))
+           (x (pop edges))
+           (y (pop edges))
+           (width (- (pop edges) x))
+           (height (- (pop edges) y))
+           frame-x frame-y frame-width frame-height)
+      (with-current-buffer (exwm--id->buffer id)
+        (when exwm--floating-frame
+          (setq frame-width (frame-pixel-width exwm--floating-frame)
+                frame-height (+ (frame-pixel-height exwm--floating-frame)
+                                ;; Use `frame-outer-height' in the future.
+                                exwm-workspace--frame-y-offset))
+          (when exwm--floating-frame-position
+            (setq frame-x (elt exwm--floating-frame-position 0)
+                  frame-y (elt exwm--floating-frame-position 1)
+                  x (+ x frame-x (- exwm-layout--floating-hidden-position))
+                  y (+ y frame-y (- exwm-layout--floating-hidden-position)))
+            (setq exwm--floating-frame-position nil))
+          (exwm--set-geometry (frame-parameter exwm--floating-frame
+                                               'exwm-container)
+                              frame-x frame-y frame-width frame-height))
+        (when (exwm-layout--fullscreen-p)
+          (with-slots ((x* x)
+                       (y* y)
+                       (width* width)
+                       (height* height))
+              (exwm-workspace--get-geometry exwm--frame)
+            (setq x x*
+                  y y*
+                  width width*
+                  height height*)))
+        ;; edited here
+        (when
+            (and (not (bound-and-true-p centaur-tabs-local-mode))
+                 (not (exwm-layout--fullscreen-p))
+                 (or (bound-and-true-p centaur-tabs-mode)
+                     (bound-and-true-p tab-line-mode)))
+          (setq y (+ y centaur-tabs-height)))
+        ;; edited here
+        (exwm--set-geometry id x y width height)
+        (xcb:+request exwm--connection (make-instance 'xcb:MapWindow :window id))
+        (exwm-layout--set-state id xcb:icccm:WM_STATE:NormalState)
+        (setq exwm--ewmh-state
+              (delq xcb:Atom:_NET_WM_STATE_HIDDEN exwm--ewmh-state))
+        (exwm-layout--set-ewmh-state id)
+        (exwm-layout--auto-iconify)))
+    (xcb:flush exwm--connection)))
+    #+end_src
 
 * Tabs
-Tabs are a relatively new feature in emacs. They come in two different flavors,
-=tab-bar-mode= and =tab-line-mode=. The first one is a great way to have
-different window layouts (what people would usually call workspaces) and the
-second is a way to display buffers that have been opened in a window (what
-people actually expect from tabs).
+  Tabs are a relatively new feature in emacs. They come in two different flavors,
+  =tab-bar-mode= and =tab-line-mode=. The first one is a great way to have
+  different window layouts (what people would usually call workspaces) and the
+  second is a way to display buffers that have been opened in a window (what
+  people actually expect from tabs).
 
-The tab-bar, much like the tool bar or the menu bar, is related to the frame.
-The tab-line, much like the mode-line or header-line, is exclusive to the
-buffer.
+  The tab-bar, much like the tool bar or the menu bar, is related to the frame.
+  The tab-line, much like the mode-line or header-line, is exclusive to the
+  buffer.
 
 ** Tab-bar-mode
 
-#+begin_src emacs-lisp :tangle config.el
+   #+begin_src emacs-lisp :tangle config.el
 (use-package! tab-bar
   :init
   (map! :nvi "C-t" #'prot/tab-bar-select-tab-dwim
@@ -1323,10 +1331,10 @@ questions.  Else use completion to select the tab to switch to."
       (tab-previous)))
 
   (tab-bar-mode -1))
-#+end_src
+   #+end_src
 
 ** Centaur tabs
-#+begin_src emacs-lisp :tangle config.el
+   #+begin_src emacs-lisp :tangle config.el
 (use-package! centaur-tabs
   :init
   (map! :n "gt" #'centaur-tabs-forward
@@ -1352,43 +1360,43 @@ questions.  Else use completion to select the tab to switch to."
          centaur-tabs-label-fixed-length 20
          uniquify-separator "/")
 
-(define-minor-mode centaur-tabs-local-mode
-  "Toggle local display of the tab bar.
+  (define-minor-mode centaur-tabs-local-mode
+    "Toggle local display of the tab bar.
 With prefix argument ARG, turn on if positive, otherwise off.
 Returns non-nil if the new state is enabled.
 When turned on, if a local header line is shown, it is hidden to show
 the tab bar.  The tab bar is locally hidden otherwise.  When turned
 off, if a local header line is hidden or the tab bar is locally
 hidden, it is shown again.  Signal an error if Centaur-Tabs mode is off."
-  :group 'centaur-tabs
-  :global nil
-  (if (centaur-tabs-mode-on-p)
-    (progn
+    :group 'centaur-tabs
+    :global nil
+    (if (centaur-tabs-mode-on-p)
+        (progn
 ;;; ON
-      (if centaur-tabs-local-mode
-          (if (and (local-variable-p centaur-tabs-display-line-format)
-                   (eval centaur-tabs-display-line-format))
+          (if centaur-tabs-local-mode
+              (if (and (local-variable-p centaur-tabs-display-line-format)
+                       (eval centaur-tabs-display-line-format))
 
-              ;; A local header line exists, hide it to show the tab bar.
-              (progn
-                ;; Fail in case of an inconsistency because another local
-                ;; header line is already hidden.
-                (when (local-variable-p 'centaur-tabs--local-hlf)
-                  (error "Another local header line is already hidden"))
-                (set (make-local-variable 'centaur-tabs--local-hlf)
-                     (eval centaur-tabs-display-line-format))
-                (kill-local-variable centaur-tabs-display-line-format))
-            ;; Otherwise hide the tab bar in this buffer.
-            (set centaur-tabs-display-line-format nil))
+                  ;; A local header line exists, hide it to show the tab bar.
+                  (progn
+                    ;; Fail in case of an inconsistency because another local
+                    ;; header line is already hidden.
+                    (when (local-variable-p 'centaur-tabs--local-hlf)
+                      (error "Another local header line is already hidden"))
+                    (set (make-local-variable 'centaur-tabs--local-hlf)
+                         (eval centaur-tabs-display-line-format))
+                    (kill-local-variable centaur-tabs-display-line-format))
+                ;; Otherwise hide the tab bar in this buffer.
+                (set centaur-tabs-display-line-format nil))
 ;;; OFF
-        (if (local-variable-p 'centaur-tabs--local-hlf)
-	    ;; A local header line is hidden, show it again.
-	(progn
-	  (set centaur-tabs-display-line-format centaur-tabs--local-hlf)
-	  (kill-local-variable 'centaur-tabs--local-hlf))
-      ;; The tab bar is locally hidden, show it again.
-      (kill-local-variable centaur-tabs-display-line-format))))
-    (message "Centaur-Tabs mode must be enabled")))
+            (if (local-variable-p 'centaur-tabs--local-hlf)
+            ;; A local header line is hidden, show it again.
+            (progn
+              (set centaur-tabs-display-line-format centaur-tabs--local-hlf)
+              (kill-local-variable 'centaur-tabs--local-hlf))
+              ;; The tab bar is locally hidden, show it again.
+              (kill-local-variable centaur-tabs-display-line-format))))
+      (message "Centaur-Tabs mode must be enabled")))
 
   (defun centaur-tabs-buffer-groups ()
     "`centaur-tabs-buffer-groups' control buffers' group rules.
@@ -1456,11 +1464,11 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
   ;;   (centaur-tabs-forward-group))
 
   (centaur-tabs-mode -1))
-#+end_src
+   #+end_src
 
 * Convenience
-#+begin_src emacs-lisp :tangle config.el
-;(server-start)
+  #+begin_src emacs-lisp :tangle config.el
+                                        ;(server-start)
 (load! "private.el") ; credentials and private info
 (setq! org-directory "~/org/"
        display-line-numbers-type `relative
@@ -1473,28 +1481,28 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
   "Kill the current buffer without confirmation"
   (interactive)
   (kill-buffer (current-buffer)))
-#+end_src
+  #+end_src
 
 ** Which-key
-Which key is one of the killer features for using emacs, it's good to discover
-commands and also to not worry about remembering keybindings. I have nothing but
-praise for this package *but* the way Doom Emacs sets it makes it pop too
-slowly. I want it to appear almost instantaneously.
+   Which key is one of the killer features for using emacs, it's good to discover
+   commands and also to not worry about remembering keybindings. I have nothing but
+   praise for this package *but* the way Doom Emacs sets it makes it pop too
+   slowly. I want it to appear almost instantaneously.
 
-#+begin_src emacs-lisp :tangle config.el
+   #+begin_src emacs-lisp :tangle config.el
 (after! which-key
   ;; which-key-idle-delay must be set before enabling the mode
   ;; so we disable it, set the variable and re-enable it
   (which-key-mode -1)
   (setq! which-key-idle-delay 0.7)
   (which-key-mode +1))
-#+end_src
+   #+end_src
 
 ** Hercules
-Hercules is a hydra banisher. Hydra is an excellent package, but you have to
-declare them explicitely, which makes it cumbersome. Hercules leverages which
-key to provide similar features.
-#+begin_src emacs-lisp :tangle config.el
+   Hercules is a hydra banisher. Hydra is an excellent package, but you have to
+   declare them explicitely, which makes it cumbersome. Hercules leverages which
+   key to provide similar features.
+   #+begin_src emacs-lisp :tangle config.el
 (use-package hercules
   :config
   (hercules-def
@@ -1502,27 +1510,27 @@ key to provide similar features.
    :hide-funs '(windresize-exit windresize-cancel-and-quit)
    :keymap 'windresize-map))
 
-  (hercules-def
-   :show-funs #'lg/edwina-popup
-   :keymap 'edwina-mode-map
-   :transient t)
-  ;(define-key <map-symbol> (kbd "<key>") #'windresize))
-#+end_src
+(hercules-def
+ :show-funs #'lg/edwina-popup
+ :keymap 'edwina-mode-map
+ :transient t)
+                                        ;(define-key <map-symbol> (kbd "<key>") #'windresize))
+   #+end_src
 
 ** Deft
-#+BEGIN_SRC emacs-lisp :tangle config.el
+   #+BEGIN_SRC emacs-lisp :tangle config.el
 (setq deft-directory "~/org")
-#+END_SRC
+   #+END_SRC
 
 ** Fast scroll mode
-#+begin_src emacs-lisp :tangle config.el
+   #+begin_src emacs-lisp :tangle config.el
 (use-package fast-scroll
   :config
   (fast-scroll-mode +1))
-#+end_src
+   #+end_src
 
 ** Scroll on jump
-  #+begin_src emacs-lisp :tangle config.el
+   #+begin_src emacs-lisp :tangle config.el
 (use-package scroll-on-jump
   :after evil
   :config
@@ -1536,17 +1544,17 @@ key to provide similar features.
   (scroll-on-jump-advice-add evil-forward-paragraph)
   (scroll-on-jump-advice-add evil-backward-paragraph)
   (setq scroll-on-jump-duration 0.2))
-  #+end_src
+   #+end_src
 
 ** good scroll
    #+begin_src emacs-lisp :tangle config.el
-   (use-package good-scroll
-     :config
-     (good-scroll-mode +1))
+(use-package good-scroll
+  :config
+  (good-scroll-mode +1))
    #+end_src
 
 * Mouse support
-#+begin_src emacs-lisp :tangle config.el
+  #+begin_src emacs-lisp :tangle config.el
 ;;; found at https://tsdh.wordpress.com/2015/03/03/swapping-emacs-windows-using-dragndrop/
 (defun th/swap-window-buffers-by-dnd (drag-event)
   "Swaps the buffers displayed in the DRAG-EVENT's start and end
@@ -1579,30 +1587,30 @@ window."
   (setq! strokes-file "~/.doom.d/strokes")
   (setq! strokes-use-strokes-buffer nil)
   (strokes-mode +1))
-      #+end_src
+  #+end_src
 
 * Hyperbole
-Hyperbole is basically hypertext everywhere. Hyperbole understands context and
-can call the appropriate action on a piece of text.
+  Hyperbole is basically hypertext everywhere. Hyperbole understands context and
+  can call the appropriate action on a piece of text.
 
-#+begin_src emacs-lisp :tangle config.el
+  #+begin_src emacs-lisp :tangle config.el
 (use-package! hyperbole
   :disabled)
-#+end_src
+  #+end_src
 
 * Org mode
 ** Performance
-#+begin_src emacs-lisp :tangle config.el
+   #+begin_src emacs-lisp :tangle config.el
 (after! org
   (setq org-fontify-quote-and-verse-blocks nil
         org-fontify-whole-heading-line nil
         org-hide-leading-stars nil
         org-startup-indented nil))
-#+end_src
+   #+end_src
 
 ** Latex
 
-#+begin_src emacs-lisp :tangle config.el
+   #+begin_src emacs-lisp :tangle config.el
 ;; (after! org
 ;;   (add-to-list 'org-latex-classes '("lettre" "\\documentclass[11pt]{lettre}
 ;; \\usepackage[utf8]{inputenc}
@@ -1615,20 +1623,20 @@ can call the appropriate action on a piece of text.
 ;;                                     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
 ;;                                     ("\\paragraph{%s}" . "\\paragraph*{%s}")
 ;;                                     ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
-#+end_src
+   #+end_src
 
 ** Org-sidebar
 
-#+begin_src emacs-lisp :tangle no
+   #+begin_src emacs-lisp :tangle no
 (use-package! org-sidebar
   :disabled
   :after org)
-#+end_src
+   #+end_src
 
 ** Org-superstar
 
-Pretty org bullet.
-#+begin_src emacs-lisp :tangle config.el
+   Pretty org bullet.
+   #+begin_src emacs-lisp :tangle config.el
 (use-package! org-superstar              ; supersedes `org-bullets'
   :after org
   :disabled
@@ -1641,11 +1649,11 @@ Pretty org bullet.
           (?* . ?➤)
           (?- . ?–)))
   (org-superstar-mode 1))
-#+end_src
+   #+end_src
 
 ** Presentation mode
 
-#+begin_src emacs-lisp :tangle config.el
+   #+begin_src emacs-lisp :tangle config.el
 (use-package! org-tree-slide
   :after org
   :commands prot/org-presentation-mode
@@ -1695,10 +1703,10 @@ Pretty org bullet.
          ("C-l" . org-tree-slide-display-header-toggle)
          ("C-j" . org-tree-slide-move-next-tree)
          ("C-k" . org-tree-slide-move-previous-tree)))
-#+end_src
+   #+end_src
 
 ** Org-noter
-#+begin_src emacs-lisp :tangle config.el
+   #+begin_src emacs-lisp :tangle config.el
 (use-package! org-noter
   :defer t
   :preface
@@ -1722,29 +1730,29 @@ Pretty org bullet.
 ;;      (:after (org-noter)
 ;;       :map pdf-view-mode-map
 ;;       :n "i" #'org-noter-insert-note))))
-#+end_src
+   #+end_src
 
 ** ox-report
-Create nice report for meetings.
-#+begin_src emacs-lisp :tangle config.el
+   Create nice report for meetings.
+   #+begin_src emacs-lisp :tangle config.el
 (use-package! ox-report)
-#+end_src
+   #+end_src
 
 ** org-ref
-#+begin_src emacs-lisp :tangle config.el
+   #+begin_src emacs-lisp :tangle config.el
 (use-package! org-ref
   :disabled
   :after org)
-#+end_src
+   #+end_src
 
 * PDF
 ** pdf-tools
-#+begin_src emacs-lisp :tangle config.el
+   #+begin_src emacs-lisp :tangle config.el
 (setq pdf-view-midnight-colors '("#ffffff" . "#000000"))
-#+end_src
+   #+end_src
 
 ** Continuous scrolling
-#+begin_src emacs-lisp :tangle no
+   #+begin_src emacs-lisp :tangle no
 (use-package! pdf-continuous-scroll-mode
   :after pdf-tools
   :disabled
@@ -1754,25 +1762,25 @@ Create nice report for meetings.
   ;;  (:map pdf-view-mode-map
   ;;   :n "j" #'pdf-continuous-scroll-forward
   ;;   :n "k" #'pdf-continuous-scroll-backward))
-   (map!
+  (map!
    (:map pdf-view-mode-map
     :n "j" #'evil-collection-pdf-view-next-line-or-next-page
     :n "k" #'evil-collection-pdf-view-previous-line-or-previous-page))
   )
-#+end_src
+   #+end_src
 
 * Completions
 ** Company
 *** Company-prescient
     #+begin_src emacs-lisp :tangle config.el
-     (use-package! company-prescient
-       :after company
-       :config
-       (company-prescient-mode +1))
+(use-package! company-prescient
+  :after company
+  :config
+  (company-prescient-mode +1))
     #+end_src
 ** Ivy
 
-#+begin_src emacs-lisp :tangle no
+   #+begin_src emacs-lisp :tangle no
 (after! ivy
   (setq ivy-re-builders-alist
         '((counsel-ffdata-firefox-history . +ivy-prescient-non-fuzzy)
@@ -1782,17 +1790,17 @@ Create nice report for meetings.
   (setq ivy-fixed-height-minibuffer nil)
   (setq ivy-read-action-function #'ivy-hydra-read-action)
   (setq ivy-add-newline-after-prompt nil))
-#+end_src
+   #+end_src
 
 *** Ivy-explorer
- #+begin_src emacs-lisp :tangle config.el
+    #+begin_src emacs-lisp :tangle config.el
 (use-package ivy-explorer
   :disabled)
- #+end_src
+    #+end_src
 
 *** Counsel
 
- #+begin_src emacs-lisp :tangle config.el
+    #+begin_src emacs-lisp :tangle config.el
 ;; (after! counsel
 ;;   (progn (map! "M-<tab>" #'counsel-switch-buffer
 ;;                (:leader
@@ -1800,11 +1808,11 @@ Create nice report for meetings.
 ;;                  #'counsel-switch-buffer "o"
 ;;                  #'counsel-switch-buffer-other-window "C-b"
 ;;                  #'counsel-switch-buffer-other-window)))))
- #+end_src
+    #+end_src
 
 *** Counsel-ffdata
- This package allows you to access your history and bookmarks from emacs, how awesome is that ?
- #+begin_src emacs-lisp :tangle no
+    This package allows you to access your history and bookmarks from emacs, how awesome is that ?
+    #+begin_src emacs-lisp :tangle no
 (use-package! counsel-ffdata
   :disabled
   :commands (counsel-ffdata-firefox-history
@@ -1814,10 +1822,10 @@ Create nice report for meetings.
          (:prefix ("s" . "search")
           :desc "Firefox history"   "h" #'counsel-ffdata-firefox-history
           :desc "Firefox bookmarks" "B" #'counsel-ffdata-firefox-bookmarks))))
- #+end_src
+    #+end_src
 
 *** Ivy-youtube
- #+begin_src emacs-lisp :tangle config.el
+    #+begin_src emacs-lisp :tangle config.el
 (use-package! ivy-youtube
   :disabled
   :config
@@ -1825,25 +1833,25 @@ Create nice report for meetings.
         (:prefix ("s" . "search")
          "y" #'ivy-youtube))
   (setq ivy-youtube-play-at "/usr/bin/mpv"))
- #+end_src
+    #+end_src
 
 *** Ivy-yasnippet
 
- Snippets are cool, but being able to narrow, preview and discover snippets is
- even cooler !
+    Snippets are cool, but being able to narrow, preview and discover snippets is
+    even cooler !
 
- #+begin_src emacs-lisp :tangle config.el
+    #+begin_src emacs-lisp :tangle config.el
 (use-package! ivy-yasnippet
   :disabled
   :init
   (map! (:leader
          (:prefix ("i" . "insert")
           :desc "Snippet" "s" #'ivy-yasnippet))))
- #+end_src
+    #+end_src
 
 *** Ivy-Spotify
 
- #+begin_src emacs-lisp :tangle config.el
+    #+begin_src emacs-lisp :tangle config.el
 (use-package! counsel-spotify
   :disabled
   :commands
@@ -1871,19 +1879,19 @@ Create nice report for meetings.
   :config
   (cl-defmethod counsel-spotify-do-play ((backend counsel-spotify-linux-backend) (something (eql nil)))
     nil))
- #+end_src
+    #+end_src
 
 *** Ivy-emms
- #+begin_src emacs-lisp :tangle config.el
+    #+begin_src emacs-lisp :tangle config.el
 (use-package! ivy-emms
   :disabled
   :after emms)
- #+end_src
+    #+end_src
 
 ** Selectrum
 *** packages.el
 
- #+begin_src emacs-lisp :tangle ./modules/personal/selectrum/packages.el
+    #+begin_src emacs-lisp :tangle ./modules/personal/selectrum/packages.el
 (package! selectrum
   :recipe (:host github
            :repo "raxod502/selectrum"))
@@ -1913,11 +1921,11 @@ Create nice report for meetings.
 (package! embark
   :recipe (:host github
            :repo "oantolin/embark"))
- #+end_src
+    #+end_src
 
 *** config.el
 
- #+begin_src emacs-lisp :tangle ./modules/personal/selectrum/config.el
+    #+begin_src emacs-lisp :tangle ./modules/personal/selectrum/config.el
 (use-package! selectrum
   :init
   (setq projectile-completion-system 'default)
@@ -1967,10 +1975,10 @@ Create nice report for meetings.
   (map! "s-;" #'embark-act)
   ;; For Selectrum users:
   (setq embark-action-indicator
-      (lambda (map)
-        (which-key--show-keymap "Embark" map nil nil 'no-paging)
-        #'which-key--hide-popup-ignore-command)
-      embark-become-indicator embark-action-indicator)
+        (lambda (map)
+          (which-key--show-keymap "Embark" map nil nil 'no-paging)
+          #'which-key--hide-popup-ignore-command)
+        embark-become-indicator embark-action-indicator)
 
   (defun current-candidate+category ()
     (when selectrum-active-p
@@ -1990,19 +1998,19 @@ Create nice report for meetings.
 
   ;; No unnecessary computation delay after injection.
   (add-hook 'embark-setup-hook 'selectrum-set-selected-candidate))
- #+end_src
+    #+end_src
 
 * Multimedia
 ** Emms
 
- Emms is a huge package that helps you manage your media files like movies,
- music, playlists and streams. You need an external player to play the media
- since Emacs is not capable of such feature. My player of choice is =mpv=, along
- with youtube-dl for content hosted on youtube.
+   Emms is a huge package that helps you manage your media files like movies,
+   music, playlists and streams. You need an external player to play the media
+   since Emacs is not capable of such feature. My player of choice is =mpv=, along
+   with youtube-dl for content hosted on youtube.
 
 *** General configuration
 
- #+begin_src emacs-lisp :tangle config.el
+    #+begin_src emacs-lisp :tangle config.el
 (use-package! emms
   :commands (emms-streams)
   :init
@@ -2015,25 +2023,25 @@ Create nice report for meetings.
    (:map emms-playlist-mode-map
     :n "q" #'emms-playlist-mode-bury-buffer)
    (:leader
-         (:prefix ("a" . "audio")
-          "e" nil
-          "es" #'emms-stop
-          "ee" #'emms-pause
-          "eS" #'emms-shuffle
-          "ea" #'emms-show-all
-          :desc "radio / streams" "r" #'emms-streams
-          )))
+    (:prefix ("a" . "audio")
+     "e" nil
+     "es" #'emms-stop
+     "ee" #'emms-pause
+     "eS" #'emms-shuffle
+     "ea" #'emms-show-all
+     :desc "radio / streams" "r" #'emms-streams
+     )))
   :config
   (emms-all)
   (emms-default-players))
- #+end_src
+    #+end_src
 
 *** Streams
 
- Here is the file that contains all the streams that I listen to (radios), all
- defined here and tangled to the right file.
+    Here is the file that contains all the streams that I listen to (radios), all
+    defined here and tangled to the right file.
 
- #+begin_src emacs-lisp :tangle emms/streams.emms
+    #+begin_src emacs-lisp :tangle emms/streams.emms
 ;;; This is an EMMS playlist file
 ;; This includes the built-in list of streams which come with Emms by
 ;; default. Emms has no affiliation of any kind with the streaming
@@ -2043,33 +2051,33 @@ Create nice report for meetings.
 ;; will enjoy them too.
 
 ((*track* (type . streamlist) (name . "http://www.somafm.com/beatblender.pls") (metadata "SomaFM: Beatblender" "http://www.somafm.com/beatblender.pls" 1 streamlist))
-(*track* (type . streamlist) (name . "http://www.somafm.com/secretagent.pls") (metadata "SomaFM: Secret Agent" "http://www.somafm.com/secretagent.pls" 1 streamlist))
-(*track* (type . streamlist) (name . "http://www.somafm.com/groovesalad.pls") (metadata "SomaFM: Groove Salad" "http://www.somafm.com/groovesalad.pls" 1 streamlist))
-(*track* (type . streamlist) (name . "http://www.somafm.com/dronezone.pls") (metadata "SomaFM: Drone Zone" "http://www.somafm.com/dronezone.pls" 1 streamlist))
-(*track* (type . streamlist) (name . "http://www.somafm.com/tagstrance.pls") (metadata "SomaFM: Tag's Trance" "http://www.somafm.com/tagstrance.pls" 1 streamlist))
-(*track* (type . streamlist) (name . "http://www.somafm.com/indiepop.pls") (metadata "SomaFM: Indie Pop Rocks" "http://www.somafm.com/indiepop.pls" 1 streamlist))
-(*track* (type . streamlist) (name . "http://www.somafm.com/doomed.pls") (metadata "SomaFM: Doomed" "http://www.somafm.com/doomed.pls" 1 streamlist))
-(*track* (type . url) (name . "http://listen.radionomy.com:80/-PHILOSOMATIKAPROGRESSIVE-") (metadata "P H I L O S O M A T I K A - Progressive Psytrance" "http://listen.radionomy.com:80/-PHILOSOMATIKAPROGRESSIVE-" 1 url))
-(*track* (type . streamlist) (name . "http://www.bassdrive.com/BassDrive.m3u") (metadata "Drum and Bass Radio, BassDrive" "http://www.bassdrive.com/BassDrive.m3u" 1 streamlist))
-(*track* (type . streamlist) (name . "http://www.ibiblio.org/wcpe/wcpe.pls") (metadata "WCPE, Classical Music" "http://www.ibiblio.org/wcpe/wcpe.pls" 1 streamlist))
-(*track* (type . streamlist) (name . "http://stream.nute.net/kohina/stream.ogg.m3u") (metadata "Kohina - Old school game and demo music" "http://stream.nute.net/kohina/stream.ogg.m3u" 1 streamlist))
-(*track* (type . streamlist) (name . "http://privat.is-by.us:8000/necta192.mp3.m3u") (metadata "Nectarine, Demoscene Radio, DE Continuum's relay 192 mp3" "http://privat.is-by.us:8000/necta192.mp3.m3u" 1 streamlist))
-(*track* (type . streamlist) (name . "http://nectarine.from-de.com/necta192.m3u") (metadata "Nectarine, Demoscene Radio, DE stream (High Bitrate)" "http://nectarine.from-de.com/necta192.m3u" 1 streamlist))
-(*track* (type . streamlist) (name . "http://www.wfmu.org/wfmu.pls") (metadata "WFMU, Freeform radio" "http://www.wfmu.org/wfmu.pls" 1 streamlist))
-(*track* (type . streamlist) (name . "http://wfmu.org/wfmu_rock.pls") (metadata "WFMU, Rock'n'Soul Ichiban!" "http://www.wfmu.org/wfmu.pls" 1 streamlist))
-(*track* (type . streamlist) (name . "http://wfmu.org/wfmu_drummer.pls") (metadata "WFMU, Give the Drummer Radio" "http://www.wfmu.org/wfmu.pls" 1 streamlist))
-(*track* (type . streamlist) (name . "http://wfmu.org/wfmu_sheena.pls") (metadata "WFMU, Sheena's Jungle Room" "http://www.wfmu.org/wfmu.pls" 1 streamlist))
-(*track* (type . streamlist) (name . "http://nyc01.egihosting.com:6232/listen.pls") (metadata "WBCR-LP - Berkshire Community Radio" "http://nyc01.egihosting.com:6232/listen.pls" 1 streamlist))
-(*track* (type . streamlist) (name . "http://199.244.85.125:8000/wxhq1") (metadata "WXHQ-LP - Newport Radio" "http://199.244.85.125:8000/wxhq1" 1 streamlist))
-(*track (type . url) (name . "http://direct.franceinter.fr/live/franceinter-lofi.mp3"))
-(*track (type . url) (name . "http://direct.franceinter.fr/live/franceinter-midfi.mp3")))
- #+end_src
+ (*track* (type . streamlist) (name . "http://www.somafm.com/secretagent.pls") (metadata "SomaFM: Secret Agent" "http://www.somafm.com/secretagent.pls" 1 streamlist))
+ (*track* (type . streamlist) (name . "http://www.somafm.com/groovesalad.pls") (metadata "SomaFM: Groove Salad" "http://www.somafm.com/groovesalad.pls" 1 streamlist))
+ (*track* (type . streamlist) (name . "http://www.somafm.com/dronezone.pls") (metadata "SomaFM: Drone Zone" "http://www.somafm.com/dronezone.pls" 1 streamlist))
+ (*track* (type . streamlist) (name . "http://www.somafm.com/tagstrance.pls") (metadata "SomaFM: Tag's Trance" "http://www.somafm.com/tagstrance.pls" 1 streamlist))
+ (*track* (type . streamlist) (name . "http://www.somafm.com/indiepop.pls") (metadata "SomaFM: Indie Pop Rocks" "http://www.somafm.com/indiepop.pls" 1 streamlist))
+ (*track* (type . streamlist) (name . "http://www.somafm.com/doomed.pls") (metadata "SomaFM: Doomed" "http://www.somafm.com/doomed.pls" 1 streamlist))
+ (*track* (type . url) (name . "http://listen.radionomy.com:80/-PHILOSOMATIKAPROGRESSIVE-") (metadata "P H I L O S O M A T I K A - Progressive Psytrance" "http://listen.radionomy.com:80/-PHILOSOMATIKAPROGRESSIVE-" 1 url))
+ (*track* (type . streamlist) (name . "http://www.bassdrive.com/BassDrive.m3u") (metadata "Drum and Bass Radio, BassDrive" "http://www.bassdrive.com/BassDrive.m3u" 1 streamlist))
+ (*track* (type . streamlist) (name . "http://www.ibiblio.org/wcpe/wcpe.pls") (metadata "WCPE, Classical Music" "http://www.ibiblio.org/wcpe/wcpe.pls" 1 streamlist))
+ (*track* (type . streamlist) (name . "http://stream.nute.net/kohina/stream.ogg.m3u") (metadata "Kohina - Old school game and demo music" "http://stream.nute.net/kohina/stream.ogg.m3u" 1 streamlist))
+ (*track* (type . streamlist) (name . "http://privat.is-by.us:8000/necta192.mp3.m3u") (metadata "Nectarine, Demoscene Radio, DE Continuum's relay 192 mp3" "http://privat.is-by.us:8000/necta192.mp3.m3u" 1 streamlist))
+ (*track* (type . streamlist) (name . "http://nectarine.from-de.com/necta192.m3u") (metadata "Nectarine, Demoscene Radio, DE stream (High Bitrate)" "http://nectarine.from-de.com/necta192.m3u" 1 streamlist))
+ (*track* (type . streamlist) (name . "http://www.wfmu.org/wfmu.pls") (metadata "WFMU, Freeform radio" "http://www.wfmu.org/wfmu.pls" 1 streamlist))
+ (*track* (type . streamlist) (name . "http://wfmu.org/wfmu_rock.pls") (metadata "WFMU, Rock'n'Soul Ichiban!" "http://www.wfmu.org/wfmu.pls" 1 streamlist))
+ (*track* (type . streamlist) (name . "http://wfmu.org/wfmu_drummer.pls") (metadata "WFMU, Give the Drummer Radio" "http://www.wfmu.org/wfmu.pls" 1 streamlist))
+ (*track* (type . streamlist) (name . "http://wfmu.org/wfmu_sheena.pls") (metadata "WFMU, Sheena's Jungle Room" "http://www.wfmu.org/wfmu.pls" 1 streamlist))
+ (*track* (type . streamlist) (name . "http://nyc01.egihosting.com:6232/listen.pls") (metadata "WBCR-LP - Berkshire Community Radio" "http://nyc01.egihosting.com:6232/listen.pls" 1 streamlist))
+ (*track* (type . streamlist) (name . "http://199.244.85.125:8000/wxhq1") (metadata "WXHQ-LP - Newport Radio" "http://199.244.85.125:8000/wxhq1" 1 streamlist))
+ (*track (type . url) (name . "http://direct.franceinter.fr/live/franceinter-lofi.mp3"))
+ (*track (type . url) (name . "http://direct.franceinter.fr/live/franceinter-midfi.mp3")))
+    #+end_src
 
 ** Video
 
- Mpv helper functions.
+   Mpv helper functions.
 
- #+BEGIN_SRC elisp :tangle config.el
+   #+BEGIN_SRC elisp :tangle config.el
 (defun mpv-v-open (url)
   "Watch a video from URL in MPV"
   (async-shell-command (format "mpv %s" url)
@@ -2081,16 +2089,16 @@ Create nice report for meetings.
   (async-shell-command (format "mpv %s --no-video" url)
                        (format "*mpv %s*" url))
   (switch-to-buffer-other-window (format "*mpv %s*" url)))
- #+END_SRC
+   #+END_SRC
 
 ** ytel
 
- Ytel is a youtube frontend for Emacs. It is a rather new tool as of writing
- these lines. It uses the invidious api (calling it through =curl=), and an
- instance of the API has to be chosen. Instances might come and go, so it might
- be necessary to check [[github:iv-org/invidious/wiki/Invidious-Instances][the available instances]].
+   Ytel is a youtube frontend for Emacs. It is a rather new tool as of writing
+   these lines. It uses the invidious api (calling it through =curl=), and an
+   instance of the API has to be chosen. Instances might come and go, so it might
+   be necessary to check [[github:iv-org/invidious/wiki/Invidious-Instances][the available instances]].
 
- #+begin_src emacs-lisp :tangle config.el
+   #+begin_src emacs-lisp :tangle config.el
 (use-package! ytel
   :commands (ytel)
   :hook (ytel-mode . (lambda () (interactive) (evil-snipe-local-mode -1)))
@@ -2134,11 +2142,11 @@ Create nice report for meetings.
       (message "Copied RSS feed for: %s -- %s" author url)))
 
   (setq! ytel-invidious-api-url "https://invidious.snopyta.org"))
- #+end_src
+   #+end_src
 
 * Elfeed
 
-#+begin_src emacs-lisp :tangle config.el
+  #+begin_src emacs-lisp :tangle config.el
 (after! elfeed
   (progn
     (defun elfeed-view-mpv (&optional use-generic-p)
@@ -2146,9 +2154,9 @@ Create nice report for meetings.
       (interactive "P")
       (let ((entries (elfeed-search-selected)))
         (cl-loop for entry in entries
-	         do (elfeed-untag entry 'unread)
-	         when (elfeed-entry-link entry)
-	         do (mpv-v-open it))
+             do (elfeed-untag entry 'unread)
+             when (elfeed-entry-link entry)
+             do (mpv-v-open it))
         (mapc #'elfeed-search-update-entry entries)
         (unless (use-region-p) (forward-line))))
 
@@ -2157,9 +2165,9 @@ Create nice report for meetings.
       (interactive "P")
       (let ((entries (elfeed-search-selected)))
         (cl-loop for entry in entries
-	         do (elfeed-untag entry 'unread)
-	         when (elfeed-entry-link entry)
-	         do (mpv-a-open it))
+             do (elfeed-untag entry 'unread)
+             when (elfeed-entry-link entry)
+             do (mpv-a-open it))
         (mapc #'elfeed-search-update-entry entries)
         (unless (use-region-p) (forward-line))))
 
@@ -2177,33 +2185,33 @@ Create nice report for meetings.
       (:prefix ("o" . "open")
        :desc "El[f]eed"         "f" #'elfeed
        :desc "El[F]eed update"  "F" #'elfeed-update)))))
-#+end_src
+  #+end_src
 
 * Ripgrep
 
-#+begin_src emacs-lisp :tangle config.el
+  #+begin_src emacs-lisp :tangle config.el
 (use-package! rg)
-#+end_src
+  #+end_src
 
 * Treemacs
 
-#+begin_src emacs-lisp :tangle config.el
+  #+begin_src emacs-lisp :tangle config.el
 (when (featurep! :ui treemacs)
   (map! (:leader
          (:prefix ("t" . "toggle")
           :desc "Treemacs" "T" #'treemacs)))
   (setq treemacs-width 20))
-#+end_src
+  #+end_src
 
 * Terminal
 ** Vterm
-#+begin_src emacs-lisp :tangle config.el
+   #+begin_src emacs-lisp :tangle config.el
 (use-package! vterm
   :disabled
   :init
   (setq vterm-always-compile-module t)
   (setq vterm-module-cmake-args "-DUSE_SYSTEM_VTERM=no"))
-#+end_src
+   #+end_src
 
 ** eshell
    In most cases, eshell is sufficient for all my needs. It works really well,
@@ -2211,9 +2219,9 @@ Create nice report for meetings.
    my computer but it's nice for emacs users on windows out there !
 
    #+begin_src emacs-lisp :tangle config.el
-   (after! eshell
-     (setq eshell-kill-on-exit nil)
-     (setq eshell-kill-processes-on-exit nil))
+(after! eshell
+  (setq eshell-kill-on-exit nil)
+  (setq eshell-kill-processes-on-exit nil))
    #+end_src
 
 ** fish completion
@@ -2238,13 +2246,13 @@ Create nice report for meetings.
 * Browsing the internet
 ** Eww
 
-EWW stands for the Emacs Web Wowser, and it is a web browser written in emacs
-lisp. It relies on =shr= (simple html renderer), and is only capable of
-rendering /you guessed it/ : html. I find myself using it more and more, as it
-is really lightweight, and is a really nice interface to read online
-documentation, as you can easily copy and paste the snippets to your project.
+   EWW stands for the Emacs Web Wowser, and it is a web browser written in emacs
+   lisp. It relies on =shr= (simple html renderer), and is only capable of
+   rendering /you guessed it/ : html. I find myself using it more and more, as it
+   is really lightweight, and is a really nice interface to read online
+   documentation, as you can easily copy and paste the snippets to your project.
 
-#+begin_src emacs-lisp :tangle config.el
+   #+begin_src emacs-lisp :tangle config.el
 (use-package! eww
   :commands (eww)
   :init
@@ -2266,7 +2274,7 @@ documentation, as you can easily copy and paste the snippets to your project.
     (interactive)
     "View video in url at point in mpv"
     (mpv-a-open (thing-at-point 'url))))
-#+end_src
+   #+end_src
 
 * System administration
   Emacs is a fantastic tool, that we can use to help manage our system in better
@@ -2278,12 +2286,12 @@ documentation, as you can easily copy and paste the snippets to your project.
 
 * Matlab
 ** Packages
-#+begin_src emacs-lisp :tangle ./modules/lang/matlab/packages.el
+   #+begin_src emacs-lisp :tangle ./modules/lang/matlab/packages.el
 (package! matlab-mode)
-#+end_src
+   #+end_src
 
 ** Config
-#+begin_src emacs-lisp :tangle ./modules/lang/matlab/config.el
+   #+begin_src emacs-lisp :tangle ./modules/lang/matlab/config.el
 ;;;###autoload
 (defun +matlab/open-repl ()
   "Open the Matlab REPL."
@@ -2307,17 +2315,17 @@ documentation, as you can easily copy and paste the snippets to your project.
   (map! :map matlab-mode-map
         :v "gr" #'matlab-shell-run-region-or-line
         :n "gr" #'matlab-shell-run-region-or-line))
-#+end_src
+   #+end_src
 * Keybindings
 ** Evil mode
-#+begin_src emacs-lisp :tangle config.el
+   #+begin_src emacs-lisp :tangle config.el
 (after! evil
   (map! :n
         "C-e" #'end-of-line))
-#+end_src
+   #+end_src
 
 ** Misc
-#+begin_src emacs-lisp :tangle config.el
+   #+begin_src emacs-lisp :tangle config.el
 (map! "M-j" #'drag-stuff-down
       "M-k" #'drag-stuff-up
       (:leader
