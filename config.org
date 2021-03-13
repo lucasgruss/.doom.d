@@ -1456,6 +1456,7 @@ firefox, it leaves fullscreen mode."
   "Kill the current buffer without confirmation"
   (interactive)
   (kill-buffer (current-buffer)))
+(map! "s-<escape>" #'lg/kill-this-buffer)
   #+end_src
 
 ** Which-key
@@ -1909,13 +1910,12 @@ window."
 
 (use-package! consult
   :init
-  (map! :leader
-        ;; (:prefix ("h" . "help")
-        ;;  "t" #'consult-theme)
+  (map! (:leader
         (:prefix ("f" . "files")
          :desc "Recent files" "r" #'consult-recent-file)
         (:prefix ("s" . "search")
          "s" #'consult-line))
+        "s-\'" #'consult-buffer)
   :config
   (setq consult-preview-key nil))
 
@@ -2256,10 +2256,12 @@ window."
    Vterm is really nice, I like it.
    #+begin_src emacs-lisp :tangle config.el
 (use-package! vterm
+  :defer t
   :init
   (setq vterm-shell "/usr/bin/bash")
   (setq vterm-always-compile-module t)
-  (setq vterm-module-cmake-args "-DUSE_SYSTEM_VTERM=no"))
+  (setq vterm-module-cmake-args "-DUSE_SYSTEM_VTERM=no")
+  (map! "s-<return>" #'+vterm/toggle))
    #+end_src
 
 ** eshell
