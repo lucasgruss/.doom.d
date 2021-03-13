@@ -2361,6 +2361,38 @@ window."
   (set-repl-handler! 'python-mode #'+python/open-ipython-repl :persist t))
  #+end_src
 
+* Emacs Application Framework (eaf)
+This is the module for the emacs application framework.
+** Packages
+#+begin_src emacs-lisp :tangle ./modules/personal/eaf/packages.el
+(package! epc)
+(package! ctable)
+(package! deferred)
+(package! s)
+(package! eaf
+  :recipe (:host github
+           :repo "manateelazycat/emacs-application-framework"))
+#+end_src
+
+** config
+#+begin_src emacs-lisp :tangle ./modules/personal/eaf/config.el
+ (use-package epc :defer t :ensure t)
+ (use-package ctable :defer t :ensure t)
+ (use-package deferred :defer t :ensure t)
+ (use-package s :defer t :ensure t)
+(use-package eaf
+  :load-path "~/.emacs.d/.local/straight/repos/emacs-application-framework" ; Set to "/usr/share/emacs/site-lisp/eaf" if installed from AUR
+  :after (epc ctable deferred s)
+  :custom
+  (eaf-browser-continue-where-left-off t)
+  :config
+  (eaf-setq eaf-browser-enable-adblocker "true")
+  (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key take_photo "p" eaf-camera-keybinding)
+  (eaf-bind-key nil "M-q" eaf-browser-keybinding)) ;; unbind, see more in the Wiki
+#+end_src
+
 * Keybindings
 ** Evil mode
    #+begin_src emacs-lisp :tangle config.el
