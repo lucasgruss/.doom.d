@@ -4,7 +4,16 @@
 #+STARTUP: inlineimages nofold
 
 * Description
-Welcome to my configuration for Emacs/Doom Emacs.
+Welcome to my configuration for Emacs. I use Doom Emacs, and my configuration is
+centered around EXWM. The themes I use are centered around readability :
+
+#+CAPTION: Light and dark versions of the themes used.
+|---------+----------------+-------------+---------------|
+| Variant | Emacs-theme    | GTK theme   | Icon theme    |
+|---------+----------------+-------------+---------------|
+| light   | modus-operandi | Adwaita     | Papirus-Light |
+| dark    | modus-vivendi  | Adwaita-Dar | Papirus-Dark  |
+|---------+----------------+-------------+---------------|
 
 #+CAPTION: Light theme
 [[./img/light.png]]
