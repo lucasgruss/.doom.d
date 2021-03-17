@@ -1,0 +1,15 @@
+#+TITLE:   Configuration for Doom Emacs
+#+AUTHOR: Lucas Gruss
+#+DATE:    March 17, 2021
+#+STARTUP: inlineimages nofold
+
+* Description
+Welcome to my configuration for Emacs/Doom Emacs.
+
+#+CAPTION: Light theme
+[[./img/light.png]]
+
+#+CAPTION: Dark theme
+[[./img/dark.png]]
+
+All my configuration can be found in the file =config.org=.
