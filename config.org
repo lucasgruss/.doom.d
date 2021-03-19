@@ -2319,7 +2319,7 @@ Format is a string matching the following format specification:
 
 *** DONE du
     Interface to disk-usage.
-   #+begin_src sh :tangle no
+   #+begin_src sh :tangle ~/.doom.d/emacs-bash-layer.sh
 function du(){
     if [ $# -eq 0 ]
     then
@@ -2332,6 +2332,7 @@ function du(){
     fi
 }
    #+end_src
+
 *** DONE man
     Interface to man page reader
 
