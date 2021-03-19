@@ -219,16 +219,16 @@
 (package! solaire-mode :disable t)
 (package! rg)
 (package! zoom)
-(package! org-mode
-  :recipe (:host github
-           :repo "yantar92/org"
-           :branch "feature/org-fold"
-           :files ("*.el" "lisp/*.el" "contrib/lisp/*.el")
-           :pre-build (with-temp-file (expand-file-name "org-version.el" (straight--repos-dir "org"))
-                        (insert "(fset 'org-release (lambda () \"9.5\"))\n"
-                                "(fset 'org-git-version #'ignore)\n"
-                                "(provide 'org-version)\n")))
-  :shadow 'org)
+;; (package! org-mode
+;;   :recipe (:host github
+;;            :repo "yantar92/org"
+;;            :branch "feature/org-fold"
+;;            :files ("*.el" "lisp/*.el" "contrib/lisp/*.el")
+;;            :pre-build (with-temp-file (expand-file-name "org-version.el" (straight--repos-dir "org"))
+;;                         (insert "(fset 'org-release (lambda () \"9.5\"))\n"
+;;                                 "(fset 'org-git-version #'ignore)\n"
+;;                                 "(provide 'org-version)\n")))
+;;   :shadow 'org)
 (package! org-tree-slide)
 (package! org-superstar)
 (package! org-sidebar)
