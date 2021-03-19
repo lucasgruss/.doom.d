@@ -1109,7 +1109,7 @@ buffer (=minimizing in other WM/DE)"
   (push (aref (kbd "<return>") 0) exwm-input-prefix-keys)
 
   ;; relaunch the panel so that it auto-hide correctly
-  (load "~/.doom.d/exwm-utils.el")
+  (load "~/.doom.d/lisp/exwm-utils.el")
                                         ;(shell-command "xfce4-panel --restart")
   (exwm-enable))
     #+end_src
