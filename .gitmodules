@@ -1,0 +1,3 @@
+[submodule "espotify"]
+	path = espotify
+	url = https://codeberg.org/jao/espotify
