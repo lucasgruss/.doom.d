@@ -1694,10 +1694,74 @@ window."
   :after org)
    #+end_src
 
+** org-contacts
+   #+begin_src emacs-lisp :tangle yes
+(use-package org-contacts
+  :after org
+  :config
+ (setq org-contacts-files '("~/org/contacts.org"))
+ ;; (setq org-contacts-keymap)
+ (setq org-contacts-matcher "EMAIL<>\"\"|ALIAS<>\"\"|TEL<>\"\"|ADRESSE<>\"\"|ANNIVERSAIRE<>\"\"")
+ (setq org-contacts-icon-size 32)
+ (setq org-contacts-vcard-file "~/org/contacts.vcf")
+ ;; (setq org-contacts-last-update nil)
+ (setq org-contacts-tel-property "TEL")
+ (setq org-contacts-group-prefix "+")
+ (setq org-contacts-icon-property "ICON")
+ (setq org-contacts-note-property "NOTE")
+ (setq org-contacts-alias-property "ALIAS")
+ (setq org-contacts-email-property "EMAIL")
+ (setq org-contacts-ignore-property "IGNORE")
+ (setq org-contacts-birthday-format "Anniversaire: %l (%Y)")
+ (setq org-contacts-address-property "ADRESSE")
+ (setq org-contacts-tags-props-prefix "#")
+ (setq org-contacts-icon-use-gravatar t)
+ (setq org-contacts-enable-completion t)
+ (setq org-contacts-birthday-property "ANNIVERSAIRE")
+ (setq org-contacts-nickname-property "NICKNAME")
+ ;; (setq org-contacts-complete-functions )
+ (setq org-contacts-completion-ignore-case t)
+ (setq org-contacts-last-read-mail-property "DERNIER_MAIL")
+ (setq org-contacts-property-values-separators "[,; \f\11\n\15\13]+")
+ (setq org-contacts-email-link-description-format "%s (%d)")
+ ;;(setq calendar-date-style 'american)
+(defun org-contacts-anniversaries (&optional field format)
+  "Compute FIELD anniversary for each contact, returning FORMAT.
+Default FIELD value is \"BIRTHDAY\".
+
+Format is a string matching the following format specification:
+
+  %h - Heading name
+  %l - Link to the heading
+  %y - Number of year
+  %Y - Number of year (ordinal)"
+  (let ((calendar-date-style 'american)
+        (entry ""))
+    (unless format (setq format org-contacts-birthday-format))
+    (cl-loop for contact in (org-contacts-filter)
+	     for anniv = (let ((anniv (cdr (assoc-string
+					    (or field org-contacts-birthday-property)
+					    (nth 2 contact)))))
+			   (when anniv
+			     (calendar-gregorian-from-absolute
+			      (org-time-string-to-absolute anniv))))
+	     ;; Use `diary-anniversary' to compute anniversary.
+	     if (and anniv (apply 'diary-anniversary anniv))
+	     collect (format-spec format
+				  `((?l . ,(org-with-point-at (cadr contact) (org-store-link nil)))
+				    (?h . ,(car contact))
+				    (?y . ,(- (calendar-extract-year date)
+					      (calendar-extract-year anniv)))
+				    (?Y . ,(let ((years (- (calendar-extract-year date)
+							   (calendar-extract-year anniv))))
+					     (format "%d%s" years (diary-ordinal-suffix years))))))))))
+ #+end_src
+
 * PDF
 ** pdf-tools
    #+begin_src emacs-lisp :tangle config.el
-(setq pdf-view-midnight-colors '("#ffffff" . "#000000"))
+(after! pdf-tools
+  (setq pdf-view-midnight-colors '("#ffffff" . "#000000")))
    #+end_src
 
 ** Continuous scrolling
