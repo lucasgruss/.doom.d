@@ -2332,9 +2332,19 @@ function du(){
     fi
 }
    #+end_src
-*** TODO man
+*** DONE man
     Interface to man page reader
 
+   #+begin_src sh :tangle ~/.doom.d/emacs-bash-layer.sh
+function man(){
+    if [ $# -eq 0 ]
+    then
+        emacsclient -e "(call-interactively #'man)"
+    else
+        emacsclient -e "(man $1)"
+    fi
+}
+   #+end_src
 
 ** Vterm
    Vterm is really nice, I like it.
