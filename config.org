@@ -2247,10 +2247,24 @@ window."
         ytdl-video-folder "~/Vidéos"))
     #+end_src
 
-*** TODO du
-    Interface to disk-usage
+*** DONE du
+    Interface to disk-usage.
+   #+begin_src sh :tangle no
+function du(){
+    if [ $# -eq 0 ]
+    then
+        emacsclient -e "(call-interactively #'disk-usage)"
+    else
+        case $1 in
+            /*) emacsclient -e "(disk-usage $1)";;
+            ,*) emacsclient -e "(disk-usage \"$PWD/$1\")";;
+        esac
+    fi
+}
+   #+end_src
 *** TODO man
     Interface to man page reader
+
 
 ** Vterm
    Vterm is really nice, I like it.
