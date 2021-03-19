@@ -814,7 +814,7 @@ Xresources have the settings applied to them."
          "l" #'edwina-inc-mfact)))
    #+end_src
 
-** EXWM
+** EXWM :module:
 *** Packages
     #+begin_src emacs-lisp :tangle ./modules/personal/exwm/packages.el
 (package! xelb)
@@ -1902,7 +1902,7 @@ Format is a string matching the following format specification:
   :after emms)
     #+end_src
 
-** Selectrum
+** Selectrum :module:
 *** packages.el
 
     #+begin_src emacs-lisp :tangle ./modules/personal/selectrum/packages.el
@@ -2457,7 +2457,7 @@ function man(){
   (set-repl-handler! 'python-mode #'+python/open-ipython-repl :persist t))
  #+end_src
 
-* Emacs Application Framework (eaf)
+* Emacs Application Framework (eaf) :module:
 This is the module for the emacs application framework.
 ** Packages
 #+begin_src emacs-lisp :tangle ./modules/personal/eaf/packages.el
