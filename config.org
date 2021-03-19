@@ -2012,7 +2012,11 @@ window."
      "m" #'emms
      :desc "radio / streams" "r" #'emms-streams)))
   :config
-  (emms-all))
+  (defun lg/emms-kill-mpv ()
+    (interactive)
+    (shell-command "killall mpv"))
+  (emms-all)
+  (add-hook 'emms-player-stopped-hook #'lg/emms-kill-mpv))
     #+end_src
 
 *** Streams
