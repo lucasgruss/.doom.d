@@ -1976,10 +1976,10 @@ Format is a string matching the following format specification:
 (use-package! consult
   :init
   (map! (:leader
-        (:prefix ("f" . "files")
-         :desc "Recent files" "r" #'consult-recent-file)
-        (:prefix ("s" . "search")
-         "s" #'consult-line))
+         (:prefix ("f" . "files")
+          :desc "Recent files" "r" #'consult-recent-file)
+         (:prefix ("s" . "search")
+          "s" #'consult-line))
         "s-\'" #'consult-buffer)
   :config
   (setq consult-preview-key nil))
@@ -2307,6 +2307,7 @@ Format is a string matching the following format specification:
    man page reader built into emacs. I want to be able to do similar things in
    any shell. The way to go is to write aliases that call emacsclient with the
    right functions and arguments.
+
 *** TODO Ytdl
     Interface to yt-download.
     #+begin_src emacs-lisp :tangle config.el
