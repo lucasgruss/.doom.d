@@ -1528,8 +1528,8 @@ firefox, it leaves fullscreen mode."
   (good-scroll-mode +1))
    #+end_src
 
-* Mouse support
-  #+begin_src emacs-lisp :tangle config.el
+** Mouse support
+   #+begin_src emacs-lisp :tangle config.el
 ;;; found at https://tsdh.wordpress.com/2015/03/03/swapping-emacs-windows-using-dragndrop/
 (defun th/swap-window-buffers-by-dnd (drag-event)
   "Swaps the buffers displayed in the DRAG-EVENT's start and end
