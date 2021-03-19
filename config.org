@@ -1567,11 +1567,12 @@ window."
 * Org mode
    #+begin_src emacs-lisp :tangle config.el
 (after! org
-  (setq org-fontify-quote-and-verse-blocks nil
-        org-fontify-whole-heading-line nil
-        org-hide-leading-stars nil
-        org-startup-indented nil
-        org-archive-location "archive/%s_archive::"))
+  (setq org-fontify-quote-and-verse-blocks nil)
+  (setq org-fontify-whole-heading-line nil)
+  (setq org-agenda-include-diary t)
+  (setq org-hide-leading-stars nil)
+  (setq org-startup-indented nil)
+  (setq org-archive-location "archive/%s_archive::"))
    #+end_src
 
 ** Org-sidebar
