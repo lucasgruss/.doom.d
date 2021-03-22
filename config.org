@@ -530,11 +530,13 @@ All buffer name start with * will group to \"Emacs\".
 Other buffer group by `centaur-tabs-get-group-name' with project name."
     (list
      (cond
-      ;; ((and (derived-mode-p 'exwm-mode)
-      ;;       exwm-firefox-evil-mode)
-      ;;       "Firefox")
+      ((and (derived-mode-p 'exwm-mode)
+            exwm-firefox-evil-mode)
+            "Firefox")
       ((derived-mode-p 'matlab-mode)
        "Matlab")
+      ((memq major-mode '(emms-playlist-mode emms-browser-mode))
+       "EMMS")
       ((or (derived-mode-p 'exwm-mode)
            (string-equal "*EXWM" (substring (buffer-name) 0 4)))
        "EXWM")
@@ -561,7 +563,7 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
       (t
        (centaur-tabs-get-group-name (current-buffer))))))
 
-  (centaur-tabs-mode -1))
+  (centaur-tabs-mode +1))
     #+end_src
 
 ** Theme
@@ -967,9 +969,27 @@ buffer (=minimizing in other WM/DE)"
             (lg/exwm-async-run program)
             (message (format "Launching %s" program)))))))
 
+
   (defun lg/run-or-raise-or-dismiss-firefox ()
     (interactive)
     (lg/run-or-raise-or-dismiss "firefox" "Firefox-esr"))
+
+  (defun lg/run-or-raise-or-dismiss-firefox ()
+    (interactive)
+    (let ((buf-list (->> (buffer-list)
+                         (--reject (not (string= "Firefox-esr" (buffer-local-value 'exwm-class-name it))))))
+          buf)
+      (if buf-list
+          (progn
+            (setq buf (car buf-list))
+            (if (eq (current-buffer) buf)
+                (windower-switch-to-last-buffer)
+              (if (get-buffer-window buf)
+                  (select-window (display-buffer buf) nil)
+                (exwm-workspace-switch-to-buffer buf))))
+        ;; start program
+        (lg/exwm-async-run "firefox")
+        (message (format "Launching %s" "firefox")))))
 
   (defun lg/run-or-raise-or-dismiss-spotify ()
     (interactive)
@@ -1036,7 +1056,9 @@ buffer (=minimizing in other WM/DE)"
 
   (defun lg/exwm-update-title-hook ()
     "Hook to be ran when window title is updated"
-    (exwm-workspace-rename-buffer exwm-class-name))
+    (if (not (string= exwm-class-name "Firefox-esr"))
+        (exwm-workspace-rename-buffer exwm-class-name)
+      (exwm-workspace-rename-buffer exwm-title)))
 
   (add-hook 'exwm-update-title-hook #'lg/exwm-update-title-hook)
 
