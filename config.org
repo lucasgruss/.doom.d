@@ -1996,6 +1996,8 @@ Format is a string matching the following format specification:
   :recipe (:host github
            :repo "raxod502/prescient.el"))
 
+(package! orderless)
+
 (package! selectrum-prescient
   :recipe (:host github
            :repo "raxod502/prescient.el"
@@ -2033,6 +2035,8 @@ Format is a string matching the following format specification:
   (setq selectrum-num-candidates-displayed 10)
   (setq selectrum-fix-minibuffer-height nil)
   (setq selectrum-display-action nil)
+  (setq selectrum-refine-candidates-function #'orderless-filter)
+  (setq selectrum-highlight-candidates-function #'orderless-highlight-matches)
   (selectrum-mode +1))
 
 (use-package! prescient
@@ -2040,13 +2044,23 @@ Format is a string matching the following format specification:
   :config
   (prescient-persist-mode +1))
 
+(use-package! orderless
+  :config
+  (setq orderless-skip-highlighting (lambda () selectrum-is-active))
+  (setq completion-styles '(orderless)))
+
 (use-package! selectrum-prescient
   :after (selectrum prescient)
   :config
+  (setq selectrum-prescient-enable-filtering nil)
   (selectrum-prescient-mode +1)
   (map! (:map selectrum-minibuffer-map
          "C-j" #'selectrum-next-candidate
+         "s-'" #'selectrum-next-candidate
+         "<mouse-5>" #'selectrum-next-candidate
          "C-k" #'selectrum-previous-candidate
+         "s-@" #'selectrum-previous-candidate
+         "<mouse-4>" #'selectrum-previous-candidate
          "C-l" #'selectrum-insert-current-candidate
          "<ESC>" #'exit-minibuffer)))
 
@@ -2061,8 +2075,12 @@ Format is a string matching the following format specification:
          (:prefix ("f" . "files")
           :desc "Recent files" "r" #'consult-recent-file)
          (:prefix ("s" . "search")
-          "s" #'consult-line))
-        "s-\'" #'consult-buffer)
+          "s" #'consult-line)
+        (:prefix ("b" . "buffer")
+         "b" #'consult-buffer
+         "o" #'consult-buffer-other-window))
+        "s-\'" #'consult-buffer
+        "M-y" #'consult-yank)
   :config
   (setq consult-preview-key nil))
 
@@ -2098,7 +2116,15 @@ Format is a string matching the following format specification:
   (add-hook 'embark-candidate-collectors #'current-candidates+category)
 
   ;; No unnecessary computation delay after injection.
-  (add-hook 'embark-setup-hook 'selectrum-set-selected-candidate))
+  (defun shrink-selectrum ()
+    (when (eq embark-collect--kind :live)
+      (with-selected-window (active-minibuffer-window)
+        (setq-local selectrum-num-candidates-displayed 1)
+        (setq-local selectrum-display-style
+                    '(horizontal :before-candidates "[" :after-candidates "]"
+                                 :more-candidates "" :candidates-separator "")))))
+
+  (add-hook 'embark-collect-mode-hook #'shrink-selectrum) (add-hook 'embark-setup-hook 'selectrum-set-selected-candidate))
 
 (use-package consult-spotify
   :load-path "~/.doom.d/espotify/"
