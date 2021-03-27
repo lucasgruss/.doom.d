@@ -2473,26 +2473,49 @@ function man(){
 
    #+begin_src emacs-lisp :tangle config.el
 (use-package eww
-  :commands (eww)
+  :commands (eww eww-browse-with-history)
   :init
   (map! (:leader
          :prefix ("o" . "open")
-         :desc "eww" "w" #'eww)
+         :desc "eww" "w" #'eww-browse-with-history)
         (:map eww-link-keymap
          "v" #'eww-mpv-video-at-point
          "a" #'eww-mpv-audio-at-point
          "C-j" #'eww-next-url
          "C-k" #'eww-previous-url))
   :config
+  (setq eww-desktop-data-save '(:url :title))
   (defun eww-mpv-video-at-point ()
     "View video in url at point in mpv"
     (interactive)
-    (mpv-v-open (thing-at-point 'url)))
+    (emms-play-url (thing-at-point 'url)))
+
+  (defun eww-mpv-video-at-current-url ()
+    "View video in url at point in mpv"
+    (interactive)
+    (emms-play-url (eww-current-url)))
 
   (defun eww-mpv-audio-at-point ()
     (interactive)
     "View video in url at point in mpv"
-    (mpv-a-open (thing-at-point 'url))))
+    (mpv-a-open (thing-at-point 'url)))
+
+(defun eww-browse-with-history (arg)
+  (interactive "P")
+  (let ((url (completing-read "EWW: " eww-prompt-history)))
+    (eww url (if arg 4 nil))))
+
+  (defun prot-eww--rename-buffer ()
+    "Rename EWW buffer using page title or URL.
+To be used by `eww-after-render-hook'."
+    (let ((name (if (eq "" (plist-get eww-data :title))
+                    (plist-get eww-data :url)
+                  (plist-get eww-data :title))))
+      (rename-buffer (format "*%s # eww*" name) t)))
+
+  (add-hook 'eww-after-render-hook #'prot-eww--rename-buffer)
+  (advice-add 'eww-back-url :after #'prot-eww--rename-buffer)
+  (advice-add 'eww-forward-url :after #'prot-eww--rename-buffer))
    #+end_src
 
 ** Elpher
