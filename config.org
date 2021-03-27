@@ -458,6 +458,20 @@ questions.  Else use completion to select the tab to switch to."
     #+end_src
 
 *** Centaur tabs
+    Centaur-tabs is a useful package that builds on the built-in tab-line to
+    provide nice looking tabs, as well as a grouping mechanism. Therefore you
+    are only shown tabs from the same group (based on the major mode for
+    instance, you can write you own grouping rules). As of writing this
+    ([2021-03-27 Sat]) I have a pull request for a new tab button, that can
+    adapt to the context to open new tabs. This effectively enables one to use
+    centaur-tabs everywhere, and I do mean everywhere if you use EXWM, you can
+    ditch the tabs for any application (terminal emulator, internet browser,
+    file manager...) by using standalone X windows instead. This makes all
+    "tabs" available for emacs through their respective buffer, in a unified and
+    consistent way. Therefore you can use all of Emacs' power : completion
+    framework, filtering in iBuffer, group closing on tabs matching a specific
+    pattern, etc.
+
     #+begin_src emacs-lisp :tangle config.el
 (use-package! centaur-tabs
   :init
@@ -465,7 +479,8 @@ questions.  Else use completion to select the tab to switch to."
         :n "gT" #'centaur-tabs-backward
         "s-m" #'centaur-tabs-backward
         "s-," #'centaur-tabs-forward
-        "s-/" #'centaur-tabs-mode)
+        "s-/" #'centaur-tabs-mode
+        :nvi "C-t" #'centaur-tabs--create-new-tab)
   :hook
   (ranger-mode . centaur-tabs-local-mode)
   (calendar-mode . centaur-tabs-local-mode)
@@ -478,10 +493,11 @@ questions.  Else use completion to select the tab to switch to."
   (setq centaur-tabs-gray-out-icons t)
   (setq centaur-tabs-set-bar 'under)
   (setq centaur-tabs-show-navigation-buttons t)
-  (setq centaur-tabs-height 25)
+  (setq centaur-tabs-show-new-tab-button t)
+  (setq centaur-tabs-height 21)
   (setq centaur-tabs-cycle-scope 'tabs)
   (setq centaur-tabs-plain-icons nil)
-  (setq centaur-tabs-label-fixed-length 20)
+  (setq centaur-tabs-label-fixed-length 15)
   (setq uniquify-separator "/")
 
   (define-minor-mode centaur-tabs-local-mode
@@ -514,10 +530,10 @@ hidden, it is shown again.  Signal an error if Centaur-Tabs mode is off."
                 (set centaur-tabs-display-line-format nil))
 ;;; OFF
             (if (local-variable-p 'centaur-tabs--local-hlf)
-            ;; A local header line is hidden, show it again.
-            (progn
-              (set centaur-tabs-display-line-format centaur-tabs--local-hlf)
-              (kill-local-variable 'centaur-tabs--local-hlf))
+                ;; A local header line is hidden, show it again.
+                (progn
+                  (set centaur-tabs-display-line-format centaur-tabs--local-hlf)
+                  (kill-local-variable 'centaur-tabs--local-hlf))
               ;; The tab bar is locally hidden, show it again.
               (kill-local-variable centaur-tabs-display-line-format))))
       (message "Centaur-Tabs mode must be enabled")))
@@ -532,7 +548,7 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
      (cond
       ((and (derived-mode-p 'exwm-mode)
             exwm-firefox-evil-mode)
-            "Firefox")
+       "Firefox")
       ((derived-mode-p 'matlab-mode)
        "Matlab")
       ((memq major-mode '(emms-playlist-mode emms-browser-mode))
@@ -542,6 +558,10 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
        "EXWM")
       ((derived-mode-p 'eww-mode)
        "eww")
+      ((derived-mode-p 'eshell-mode)
+       "EShell")
+      ((derived-mode-p 'vterm-mode)
+       "Vterm")
       ((or (string-equal "*" (substring (buffer-name) 0 1))
            (memq major-mode '(magit-process-mode
                               magit-status-mode
@@ -554,6 +574,8 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
        "Emacs")
       ((derived-mode-p 'eshell-mode)
        "EShell")
+      ((derived-mode-p 'vterm-mode)
+       "Vterm")
       ((derived-mode-p 'emacs-lisp-mode)
        "Elisp")
       ((derived-mode-p 'dired-mode)
@@ -563,8 +585,46 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
       (t
        (centaur-tabs-get-group-name (current-buffer))))))
 
+  (defun centaur-tabs--create-new-tab ()
+    "Create a new tab"
+    (interactive)
+    (cond
+     ((string= exwm-class-name "Firefox-esr")
+      (exwm-firefox-core-window-new))
+     ((eq major-mode 'exwm-mode)
+      (call-interactively #'app-launcher-run-app))
+     ((eq major-mode 'eshell-mode)
+      (eshell))
+     ((eq major-mode 'vterm-mode)
+      (vterm))
+     ((eq major-mode 'term-mode)
+      (ansi-term))
+     ((derived-mode-p 'eww-mode)
+      (let ((current-prefix-arg 4))
+        (call-interactively #'eww-browse-with-history)))
+     (t
+      (call-interactively #'find-file))))
+
+  (defun centaur-tabs-switch-group (&optional groupname)
+    "Switch tab groups using ido.  GROUPNAME can optionaly be provided."
+    (interactive)
+    (let* ((tab-buffer-list (cl-mapcar
+                 #'(lambda (b)
+                     (with-current-buffer b
+                   (list (current-buffer)
+                         (buffer-name)
+                         (funcall centaur-tabs-buffer-groups-function) )))
+                 (funcall centaur-tabs-buffer-list-function)))
+       (groups (centaur-tabs-get-groups))
+       (group-name (or groupname (completing-read "Groups: " groups))) )
+      (catch 'done
+        (mapc
+         #'(lambda (group)
+         (when (equal group-name (car (car (cdr (cdr group)))))
+           (throw 'done (switch-to-buffer (car (cdr group))))))
+         tab-buffer-list) )))
   (centaur-tabs-mode +1))
-    #+end_src
+      #+end_src
 
 ** Theme
 *** Font choice
