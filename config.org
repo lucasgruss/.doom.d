@@ -1,48 +1,49 @@
 #+TITLE:  Configuration for my kitchen sink
 #+AUTHOR: Lucas Gruss
 #+STARTUP: overview
+#+PROPERTY: header-args:emacs-lisp results:none
 
 * Introduction
-  This is my configuration file for Doom Emacs. It is a self contained document
-  with everything needed to set up Doom. Normally you customize Doom by editing
-  three =.el= files, which are =config.el=, =packages.el= and =init.el=. Thanks to
-  the =literate= config module, it is possible to have all three in the same org
-  document and they get automatically tangled in the right place upon saving this
-  file.
+This is my configuration file for Doom Emacs. It is a self contained document
+with everything needed to set up Doom. Normally you customize Doom by editing
+three =.el= files, which are =config.el=, =packages.el= and =init.el=. Thanks to
+the =literate= config module, it is possible to have all three in the same org
+document and they get automatically tangled in the right place upon saving this
+file.
 
-  - Doom Emacs ::
-    I use Doom Emacs as my configuration framework. I used to have a rather
-    lengthy hand-rolled literate configuration file. In a lot of cases, I was
-    reinventing the wheel by configuring stuff in a way that was similar to what
-    Doom has to offer (or other configuration frameworks for that matter). So I
-    just decided that I might as well use a configuration framework and have stuff
-    work out of the box. I chose Doom because it enables excellent evil support
-    across all the modules (so I don't have to go through the pain of configuring
-    everything to get a consistent evil experience). It's also very fast, and has
-    a very active community. I want to extend my thanks to Henrik Lissner who is
-    the maintainer of the framework, as well as all contributors to the project.
+- Doom Emacs ::
+  I use Doom Emacs as my configuration framework. I used to have a rather
+  lengthy hand-rolled literate configuration file. In a lot of cases, I was
+  reinventing the wheel by configuring stuff in a way that was similar to what
+  Doom has to offer (or other configuration frameworks for that matter). So I
+  just decided that I might as well use a configuration framework and have stuff
+  work out of the box. I chose Doom because it enables excellent evil support
+  across all the modules (so I don't have to go through the pain of configuring
+  everything to get a consistent evil experience). It's also very fast, and has
+  a very active community. I want to extend my thanks to Henrik Lissner who is
+  the maintainer of the framework, as well as all contributors to the project.
 
-  - gcc emacs ::
-    I build Emacs from source and I am on the =native-comp= branch. Native
-    compilation helps me achieve better performances without headaches, and the
-    branch is now stable enough to be used without running into issues. It's most
-    likely going to be included in the next release of Emacs (Emacs 28) and I
-    would like to extend my thanks to Andrea Corallo who did a fantastic job on
-    this feature, as well as all the contributors to this feature.
+- gcc emacs ::
+  I build Emacs from source and I am on the =native-comp= branch. Native
+  compilation helps me achieve better performances without headaches, and the
+  branch is now stable enough to be used without running into issues. It's most
+  likely going to be included in the next release of Emacs (Emacs 28) and I
+  would like to extend my thanks to Andrea Corallo who did a fantastic job on
+  this feature, as well as all the contributors to this feature.
 
-  - The Emacs community ::
-    Thank you to all the community in making Emacs such great software. It is
-    really hard to express how much Emacs has impacted me. I really like how Emacs
-    behaves as a platform and I find it much more pleasant to use a computer
-    through Emacs. Thank you to the maintainers across the years, to contributors,
-    package developers and users as a whole that make this tool such a polyvalent
-    swiss-army kitchen sink.
+- The Emacs community ::
+  Thank you to all the community in making Emacs such great software. It is
+  really hard to express how much Emacs has impacted me. I really like how Emacs
+  behaves as a platform and I find it much more pleasant to use a computer
+  through Emacs. Thank you to the maintainers across the years, to contributors,
+  package developers and users as a whole that make this tool such a polyvalent
+  swiss-army kitchen sink.
 
 * Doom stuff
 ** init.el
-   This is my doom block. What it contains is pretty self explanatory.
+This is my doom block. What it contains is pretty self explanatory.
 
-   #+begin_src emacs-lisp :tangle init.el
+#+begin_src emacs-lisp :tangle init.el
 ;;; init.el -*- lexical-binding: t; -*-
 
 (doom! :input
@@ -53,7 +54,7 @@
        company           ; the ultimate code completion backend
        ;;(helm +fuzzy +icons +childframe)              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
-                                        ;(ivy +icons +prescient) ; a search engine for love and life
+       ;;(ivy +icons +prescient) ; a search engine for love and life
 
        :ui
        deft              ; notational velocity for Emacs
@@ -68,7 +69,7 @@
        nav-flash         ; blink the current line after jumping
        ;;neotree           ; a project drawer, like NERDTree for vim
        ophints           ; highlight the region an operation acts on
-       (popup +hacks)   ; tame sudden yet inevitable temporary windows
+       ;;(popup +hacks)   ; tame sudden yet inevitable temporary windows
        ;;ligatures       ; ligatures or substitute text with pretty symbols
        ;;tabs              ; an tab bar for Emacs
        treemacs          ; a project drawer, like neotree but cooler
@@ -165,7 +166,7 @@
        ledger            ; an accounting system in Emacs
        lua               ; one-based indices? one-based indices
        markdown          ; writing docs for people to ignore
-       matlab
+       ;;matlab
        ;;nim               ; python + lisp at the speed of c
        ;;nix               ; I hereby declare "nix geht mehr!"
        ;;ocaml             ; an objective camel
@@ -206,12 +207,13 @@
        (default +bindings +smartparens)
 
        :personal
+       eaf
        exwm
        selectrum)
-   #+end_src
+#+end_src
 
 ** packages.el
-   #+begin_src emacs-lisp :tangle packages.el
+#+begin_src emacs-lisp :tangle packages.el
 ;; -*- no-byte-compile: t; -*-
 (package! modus-themes)
 (package! theme-magic)
@@ -233,15 +235,17 @@
 (package! org-superstar)
 (package! org-sidebar)
 (package! org-emms)
+(package! org-ref)
 (package! ox-report)
 (package! org-msg)
 (package! emms)
-;;(package! ivy-emms)
 (package! company-prescient)
 (package! spotify
   :recipe (:host github
            :repo "danielfm/spotify.el"))
-(package! centaur-tabs)
+(package! centaur-tabs
+  :recipe (:host github
+           :repo "ema2159/centaur-tabs"))
 (package! posframe)
 (package! fast-scroll
   :recipe (:host github
@@ -261,7 +265,10 @@
            :repo "ambrevar/emacs-fish-completion"))
 (package! olivetti)
 (package! ytel)
-(package! guix)
+;; (package! guix)
+(package! pdf-continuous-scroll-mode
+  :recipe (:host github
+           :repo "dalanicolai/pdf-continuous-scroll-mode.el"))
 (package! disk-usage)
 (package! howdoyou)
 (package! reddigg)
@@ -271,47 +278,66 @@
            :repo "xFA25E/ytel-show"))
 (package! ytdious)
 (package! elpher)
-  #+end_src
+(package! zotxt)
+(package! smudge
+  :recipe (:host github
+           :repo "danielfm/smudge"))
+(package! vterm)
+(package! lispy)
+(package! outshine)
+(package! webkit
+  :recipe (:host github
+           :files (:defaults "*.js" "*.css" "*.so")
+           :repo "akirakyle/emacs-webkit"))
+(package! bongo)
+(package! volume)
+#+end_src
 
+** doom core
+   #+begin_src emacs-lisp :tangle yes
+(setq doom-leader-alt-key "M-SPC")
+   #+end_src
 * System administration
 ** Guix
-  Emacs is a fantastic tool, that we can use to help manage our system in better
-  ways. I use guix on Debian at the moment, but I plan on migrating most of the
-  package management to guix once I get more comfortable using it.
-  #+begin_src emacs-lisp :tangle config.el
-(use-package! guix-emacs)
-  #+end_src
+Emacs is a fantastic tool, that we can use to help manage our system in better
+ways. I use guix on Debian at the moment, but I plan on migrating most of the
+package management to guix once I get more comfortable using it.
+
+#+begin_src emacs-lisp :tangle config.el
+(use-package! guix)
+#+end_src
 
 ** Dired
-   #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (after! dired
   (map! :map dired-mode-map
         :n "h" #'dired-up-directory
-        :n "l" #'dired-find-file))
-   #+end_src
+        :n "l" #'dired-find-file)
+  (add-hook 'dired-mode-hook #'dired-hide-details-mode))
+#+end_src
 
 * User interface
 ** All the icons
-   Add some support for EXWM buffers. I chose a random icon that looked nice,
-   like the toggle-on icon.
+Add some support for EXWM buffers. I chose a random icon that looked nice,
+like the toggle-on icon.
 
-   #+begin_src emacs-lisp :tangle config.el :results no
+#+begin_src emacs-lisp :tangle config.el :results no
 (after! all-the-icons
   (add-to-list 'all-the-icons-mode-icon-alist
                '(exwm-mode  all-the-icons-faicon "toggle-on" :height 1.0 :v-adjust -0.2
                             :face all-the-icons-green))
   (add-to-list 'all-the-icons-icon-alist
                '("\\.m$" all-the-icons-fileicon "matlab" :face all-the-icons-orange)))
-   #+end_src
+#+end_src
 
 ** Fringes
-   #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (fringe-mode -1)
-   #+end_src
+#+end_src
 
 ** Modeline
 
-   #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (after! doom-modeline
   (setq doom-modeline-buffer-file-name-style 'auto)
   (setq doom-modeline-height 21)
@@ -343,35 +369,43 @@ Requires `eyebrowse-mode' or `tab-bar-mode' to be enabled."
                     (if (doom-modeline--active)
                         'doom-modeline-buffer-major-mode
                       'mode-line-inactive)))))
+  (doom-modeline-def-modeline 'exwm
+    '(bar workspace-name window-number modals buffer-info)
+    '(objed-state misc-info persp-name battery grip irc mu4e gnus major-mode process vcs checker))
+  (defun doom-modeline-set-exwm-modeline ()
+    "Set exwm mode-line."
+    (doom-modeline-set-modeline 'exwm))
+  (add-hook 'exwm-mode-hook #'doom-modeline-set-exwm-modeline)
   (display-time-mode -1))
-   #+end_src
+#+end_src
 
 ** Olivetti mode
-   #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (use-package olivetti
   :commands olivetti-mode
   :config
   (setq olivetti-body-width 0.7)
   (setq olivetti-minimum-body-width 80))
-   #+end_src
+#+end_src
 
 ** Tabs
-   Tabs are a relatively new feature in emacs. They come in two different flavors,
-   =tab-bar-mode= and =tab-line-mode=. The first one is a great way to have
-   different window layouts (what people would usually call workspaces) and the
-   second is a way to display buffers that have been opened in a window (what
-   people actually expect from tabs).
 
-   The tab-bar, much like the tool bar or the menu bar, is related to the frame.
-   The tab-line, much like the mode-line or header-line, is exclusive to the
-   buffer.
+Tabs are a relatively new feature in emacs. They come in two different flavors,
+=tab-bar-mode= and =tab-line-mode=. The first one is a great way to have
+different window layouts (what people would usually call workspaces) and the
+second is a way to display buffers that have been opened in a window (what
+people actually expect from tabs).
+
+The tab-bar, much like the tool bar or the menu bar, is related to the frame.
+The tab-line, much like the mode-line or header-line, is exclusive to the
+buffer.
 
 *** Tab-bar-mode
 
-    #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (use-package! tab-bar
   :init
-  (map! :nvi "C-t" #'prot/tab-bar-select-tab-dwim
+  (map! :nvi ;;"C-t" #'prot/tab-bar-select-tab-dwim
         "s-M" #'lg/tab-previous-and-hide-maybe
         "s-<" #'lg/tab-next-and-hide-maybe
         "s-?" #'lg/tab-bar-mode-toggle
@@ -455,24 +489,25 @@ questions.  Else use completion to select the tab to switch to."
       (tab-previous)))
 
   (tab-bar-mode -1))
-    #+end_src
+#+end_src
 
 *** Centaur tabs
-    Centaur-tabs is a useful package that builds on the built-in tab-line to
-    provide nice looking tabs, as well as a grouping mechanism. Therefore you
-    are only shown tabs from the same group (based on the major mode for
-    instance, you can write you own grouping rules). As of writing this
-    ([2021-03-27 Sat]) I have a pull request for a new tab button, that can
-    adapt to the context to open new tabs. This effectively enables one to use
-    centaur-tabs everywhere, and I do mean everywhere if you use EXWM, you can
-    ditch the tabs for any application (terminal emulator, internet browser,
-    file manager...) by using standalone X windows instead. This makes all
-    "tabs" available for emacs through their respective buffer, in a unified and
-    consistent way. Therefore you can use all of Emacs' power : completion
-    framework, filtering in iBuffer, group closing on tabs matching a specific
-    pattern, etc.
 
-    #+begin_src emacs-lisp :tangle config.el
+Centaur-tabs is a useful package that builds on the built-in tab-line to
+provide nice looking tabs, as well as a grouping mechanism. Therefore you
+are only shown tabs from the same group (based on the major mode for
+instance, you can write you own grouping rules). As of writing this
+([2021-03-27 Sat]) I have a pull request for a new tab button, that can
+adapt to the context to open new tabs. This effectively enables one to use
+centaur-tabs everywhere, and I do mean everywhere if you use EXWM, you can
+ditch the tabs for any application (terminal emulator, internet browser,
+file manager...) by using standalone X windows instead. This makes all
+"tabs" available for emacs through their respective buffer, in a unified and
+consistent way. Therefore you can use all of Emacs' power : completion
+framework, filtering in iBuffer, group closing on tabs matching a specific
+pattern, etc.
+
+#+begin_src emacs-lisp :tangle config.el :results none
 (use-package! centaur-tabs
   :init
   (map! :n "gt" #'centaur-tabs-forward
@@ -482,10 +517,12 @@ questions.  Else use completion to select the tab to switch to."
         "s-/" #'centaur-tabs-mode
         :nvi "C-t" #'centaur-tabs--create-new-tab)
   :hook
-  (ranger-mode . centaur-tabs-local-mode)
   (calendar-mode . centaur-tabs-local-mode)
-  (helpful-mode . centaur-tabs-local-mode)
+  (dired-mode . centaur-tabs-local-mode)
+  (pdf-outline-buffer-mode . centaur-tabs-local-mode)
   (exwm-floating-setup . centaur-tabs-local-mode)
+  (calc-mode . centaur-tabs-local-mode)
+  (calc-trail-mode . centaur-tabs-local-mode)
   :config
   (setq centaur-tabs-style "bar")
   (setq centaur-tabs-set-modified-marker t)
@@ -495,199 +532,130 @@ questions.  Else use completion to select the tab to switch to."
   (setq centaur-tabs-show-navigation-buttons t)
   (setq centaur-tabs-show-new-tab-button t)
   (setq centaur-tabs-height 21)
+  (setq centaur-tabs-enable-ido-completion nil)
   (setq centaur-tabs-cycle-scope 'tabs)
   (setq centaur-tabs-plain-icons nil)
   (setq centaur-tabs-label-fixed-length 15)
   (setq uniquify-separator "/")
-
-  (define-minor-mode centaur-tabs-local-mode
-    "Toggle local display of the tab bar.
-With prefix argument ARG, turn on if positive, otherwise off.
-Returns non-nil if the new state is enabled.
-When turned on, if a local header line is shown, it is hidden to show
-the tab bar.  The tab bar is locally hidden otherwise.  When turned
-off, if a local header line is hidden or the tab bar is locally
-hidden, it is shown again.  Signal an error if Centaur-Tabs mode is off."
-    :group 'centaur-tabs
-    :global nil
-    (if (centaur-tabs-mode-on-p)
-        (progn
-;;; ON
-          (if centaur-tabs-local-mode
-              (if (and (local-variable-p centaur-tabs-display-line-format)
-                       (eval centaur-tabs-display-line-format))
-
-                  ;; A local header line exists, hide it to show the tab bar.
-                  (progn
-                    ;; Fail in case of an inconsistency because another local
-                    ;; header line is already hidden.
-                    (when (local-variable-p 'centaur-tabs--local-hlf)
-                      (error "Another local header line is already hidden"))
-                    (set (make-local-variable 'centaur-tabs--local-hlf)
-                         (eval centaur-tabs-display-line-format))
-                    (kill-local-variable centaur-tabs-display-line-format))
-                ;; Otherwise hide the tab bar in this buffer.
-                (set centaur-tabs-display-line-format nil))
-;;; OFF
-            (if (local-variable-p 'centaur-tabs--local-hlf)
-                ;; A local header line is hidden, show it again.
-                (progn
-                  (set centaur-tabs-display-line-format centaur-tabs--local-hlf)
-                  (kill-local-variable 'centaur-tabs--local-hlf))
-              ;; The tab bar is locally hidden, show it again.
-              (kill-local-variable centaur-tabs-display-line-format))))
-      (message "Centaur-Tabs mode must be enabled")))
-
-  (defun centaur-tabs-buffer-groups ()
-    "`centaur-tabs-buffer-groups' control buffers' group rules.
-Group centaur-tabs with mode if buffer is derived from `eshell-mode'
-`emacs-lisp-mode' `dired-mode' `org-mode' `magit-mode'.
-All buffer name start with * will group to \"Emacs\".
-Other buffer group by `centaur-tabs-get-group-name' with project name."
-    (list
-     (cond
-      ((and (derived-mode-p 'exwm-mode)
-            exwm-firefox-evil-mode)
-       "Firefox")
-      ((derived-mode-p 'matlab-mode)
-       "Matlab")
-      ((memq major-mode '(emms-playlist-mode emms-browser-mode))
-       "EMMS")
-      ((or (derived-mode-p 'exwm-mode)
-           (string-equal "*EXWM" (substring (buffer-name) 0 4)))
-       "EXWM")
-      ((derived-mode-p 'eww-mode)
-       "eww")
-      ((derived-mode-p 'eshell-mode)
-       "EShell")
-      ((derived-mode-p 'vterm-mode)
-       "Vterm")
-      ((or (string-equal "*" (substring (buffer-name) 0 1))
-           (memq major-mode '(magit-process-mode
-                              magit-status-mode
-                              magit-diff-mode
-                              magit-log-mode
-                              magit-file-mode
-                              magit-blob-mode
-                              magit-blame-mode
-                              )))
-       "Emacs")
-      ((derived-mode-p 'eshell-mode)
-       "EShell")
-      ((derived-mode-p 'vterm-mode)
-       "Vterm")
-      ((derived-mode-p 'emacs-lisp-mode)
-       "Elisp")
-      ((derived-mode-p 'dired-mode)
-       "Dired")
-      ((memq major-mode '(org-mode org-agenda-mode diary-mode))
-       "OrgMode")
-      (t
-       (centaur-tabs-get-group-name (current-buffer))))))
-
-  (defun centaur-tabs--create-new-tab ()
-    "Create a new tab"
-    (interactive)
-    (cond
-     ((string= exwm-class-name "Firefox-esr")
-      (exwm-firefox-core-window-new))
-     ((eq major-mode 'exwm-mode)
-      (call-interactively #'app-launcher-run-app))
-     ((eq major-mode 'eshell-mode)
-      (eshell))
-     ((eq major-mode 'vterm-mode)
-      (vterm))
-     ((eq major-mode 'term-mode)
-      (ansi-term))
-     ((derived-mode-p 'eww-mode)
-      (let ((current-prefix-arg 4))
-        (call-interactively #'eww-browse-with-history)))
-     (t
-      (call-interactively #'find-file))))
-
-  (defun centaur-tabs-switch-group (&optional groupname)
-    "Switch tab groups using ido.  GROUPNAME can optionaly be provided."
-    (interactive)
-    (let* ((tab-buffer-list (cl-mapcar
-                 #'(lambda (b)
-                     (with-current-buffer b
-                   (list (current-buffer)
-                         (buffer-name)
-                         (funcall centaur-tabs-buffer-groups-function) )))
-                 (funcall centaur-tabs-buffer-list-function)))
-       (groups (centaur-tabs-get-groups))
-       (group-name (or groupname (completing-read "Groups: " groups))) )
-      (catch 'done
-        (mapc
-         #'(lambda (group)
-         (when (equal group-name (car (car (cdr (cdr group)))))
-           (throw 'done (switch-to-buffer (car (cdr group))))))
-         tab-buffer-list) )))
-  (centaur-tabs-mode +1))
-      #+end_src
-
-** Theme
-*** Font choice
-#+begin_src emacs-lisp :tangle config.el
-(setq! doom-font "Iosevka:pixelsize=15")
+  (centaur-tabs-mode +1)
+  (use-package lg-centaur-tabs
+    :load-path "~/.config/doom/lisp/"))
 #+end_src
 
+** Font choice
+
+#+begin_src emacs-lisp :tangle config.el
+(setq! doom-font (font-spec :family "Iosevka" :weight 'semi-light :size 15))
+(setq! doom-variable-pitch-font (font-spec :family "DejaVu Sans Condensed" :size 15))
+(set-face-attribute 'default nil :family "Iosevka" :weight 'normal :height 110)
+(set-face-attribute 'fixed-pitch nil :family "Iosevka" :weight 'normal :height 110)
+;(set-face-attribute 'variable-pitch nil :family "DejaVu Sans Condensed" :weight 'semi-light :height 110)
+(set-face-attribute 'variable-pitch nil :family "Roboto Mono" :height 110 :width 'normal)
+#+end_src
+end_src
+
+** Theme
 *** modus themes
 
-    I use the modus themes most of the times. I use the light version during the
-    day and the dark version very late at night.
+ I use the modus themes most of the times. I use the light version during the
+ day and the dark version very late at night.
 
-    #+begin_src emacs-lisp :tangle config.el
+ #+begin_src emacs-lisp :tangle config.el :results none
 (use-package modus-themes
   :config
   (setq modus-themes-slanted-constructs t)
-  (setq modus-themes-bold-constructs t)
+  (setq modus-themes-bold-constructs nil)
   (setq modus-themes-fringes 'subtle) ; {nil,'subtle,'intense})
-  (setq modus-themes-mode-line nil) ; {nil,'3d,'moody}
-  (setq modus-themes-intense-hl-line t)
-  (setq modus-themes-prompts nil) ; {nil,'subtle,'intense}
+  ;; Options for `modus-themes-lang-checkers': nil,
+  ;; 'straight-underline, 'subtle-foreground,
+  ;; 'subtle-foreground-straight-underline, 'intense-foreground,
+  ;; 'intense-foreground-straight-underline, 'colored-background
+  (setq modus-themes-lang-checkers 'straight-underline)
+
+  ;; Options for `modus-themes-mode-line': nil, '3d, 'moody,
+  ;; 'borderless, 'borderless-3d, 'borderless-moody, 'accented,
+  ;; 'accented-3d, 'accented-moody
+  (setq modus-themes-mode-line 'accented)
+
+  ;; Options for `modus-themes-syntax': nil, 'faint,
+  ;; 'yellow-comments, 'green-strings,
+  ;; 'yellow-comments-green-strings, 'alt-syntax,
+  ;; 'alt-syntax-yellow-comments, 'faint-yellow-comments
+  (setq modus-themes-syntax nil)
+
+  ;; Options for `modus-themes-hl-line': nil, 'intense-background,
+  ;; 'accented-background, 'underline-neutral,
+  ;; 'underline-accented, 'underline-only-neutral,
+  ;; 'underline-only-accented
+  (setq modus-themes-intense-hl-line 'accented-background)
+  (setq modus-themes-subtle-line-numbers nil)
+  (setq modus-themes-paren-match 'subtle-bold) ; {nil,'subtle-bold,'intense,'intense-bold}
+
+  ;; Options for `modus-themes-links': nil, 'faint,
+  ;; 'neutral-underline, 'faint-neutral-underline, 'no-underline,
+  ;; 'underline-only, 'neutral-underline-only
+  (setq modus-themes-links 'neutral-underline)
+
+  ;; Options for `modus-themes-prompts': nil, 'subtle-accented,
+  ;; 'intense-accented, 'subtle-gray, 'intense-gray
+  (setq modus-themes-prompts 'intense-gray)
   (setq modus-themes-completions 'moderate) ; {nil,'moderate,'opinionated})
-  (setq modus-themes-diffs nil) ; {nil,'desaturated,'fg-only})
-  (setq modus-themes-org-blocks 'greyscale) ; {nil,'greyscale,'rainbow}
-  (setq modus-themes-headings '((t . rainbow)))
-  (setq modus-themes-variable-pitch-headings nil)
+
+  ;; Options for `modus-themes-region': nil, 'no-extend, 'bg-only,
+  ;; 'bg-only-no-extend, 'accent, 'accent-no-extend
+  (setq modus-themes-region 'accent)
+
+  ;; Options for `modus-themes-diffs': nil, 'desaturated,
+  ;; 'fg-only, 'bg-only, 'deuteranopia,
+  (setq modus-themes-diffs 'deuteranopia) ;
+  (setq modus-themes-org-blocks 'rainbow) ; {nil,'greyscale,'rainbow}
+  (setq modus-themes-org-habit nil) ; {nil,'simplified,'traffic-light}
+  (setq modus-themes-headings '((t . highlight)))
+  (setq modus-themes-variable-pitch-ui nil)
+  (setq modus-themes-variable-pitch-headings t)
   (setq modus-themes-scale-headings t)
   (setq modus-themes-scale-1 1.1)
   (setq modus-themes-scale-2 1.15)
   (setq modus-themes-scale-3 1.21)
   (setq modus-themes-scale-4 1.27)
   (setq modus-themes-scale-5 1.33)
+  ;(modus-themes-load-themes)
+  (load! "lisp/modus-theme-exporter.el"))
 
-  (load! "lisp/modus-theme-exporter.el")
-
-  (defun lg/modus-themes-propagate ()
-    "Apply system wide settings that are consistent with the
+(defun lg/theme-propagate ()
+  "Apply system wide settings that are consistent with the
 modus themes. A suitable gtk theme is applied, icon theme is
 applied, Xresources are computed based on the
 modus-themes-exporter package and the programs that use the
 Xresources have the settings applied to them."
-    (pcase (modus-themes--current-theme)
-      ('modus-vivendi
-       (shell-command "sed -i 's/ThemeName \"Adwaita\"/ThemeName \"Adwaita-dark\"/g' ~/.xsettingsd")
-       (shell-command "sed -i 's/IconThemeName \"Papirus-Light\"/IconThemeName \"Papirus-Dark\"/g' ~/.xsettingsd"))
-      ('modus-operandi
-       (shell-command "sed -i 's/ThemeName \"Adwaita-dark\"/ThemeName \"Adwaita\"/g' ~/.xsettingsd")
-       (shell-command "sed -i 's/IconThemeName \"Papirus-Dark\"/IconThemeName \"Papirus-Light\"/g' ~/.xsettingsd")))
-    (shell-command "killall -HUP xsettingsd")
-    (modus-themes-exporter-export "xcolors" "~/.Xresources")
-    (shell-command "xrdb ~/.Xresources")
-    ;;(shell-command "~/spicetify-cli/spicetify apply")
-    (efs/start-panel))
-  (add-hook 'modus-themes-after-load-theme-hook #'lg/modus-themes-propagate)
-  (map!
-   :leader
-   (:prefix ("t" . "toggle")
-    :desc "modus-theme" "m" #'modus-themes-toggle)))
-(modus-themes-load-operandi)
-    #+end_src
+  (interactive)
+  (pcase doom-theme
+    ('doom-one
+     (shell-command "sed -i 's/ThemeName \"Adwaita\"/ThemeName \"Adwaita-dark\"/g' ~/.xsettingsd")
+     (shell-command "sed -i 's/IconThemeName \"Papirus-Light\"/IconThemeName \"Papirus-Dark\"/g' ~/.xsettingsd"))
+    ('modus-vivendi
+     (shell-command "sed -i 's/ThemeName \"Adwaita\"/ThemeName \"Adwaita-dark\"/g' ~/.xsettingsd")
+     (shell-command "sed -i 's/IconThemeName \"Papirus-Light\"/IconThemeName \"Papirus-Dark\"/g' ~/.xsettingsd")
+     (modus-themes-exporter-export "xcolors" "~/.Xresources"))
+    ('modus-operandi
+     (shell-command "sed -i 's/ThemeName \"Adwaita-dark\"/ThemeName \"Adwaita\"/g' ~/.xsettingsd")
+     (shell-command "sed -i 's/IconThemeName \"Papirus-Dark\"/IconThemeName \"Papirus-Light\"/g' ~/.xsettingsd")
+     (modus-themes-exporter-export "xcolors" "~/.Xresources")))
+  (shell-command "killall -HUP xsettingsd")
+  (shell-command "xrdb ~/.Xresources")
+  ;(shell-command "~/spicetify-cli/spicetify apply")
+  (efs/start-panel))
+
+(add-hook 'doom-load-theme-hook #'lg/theme-propagate)
+(map!
+ :leader
+ (:prefix ("t" . "toggle")
+  :desc "modus-theme" "m" #'modus-themes-toggle))
+;(setq doom-theme 'modus-vivendi)
+ #+end_src
 
 ** Transparency
-   #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (setq frame-alpha-lower-limit 1)
 (defvar lg/transparency-alpha 80
   "Transparency of all frames.")
@@ -729,13 +697,14 @@ Xresources have the settings applied to them."
   (when (> 0 lg/transparency-alpha) (setq lg/transparency-alpha 0))
   (set-frame-parameter
    nil 'alpha lg/transparency-alpha))
-   #+end_src
+#+end_src
 
 * Window management
 ** Popups
-   #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el :results none
 (set-popup-rules!
   '(("^\\*Completions" :ignore t)
+    ("^\\*vterm" :ignore t)
     ("^\\*Local variables\\*$"
      :vslot -1 :slot 1 :size +popup-shrink-to-fit)
     ("^\\*\\(?:[Cc]ompil\\(?:ation\\|e-Log\\)\\|Messages\\)"
@@ -765,19 +734,19 @@ Xresources have the settings applied to them."
      :ignore t)
     ("^\\*ytel-show\\*"  ; `ytel-show'
      :vslot -12 :size 0.5)
-     ;; :slot 2 :vslot 2 :size 0.45 :select t)
+    ;; :slot 2 :vslot 2 :size 0.45 :select t)
     ("^\\*Warnings" :vslot 99 :size 0.25)
     ("^\\*Backtrace" :vslot 99 :size 0.4 :quit nil)
     ("^\\*CPU-Profiler-Report "    :side bottom :vslot 100 :slot 1 :height 0.4 :width 0.5 :quit nil)
     ("^\\*Memory-Profiler-Report " :side bottom :vslot 100 :slot 2 :height 0.4 :width 0.5 :quit nil)
     ("^\\*Process List\\*" :side bottom :vslot 101 :size 0.25 :select t :quit t)
     ("^\\*\\(?:Proced\\|timer-list\\|Abbrevs\\|Output\\|Occur\\|unsent mail\\)\\*" :ignore t)))
-   #+end_src
+#+end_src
 
 ** Zoom mode
-   Zoom is a nice package for window management in emacs. It enlarges the window
-   that has focus.
-   #+begin_src emacs-lisp :tangle config.el
+Zoom is a nice package for window management in emacs. It enlarges the window
+that has focus.
+#+begin_src emacs-lisp :tangle config.el
 (use-package! zoom
   :config
   (map!
@@ -785,10 +754,10 @@ Xresources have the settings applied to them."
    (:prefix ("t" . "toggle")
     :desc "Zoom mode" "Z" #'zoom-mode))
   (zoom-mode -1))
-   #+end_src
+#+end_src
 
 ** Windmove
-   #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (use-package! windmove
   :init
   (map! "s-h" #'windmove-left
@@ -798,23 +767,22 @@ Xresources have the settings applied to them."
   :config
   (setq windmove-wrap-around nil)
   (setq windmove-window-distance-delta 1))
-   #+end_src
+#+end_src
 
 ** Framemove
 
-   Framemove extends windmove and allows to move from frame to frame. It makes
-   switching from screen to screen easier in EXWM.
-   #+begin_src emacs-lisp :tangle config.el
+Framemove extends windmove and allows to move from frame to frame. It makes
+switching from screen to screen easier in EXWM.
+#+begin_src emacs-lisp :tangle config.el
 (use-package! framemove
   :after exwm-randr
-  :init
-  (load! "lisp/framemove.el")
+  :load-path "lisp"
   :config
   (setq framemove-hook-into-windmove t))
-   #+end_src
+#+end_src
 
 ** Windower
-   #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (use-package! windower
   :init
   (setq windower-border-move-distance 1)
@@ -830,17 +798,17 @@ Xresources have the settings applied to them."
         "s-r"     #'windower-switch-to-last-buffer
         "s-o"     #'windower-toggle-single
         "s-\\"    #'windower-toggle-split))
-   #+end_src
+#+end_src
 
 ** Windresize
 
-   #+begin_src emacs-lisp :tangle config.el
-(use-package windresize :after exwm)
-   #+end_src
+#+begin_src emacs-lisp :tangle config.el
+(use-package windresize)
+#+end_src
 
 ** Edwina
 
-   #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (use-package edwina
   :commands (edwina-mode lg/edwina-popup)
   :hook (edwina-mode . lg/edwina-remove-or-restore-buffer-behaviour)
@@ -874,11 +842,11 @@ Xresources have the settings applied to them."
          "j" #'edwina-dec-nmaster
          "h" #'edwina-dec-mfact
          "l" #'edwina-inc-mfact)))
-   #+end_src
+#+end_src
 
 ** EXWM :module:
 *** Packages
-    #+begin_src emacs-lisp :tangle ./modules/personal/exwm/packages.el
+#+begin_src emacs-lisp :tangle ./modules/personal/exwm/packages.el
 (package! xelb)
 (package! exwm)
 
@@ -904,26 +872,26 @@ Xresources have the settings applied to them."
   :recipe
   (:host github
    :repo "tumashu/exwm-x"))
-    #+end_src
+#+end_src
 
 *** Config
 
-    The following snippet should go into the file
-    =/usr/share/xsessions/emacs.desktop= to make EXWM a possible choice in the
-    display manager.
+The following snippet should go into the file
+=/usr/share/xsessions/emacs.desktop= to make EXWM a possible choice in the
+display manager.
 
-    #+begin_src conf :tangle no
+#+begin_src conf :tangle no
 [Desktop Entry]
 Name=EXWM
 Comment=Emacs is awesome!
 Exec=emacs
 Type=application
-    #+end_src
+#+end_src
 
 *** Media keys
 
-    Media keys need to be explicitely bound, as we might not use EXWM in a DE.
-    #+begin_src emacs-lisp :tangle no
+Media keys need to be explicitely bound, as we might not use EXWM in a DE.
+#+begin_src emacs-lisp :tangle no
 (defun lg/volume-down ()
   "Lower volume of the computer"
   (interactive)
@@ -943,18 +911,18 @@ Type=application
   "Increase brightness of the screen"
   (interactive)
   (shell-command "xbacklight -inc 10"))
-    #+end_src
+#+end_src
 
 *** Mouse
-    #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
+#+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
 (after! exwm
   (map! "<mode-line> <double-mouse-3>" #'exwm-floating-toggle-floating))
-    #+end_src
+#+end_src
 
 *** EXWM-randr
 
-    EXWM has built in support for multi-monitor.
-    #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
+EXWM has built in support for multi-monitor.
+#+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
 (use-package! exwm-randr
   :config
   (setq! exwm-randr-workspace-monitor-plist '(0 "eDP-1" 1 "DP-2"))
@@ -964,11 +932,11 @@ Type=application
      "xrandr" nil "sh ~/.screenlayout/arandr.layout.sh"))
   (add-hook 'exwm-randr-screen-change-hook #'lg/setup-screens)
   (exwm-randr-enable))
-    #+end_src
+#+end_src
 
 *** EXWM-Systemtray
 
-    #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
+#+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
 (use-package! exwm-systemtray
   :disabled
   :config
@@ -976,31 +944,15 @@ Type=application
          exwm-systemtray-icon-gap 3
          exwm-systemtray-background-color "black")
   (exwm-systemtray-enable))
-    #+end_src
+#+end_src
 
 *** EXWM
-    EXWM is seriously awesome. Now I don't have to exit emacs *ever* and I get to
-    configure my window manager with emacs lisp. Life is good.
+EXWM is seriously awesome. Now I don't have to exit emacs *ever* and I get to
+configure my window manager with emacs lisp. Life is good.
 
-    #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
+#+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
 (use-package! exwm
   :if window-system
-  ;; :init
-  ;; (map!
-  ;;  :map exwm-mode-map
-  ;;  :localleader
-  ;;  :desc "Toggle mode-line"       "m" #'exwm-layout-toggle-mode-line
-  ;;  :leader
-  ;;  (:prefix ("e" . "EXWM")
-  ;;   :desc "Attach minibuffer"      "a" #'exwm-workspace-attach-minibuffer
-  ;;   :desc "Detach minibuffer"      "d" #'exwm-workspace-detach-minibuffer
-  ;;   :desc "Fullscreen"             "f" #'exwm-layout-set-fullscreen
-  ;;   :desc "Floating hide"          "h" #'exwm-layout-set-fullscreen
-  ;;   :desc "Release keyboard"       "k" #'exwm-input-release-keyboard
-  ;;   :desc "Send next key"          "q" #'exwm-input-send-next-key
-  ;;   :desc "Reset"                  "r" #'exwm-reset
-  ;;   :desc "Toggle floating layout" "t" #'exwm-floating-toggle-floating
-  ;;   :desc "Workspace move window"  "w" #'exwm-workspace-move-window))
   :config
   (defun lg/exwm-async-run (name)
     "Run a process asynchronously"
@@ -1029,7 +981,6 @@ buffer (=minimizing in other WM/DE)"
             (lg/exwm-async-run program)
             (message (format "Launching %s" program)))))))
 
-
   (defun lg/run-or-raise-or-dismiss-firefox ()
     (interactive)
     (lg/run-or-raise-or-dismiss "firefox" "Firefox-esr"))
@@ -1037,7 +988,7 @@ buffer (=minimizing in other WM/DE)"
   (defun lg/run-or-raise-or-dismiss-firefox ()
     (interactive)
     (let ((buf-list (->> (buffer-list)
-                         (--reject (not (string= "Firefox-esr" (buffer-local-value 'exwm-class-name it))))))
+                      (--reject (not (string= "Firefox-esr" (buffer-local-value 'exwm-class-name it))))))
           buf)
       (if buf-list
           (progn
@@ -1101,7 +1052,9 @@ buffer (=minimizing in other WM/DE)"
     (shell-command "killall compton")
     (shell-command "killall kdeconnect-indicator")
     (shell-command "killall xsettingsd")
-    (shell-command "feh --bg-fill ~/Images/Wallpaper/landscapes_sand_desert_dunes.jpg")
+                                        ;(shell-command "feh --bg-fill ~/Images/Wallpaper/landscapes_sand_desert_dunes.jpg")
+    (shell-command "feh --bg-fill ~/Images/Wallpaper/solid_blue.jpeg")
+    ;; (shell-command "feh --bg-fill ~/Images/Wallpaper/mountain.png")
     (efs/run-in-background "pasystray")
     (efs/run-in-background "compton")
     (efs/run-in-background "xfce4-power-manager")
@@ -1143,7 +1096,7 @@ buffer (=minimizing in other WM/DE)"
           ([?\s-t] . lg/run-or-raise-or-dismiss-thunderbird)
           ([?\s-s] . lg/run-or-raise-or-dismiss-spotify)
           ([?\s-u] . lg/toggle-line-char-modes)
-          ([s-return] . +vterm/toggle)
+          ([s-return] . vterm)
           ([s-escape] . lg/kill-this-buffer)
           ([?\s-/]  . centaur-tabs-mode)
           ([?\s-m]  . centaur-tabs-backward)
@@ -1170,35 +1123,45 @@ buffer (=minimizing in other WM/DE)"
           ([?\s-j] . windmove-down)  ([?\s-J] . windower-swap-below)
           ([?\s-k] . windmove-up)    ([?\s-K] . windower-swap-above)
           ([?\s-l] . windmove-right) ([?\s-L] . windower-swap-right)))
-        (setq exwm-workspace-show-all-buffers t)
-        (setq exwm-layout-show-all-buffers t)
-        (setq exwm-workspace-number 2)
-        (setq exwm-workspace-minibuffer-position nil)
-        (setq exwm-workspace-display-echo-area-timeout 1)
+  (setq exwm-workspace-show-all-buffers t)
+  (setq exwm-layout-show-all-buffers t)
+  (setq exwm-workspace-number 2)
+  (setq exwm-workspace-minibuffer-position nil)
+  (setq exwm-workspace-display-echo-area-timeout 1)
 
   (setq! exwm-manage-configurations
          '(((or (equal "hl2-linux" exwm-class-name)
                 (equal "hl2-linux" exwm-title))
-            ;;floating t
+            floating nil
             fullscreen nil
             tiling-mode-line nil
             ;;char-mode t
             managed t)
+           ((equal exwm-class-name "openspades")
+            floating nil
+            managed t)
            ((equal exwm-class-name "Firefox-esr")
-            floating-mode-line nil)))
+            floating-mode-line nil)
+           ))
 
   (push (aref (kbd "<escape>") 0) exwm-input-prefix-keys)
   (push (aref (kbd "<return>") 0) exwm-input-prefix-keys)
+  (push (aref (kbd "s-<SPC>") 0) exwm-input-prefix-keys)
 
   ;; relaunch the panel so that it auto-hide correctly
-  (load "~/.doom.d/lisp/exwm-utils.el")
+  (load "~/.config/doom/lisp/exwm-utils.el")
                                         ;(shell-command "xfce4-panel --restart")
+
   (exwm-enable))
-    #+end_src
+#+end_src
 
 *** EXWM-outer-gaps
+I wrote EXWM outer gaps to add some useless gaps to EXWM. I seldom use them,
+but they are there. Since I use polybar on top of the echo area, I set some
+environment variables that are used in polybar's configuration file and that
+basically tell it where to draw the bar, taking the gaps into account.
 
-    #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
+#+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
 (use-package exwm-outer-gaps
   :after (xelb exwm hercules)
   :init
@@ -1226,7 +1189,7 @@ buffer (=minimizing in other WM/DE)"
 Argument hide is t if minibuffer should be hidden, true if shown."
     (if hide
         (exwm-outer-gaps-set 3 -20 nil)
-        ;(setq exwm-outer-gaps-width [0 0 0 -20])
+                                        ;(setq exwm-outer-gaps-width [0 0 0 -20])
       ;; (setq exwm-outer-gaps-width [0 0 0 0]))
       (exwm-outer-gaps-set 3 0 nil))
     (exwm-outer-gaps-apply))
@@ -1284,12 +1247,12 @@ Argument hide is t if minibuffer should be hidden, true if shown."
   (defun lg/exwm-outer-gaps-setenv-and-polybar ()
     "Set environment variables that are used by polybar to overlay
   the minibuffer, and restart polybar after a timer."
-    (setenv "GAP_RIGHT" "50%")
+    (setenv "GAP_RIGHT" "65%")
     (setenv "GAP_BOTTOM" (number-to-string
                           (if exwm-outer-gaps-mode
                               (aref exwm-outer-gaps-width 3)
                             0)))
-    (setenv "PANEL_WIDTH" (concat "50%:-"
+    (setenv "PANEL_WIDTH" (concat "35%:-"
                                   (number-to-string
                                    (if exwm-outer-gaps-mode
                                        (aref exwm-outer-gaps-width 0)
@@ -1302,16 +1265,16 @@ Argument hide is t if minibuffer should be hidden, true if shown."
   ;; (add-hook 'minibuffer-setup-hook #'lg/exwm-outer-gaps-show-minibuffer-init-hook 100)
   ;; (add-hook 'minibuffer-exit-hook #'lg/exwm-outer-gaps-hide-minibuffer-exit-hook 100)
   (exwm-outer-gaps-mode +1))
-    #+end_src
+#+end_src
 
 *** EXWM-Firefox
 
-    With EXWM emulation keys, you can have vi-style keybindings within firefox,
-    without having to install anything on the browser. Have I mentioned how awesome EXWM
-    is? My next objective will probably be to bring firefox even closer to emacs by
-    enabling new tabs within new windows and have emacs handle all windows with iBuffer.
+With EXWM emulation keys, you can have vi-style keybindings within firefox,
+without having to install anything on the browser. Have I mentioned how awesome EXWM
+is? My next objective will probably be to bring firefox even closer to emacs by
+enabling new tabs within new windows and have emacs handle all windows with iBuffer.
 
-    #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
+#+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
 (use-package! exwm-firefox-evil
   :hook ((exwm-manage-finish . exwm-firefox-evil-activate-if-firefox)
          ;; (exwm-manage-finish . lg/exwm-firefox-force-fullscreen)
@@ -1354,10 +1317,10 @@ firefox, it leaves fullscreen mode."
     (exwm-input--fake-key 'f1))
 
   (defun lg/exwm-firefox-hook ()
-    "Sets firefox how I like it"
+    "Hook to be run after entering exwm-firefox-evil-mode"
     (interactive)
-    (when exwm-firefox-evil-mode
-      (lg/exwm-firefox-toggle-tree-tab)))
+    (exwm-firefox-intercept-next-ret)
+    (exwm-firefox-evil-insert))
 
   (defun lg/exwm-firefox-hint ()
     "Highlights hints on the page."
@@ -1383,9 +1346,11 @@ firefox, it leaves fullscreen mode."
   (advice-add #'exwm-firefox-core-focus-search-bar :after #'exwm-firefox-intercept-next-ret)
   (advice-add #'exwm-firefox-core-quick-find :after #'exwm-firefox-intercept-next-ret)
 
+  (evil-initial-state 'exwm-firefox-evil-mode 'insert)
+
   (define-key! 'normal exwm-firefox-evil-mode-map
-    "m" #'exwm-firefox-open-in-mpv
-    "t" #'exwm-firefox-core-tab-new
+    "m" nil
+    "t" #'exwm-firefox-core-window-new
     "f" #'lg/exwm-firefox-hint
     "F" #'lg/exwm-firefox-force-fullscreen
     "T" #'lg/exwm-firefox-toggle-tree-tab
@@ -1426,22 +1391,23 @@ firefox, it leaves fullscreen mode."
     "D" #'exwm-firefox-split-detach
     "M" #'exwm-firefox-merge)
   ;; I don't like renaming the name of the firefox window
-  (remove-hook 'exwm-update-title-hook 'exwm-firefox--update-title))
-    #+end_src
+                                        ;(remove-hook 'exwm-update-title-hook 'exwm-firefox--update-title))
+  )
+#+end_src
 
 *** EXWM-background
-    #+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle no
 (use-package exwm-background)
-    #+end_src
+#+end_src
 
 *** EXWM-x
-    EXWM-x is a package that extends EXWM to bring interesting features, like
-    enhanced mouse control, buttons for your X-applications, etc. I don't use all
-    of its features, but rather cherry pick those I find interesting.
+EXWM-x is a package that extends EXWM to bring interesting features, like
+enhanced mouse control, buttons for your X-applications, etc. I don't use all
+of its features, but rather cherry pick those I find interesting.
 
 **** Buttons
 
-     #+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle no
 (use-package exwmx-button
   :config
   (exwmx-button-enable)
@@ -1450,16 +1416,22 @@ firefox, it leaves fullscreen mode."
     (remove-hook 'exwm-update-class-hook #'exwmx-button--update-button-line)
     (remove-hook 'exwm-update-title-hook #'exwmx-button--update-button-line)
     (remove-hook 'buffer-list-update-hook #'exwmx-button--update-button-line))
-     #+end_src
+#+end_src
 
 **** Floating frames
-     #+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle no
 (use-package exwmx-floating)
-     #+end_src
+#+end_src
 
 *** Polybar
 
-    #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
+I use polybar and make it draw on top of the echo area, on the right half.
+The echo area is empty most of the time, and messages displayed there are
+usually short enough to be less than half a line. I add some more
+configuration to hide polybar when entering the minibuffer, and restoring it
+when leaving it.
+
+#+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
 (defun lg/polybar-minibuffer-hide ()
   (call-process "polybar-msg" nil 0 nil "cmd" "hide"))
 (defun lg/polybar-minibuffer-show ()
@@ -1467,10 +1439,16 @@ firefox, it leaves fullscreen mode."
 
 (add-hook 'minibuffer-setup-hook #'lg/polybar-minibuffer-hide)
 (add-hook 'minibuffer-exit-hook #'lg/polybar-minibuffer-show)
-    #+end_src
+#+end_src
 
 *** Tab-line/Centaur-tabs fix
-    #+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
+EXWM is older than the tab-line, and does not take it into account. We have
+to modify exwm to make it draw X windows below the tab-line (the top border
+of the window has to be lower), otherwise they will overlap it. Centaur-tabs
+uses the tab-line to render its tab-line, and I use it rather than tab-line,
+therefore I make the frames lower by =centaur-tabs-height= pixels.
+
+#+begin_src emacs-lisp :tangle ./modules/personal/exwm/config.el
 (after! exwm
   (defun exwm-layout--show (id &optional window)
     "Show window ID exactly fit in the Emacs window WINDOW."
@@ -1522,10 +1500,13 @@ firefox, it leaves fullscreen mode."
         (exwm-layout--set-ewmh-state id)
         (exwm-layout--auto-iconify)))
     (xcb:flush exwm--connection)))
-    #+end_src
+#+end_src
+
+#+RESULTS:
+: exwm-layout--show
 
 * Convenience
-  #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (load! "private.el") ; credentials and private info
 (setq! org-directory "~/org/"
        display-line-numbers-type `relative
@@ -1539,28 +1520,28 @@ firefox, it leaves fullscreen mode."
   (interactive)
   (kill-buffer (current-buffer)))
 (map! "s-<escape>" #'lg/kill-this-buffer)
-  #+end_src
+#+end_src
 
 ** Which-key
-   Which key is one of the killer features for using emacs, it's good to discover
-   commands and also to not worry about remembering keybindings. I have nothing but
-   praise for this package *but* the way Doom Emacs sets it makes it pop too
-   slowly. I want it to appear almost instantaneously.
+Which key is one of the killer features for using emacs, it's good to discover
+commands and also to not worry about remembering keybindings. I have nothing but
+praise for this package *but* the way Doom Emacs sets it makes it pop too
+slowly. I want it to appear almost instantaneously.
 
-   #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (after! which-key
   ;; which-key-idle-delay must be set before enabling the mode
   ;; so we disable it, set the variable and re-enable it
   (which-key-mode -1)
   (setq! which-key-idle-delay 0.7)
   (which-key-mode +1))
-   #+end_src
+#+end_src
 
 ** Hercules
-   Hercules is a hydra banisher. Hydra is an excellent package, but you have to
-   declare them explicitely, which makes it cumbersome. Hercules leverages which
-   key to provide similar features.
-   #+begin_src emacs-lisp :tangle config.el
+Hercules is a hydra banisher. Hydra is an excellent package, but you have to
+declare them explicitely, which makes it cumbersome. Hercules leverages which
+key to provide similar features.
+#+begin_src emacs-lisp :tangle config.el
 (use-package hercules
   :config
   (hercules-def
@@ -1572,22 +1553,22 @@ firefox, it leaves fullscreen mode."
    :show-funs #'lg/edwina-popup
    :keymap 'edwina-mode-map
    :transient t))
-   #+end_src
+#+end_src
 
 ** Deft
-   #+BEGIN_SRC emacs-lisp :tangle config.el
+#+BEGIN_SRC emacs-lisp :tangle config.el
 (setq deft-directory "~/org")
-   #+END_SRC
+#+END_SRC
 
 ** Fast scroll mode
-   #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (use-package fast-scroll
   :config
   (fast-scroll-mode +1))
-   #+end_src
+#+end_src
 
 ** Scroll on jump
-   #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (use-package scroll-on-jump
   :after evil
   :config
@@ -1601,17 +1582,17 @@ firefox, it leaves fullscreen mode."
   (scroll-on-jump-advice-add evil-forward-paragraph)
   (scroll-on-jump-advice-add evil-backward-paragraph)
   (setq scroll-on-jump-duration 0.2))
-   #+end_src
+#+end_src
 
 ** good scroll
-   #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (use-package good-scroll
   :config
   (good-scroll-mode +1))
-   #+end_src
+#+end_src
 
 ** Mouse support
-   #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 ;;; found at https://tsdh.wordpress.com/2015/03/03/swapping-emacs-windows-using-dragndrop/
 (defun th/swap-window-buffers-by-dnd (drag-event)
   "Swaps the buffers displayed in the DRAG-EVENT's start and end
@@ -1641,34 +1622,58 @@ window."
   (map! "<mouse-8>" #'strokes-do-stroke
         "<S-down-mouse-1>" #'strokes-do-stroke
         "<s-down-mouse-1>" #'strokes-do-stroke)
-  (setq! strokes-file "~/.doom.d/strokes")
+  (setq! strokes-file "~/.config/doom/strokes")
   (setq! strokes-use-strokes-buffer nil)
   (strokes-mode +1))
-  #+end_src
+#+end_src
 
 * Org mode
-   #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (after! org
   (setq org-fontify-quote-and-verse-blocks nil)
   (setq org-fontify-whole-heading-line nil)
   (setq org-agenda-include-diary t)
-  (setq org-hide-leading-stars nil)
+  (setq org-startup-with-latex-preview t)
+  (setq org-hide-leading-stars t)
   (setq org-startup-indented nil)
-  (setq org-archive-location "archive/%s_archive::"))
-   #+end_src
+  (setq org-archive-location "archive/%s_archive::")
+  (setq org-src-block-faces
+        `(("emacs-lisp" modus-themes-nuanced-magenta)
+          ("elisp" modus-themes-nuanced-magenta)
+          ("clojure" modus-themes-nuanced-magenta)
+          ("clojurescript" modus-themes-nuanced-magenta)
+          ("c" modus-themes-nuanced-blue)
+          ("c++" modus-themes-nuanced-blue)
+          ("sh" modus-themes-nuanced-green)
+          ("shell" modus-themes-nuanced-green)
+          ("html" modus-themes-nuanced-yellow)
+          ("xml" modus-themes-nuanced-yellow)
+          ("css" modus-themes-nuanced-red)
+          ("scss" modus-themes-nuanced-red)
+          ("matlab" modus-themes-nuanced-red)
+          ("octave" modus-themes-nuanced-red)
+          ("python" modus-themes-nuanced-green)
+          ("ipython" modus-themes-nuanced-magenta)
+          ("r" modus-themes-nuanced-cyan)
+          ("yaml" modus-themes-nuanced-cyan)
+          ("conf" modus-themes-nuanced-cyan)
+          ("docker" modus-themes-nuanced-cyan))))
+
+(defun org-latex-preview-latex-image-clear-directory ()
+  (interactive)
+  (delete-directory org-preview-latex-image-directory t nil))
+#+end_src
 
 ** Org-sidebar
 
-   #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (use-package! org-sidebar
   :disabled
   :after org)
-   #+end_src
+#+end_src
 
 ** Org-superstar
-
-   Pretty org bullet.
-   #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (use-package! org-superstar              ; supersedes `org-bullets'
   :after org
   :disabled
@@ -1681,11 +1686,11 @@ window."
           (?* . ?➤)
           (?- . ?–)))
   (org-superstar-mode 1))
-   #+end_src
+#+end_src
 
 ** Presentation mode
 
-   #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (use-package! org-tree-slide
   :after org
   :commands prot/org-presentation-mode
@@ -1735,11 +1740,12 @@ window."
          ("C-l" . org-tree-slide-display-header-toggle)
          ("C-j" . org-tree-slide-move-next-tree)
          ("C-k" . org-tree-slide-move-previous-tree)))
-   #+end_src
+#+end_src
 
-** Org-noter
-   #+begin_src emacs-lisp :tangle config.el
+** org-noter
+#+begin_src emacs-lisp :tangle config.el
 (use-package! org-noter
+  :after org
   :defer t
   :preface
   ;; Allow the user to preempt this and set the document search path
@@ -1749,67 +1755,62 @@ window."
   (unless org-noter-notes-search-path
     (setq org-noter-notes-search-path (list org-directory)))
   (setq org-noter-auto-save-last-location t
+        org-noter-default-notes-file-names '("lecture.org")
         org-noter-separate-notes-from-heading t
-        org-noter-always-create-frame nil)
+        org-noter-always-create-frame nil
+        org-noter-kill-frame-at-session-end nil)
   (map!
    (:after (org-noter)
     :map pdf-view-mode-map
     :n "i" #'org-noter-insert-note)))
-;; (after! org-noter
-;;   (progn
-;;     (setq org-noter-always-create-frame nil)
-;;     (map!
-;;      (:after (org-noter)
-;;       :map pdf-view-mode-map
-;;       :n "i" #'org-noter-insert-note))))
-   #+end_src
+#+end_src
 
 ** ox-report
-   Create nice report for meetings.
-   #+begin_src emacs-lisp :tangle config.el
-(use-package! ox-report)
-   #+end_src
+Create nice report for meetings.
+#+begin_src emacs-lisp :tangle config.el
+(use-package! ox-report
+  :after org)
+#+end_src
 
 ** org-ref
-   #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (use-package! org-ref
-  :disabled
   :after org)
-   #+end_src
+#+end_src
 
 ** org-contacts
-   #+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package org-contacts
   :after org
   :config
- (setq org-contacts-files '("~/org/contacts.org"))
- ;; (setq org-contacts-keymap)
- (setq org-contacts-matcher "EMAIL<>\"\"|ALIAS<>\"\"|TEL<>\"\"|ADRESSE<>\"\"|ANNIVERSAIRE<>\"\"")
- (setq org-contacts-icon-size 32)
- (setq org-contacts-vcard-file "~/org/contacts.vcf")
- ;; (setq org-contacts-last-update nil)
- (setq org-contacts-tel-property "TEL")
- (setq org-contacts-group-prefix "+")
- (setq org-contacts-icon-property "ICON")
- (setq org-contacts-note-property "NOTE")
- (setq org-contacts-alias-property "ALIAS")
- (setq org-contacts-email-property "EMAIL")
- (setq org-contacts-ignore-property "IGNORE")
- (setq org-contacts-birthday-format "Anniversaire: %l (%Y)")
- (setq org-contacts-address-property "ADRESSE")
- (setq org-contacts-tags-props-prefix "#")
- (setq org-contacts-icon-use-gravatar t)
- (setq org-contacts-enable-completion t)
- (setq org-contacts-birthday-property "ANNIVERSAIRE")
- (setq org-contacts-nickname-property "NICKNAME")
- ;; (setq org-contacts-complete-functions )
- (setq org-contacts-completion-ignore-case t)
- (setq org-contacts-last-read-mail-property "DERNIER_MAIL")
- (setq org-contacts-property-values-separators "[,; \f\11\n\15\13]+")
- (setq org-contacts-email-link-description-format "%s (%d)")
- ;;(setq calendar-date-style 'american)
-(defun org-contacts-anniversaries (&optional field format)
-  "Compute FIELD anniversary for each contact, returning FORMAT.
+  (setq org-contacts-files '("~/org/contacts.org"))
+  ;; (setq org-contacts-keymap)
+  (setq org-contacts-matcher "EMAIL<>\"\"|ALIAS<>\"\"|TEL<>\"\"|ADRESSE<>\"\"|ANNIVERSAIRE<>\"\"")
+  (setq org-contacts-icon-size 32)
+  (setq org-contacts-vcard-file "~/org/contacts.vcf")
+  ;; (setq org-contacts-last-update nil)
+  (setq org-contacts-tel-property "TEL")
+  (setq org-contacts-group-prefix "+")
+  (setq org-contacts-icon-property "ICON")
+  (setq org-contacts-note-property "NOTE")
+  (setq org-contacts-alias-property "ALIAS")
+  (setq org-contacts-email-property "EMAIL")
+  (setq org-contacts-ignore-property "IGNORE")
+  (setq org-contacts-birthday-format "Anniversaire: %l (%Y)")
+  (setq org-contacts-address-property "ADRESSE")
+  (setq org-contacts-tags-props-prefix "#")
+  (setq org-contacts-icon-use-gravatar t)
+  (setq org-contacts-enable-completion t)
+  (setq org-contacts-birthday-property "ANNIVERSAIRE")
+  (setq org-contacts-nickname-property "NICKNAME")
+  ;; (setq org-contacts-complete-functions )
+  (setq org-contacts-completion-ignore-case t)
+  (setq org-contacts-last-read-mail-property "DERNIER_MAIL")
+  (setq org-contacts-property-values-separators "[,; \f\11\n\15\13]+")
+  (setq org-contacts-email-link-description-format "%s (%d)")
+  ;;(setq calendar-date-style 'american)
+  (defun org-contacts-anniversaries (&optional field format)
+    "Compute FIELD anniversary for each contact, returning FORMAT.
 Default FIELD value is \"BIRTHDAY\".
 
 Format is a string matching the following format specification:
@@ -1818,176 +1819,132 @@ Format is a string matching the following format specification:
   %l - Link to the heading
   %y - Number of year
   %Y - Number of year (ordinal)"
-  (let ((calendar-date-style 'american)
-        (entry ""))
-    (unless format (setq format org-contacts-birthday-format))
-    (cl-loop for contact in (org-contacts-filter)
-	     for anniv = (let ((anniv (cdr (assoc-string
-					    (or field org-contacts-birthday-property)
-					    (nth 2 contact)))))
-			   (when anniv
-			     (calendar-gregorian-from-absolute
-			      (org-time-string-to-absolute anniv))))
-	     ;; Use `diary-anniversary' to compute anniversary.
-	     if (and anniv (apply 'diary-anniversary anniv))
-	     collect (format-spec format
-				  `((?l . ,(org-with-point-at (cadr contact) (org-store-link nil)))
-				    (?h . ,(car contact))
-				    (?y . ,(- (calendar-extract-year date)
-					      (calendar-extract-year anniv)))
-				    (?Y . ,(let ((years (- (calendar-extract-year date)
-							   (calendar-extract-year anniv))))
-					     (format "%d%s" years (diary-ordinal-suffix years))))))))))
- #+end_src
+    (let ((calendar-date-style 'american)
+          (entry ""))
+      (unless format (setq format org-contacts-birthday-format))
+      (cl-loop for contact in (org-contacts-filter)
+           for anniv = (let ((anniv (cdr (assoc-string
+                          (or field org-contacts-birthday-property)
+                          (nth 2 contact)))))
+                 (when anniv
+                   (calendar-gregorian-from-absolute
+                    (org-time-string-to-absolute anniv))))
+           ;; Use `diary-anniversary' to compute anniversary.
+           if (and anniv (apply 'diary-anniversary anniv))
+           collect (format-spec format
+                    `((?l . ,(org-with-point-at (cadr contact) (org-store-link nil)))
+                      (?h . ,(car contact))
+                      (?y . ,(- (calendar-extract-year date)
+                            (calendar-extract-year anniv)))
+                      (?Y . ,(let ((years (- (calendar-extract-year date)
+                                 (calendar-extract-year anniv))))
+                           (format "%d%s" years (diary-ordinal-suffix years))))))))))
+#+end_src
+
+** org protocol
+#+begin_src emacs-lisp :tangle config.el
+(use-package org-protocol
+  :after org)
+#+end_src
+
+** org-capture
+#+begin_src emacs-lisp :tangle config.el
+(use-package org-capture
+  :after org
+  :config
+  (setq org-capture-templates '(("t" "Personal todo" entry
+                                 (file+headline +org-capture-todo-file "Inbox")
+                                 "* [ ] %?\n%i\n%a" :prepend t)
+                                ("n" "Personal notes" entry
+                                 (file+headline +org-capture-notes-file "Inbox")
+                                 "* %u %?\n%i\n%a" :prepend t)
+                                ("j" "Journal" entry
+                                 (file+olp+datetree +org-capture-journal-file)
+                                 "* %U %?\n%i\n%a" :prepend t)
+                                ("p" "Templates for projects")
+                                ("pt" "Project-local todo" entry
+                                 (file+headline +org-capture-project-todo-file "Inbox")
+                                 "* TODO %?\n%i\n%a" :prepend t)
+                                ("pn" "Project-local notes" entry
+                                 (file+headline +org-capture-project-notes-file "Inbox")
+                                 "* %U %?\n%i\n%a" :prepend t)
+                                ("pc" "Project-local changelog" entry
+                                 (file+headline +org-capture-project-changelog-file "Unreleased")
+                                 "* %U %?\n%i\n%a" :prepend t)
+                                ("o" "Centralized templates for projects")
+                                ("ot" "Project todo" entry #'+org-capture-central-project-todo-file "* TODO %?\n %i\n %a" :heading "Tasks" :prepend nil)
+                                ("on" "Project notes" entry #'+org-capture-central-project-notes-file "* %U %?\n %i\n %a" :heading "Notes" :prepend t)
+                                ("oc" "Project changelog" entry #'+org-capture-central-project-changelog-file "* %U %?\n %i\n %a" :heading "Changelog" :prepend t)
+                                ("l" "Link" entry (file+headline "~/org/links.org" "Links")
+                                 "* %a %^g\n %?\n %T\n %i"))))
+#+end_src
+
+** org-pomodoro
+  #+begin_src emacs-lisp :tangle yes
+(use-package org-pomodoro
+  :after org
+  :config
+  (setq org-pomodoro-length 45)
+  (setq org-pomodoro-short-break-length 10)
+  (setq org-pomodoro-long-break-frequency 3)
+  (setq org-pomodoro-ticking-sound-p nil)
+  (setq org-pomodoro-play-sounds nil)
+  (setq org-pomodoro-short-break-sound "/usr/share/sounds/freedesktop/stereo/complete.oga")
+  (setq org-pomodoro-long-break-sound "/usr/share/sounds/freedesktop/stereo/complete.oga")
+  (setq org-pomodoro-finished-sound "/usr/share/sounds/freedesktop/stereo/complete.oga"))
+  #+end_src
+
+** integration with zotero
+#+begin_src emacs-lisp :tangle config.el
+(use-package zotxt)
+(use-package org-zotxt)
+(use-package org-zotxt-noter)
+#+end_src
 
 * PDF
 ** pdf-tools
-   #+begin_src emacs-lisp :tangle config.el
-(after! pdf-tools
+#+begin_src emacs-lisp :tangle no
+(use-package pdf-tools
+  :config
   (setq pdf-view-midnight-colors '("#ffffff" . "#000000")))
-   #+end_src
+#+end_src
 
 ** Continuous scrolling
-   #+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle config.el
 (use-package! pdf-continuous-scroll-mode
   :after pdf-tools
-  :disabled
   :init
-  (setq pdf-continuous-scroll-mode-map (make-sparse-keymap))
+  (map!
+   (:map pdf-continuous-scroll-mode-map
+    :n "j" #'pdf-continuous-scroll-forward
+    :n "k" #'pdf-continuous-scroll-backward)))
   ;; (map!
   ;;  (:map pdf-view-mode-map
-  ;;   :n "j" #'pdf-continuous-scroll-forward
-  ;;   :n "k" #'pdf-continuous-scroll-backward))
-  (map!
-   (:map pdf-view-mode-map
-    :n "j" #'evil-collection-pdf-view-next-line-or-next-page
-    :n "k" #'evil-collection-pdf-view-previous-line-or-previous-page))
-  )
-   #+end_src
+  ;;   :n "j" #'evil-collection-pdf-view-next-line-or-next-page
+  ;;   :n "k" #'evil-collection-pdf-view-previous-line-or-previous-page)))
+#+end_src
 
 * Completions
 ** Company
+   #+begin_src emacs-lisp :tangle config.el :results none
+(after! company
+  (setq company-idle─delay 0.1)
+  (setq company-minimum-prefix-length 1)
+  (set-company-backend! 'sh-mode
+    'company-shell))
+   #+end_src
+
 *** Company-prescient
-    #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (use-package! company-prescient
   :after company
   :config
   (company-prescient-mode +1))
-    #+end_src
-** Ivy
-
-   #+begin_src emacs-lisp :tangle no
-(after! ivy
-  (setq ivy-re-builders-alist
-        '((counsel-ffdata-firefox-history . +ivy-prescient-non-fuzzy)
-          (counsel-ffdata-firefox-bookmarks . +ivy-prescient-non-fuzzy)
-          (swiper . +ivy-prescient-non-fuzzy)
-          (t . ivy-prescient-re-builder)))
-  (setq ivy-fixed-height-minibuffer nil)
-  (setq ivy-read-action-function #'ivy-hydra-read-action)
-  (setq ivy-add-newline-after-prompt nil))
-   #+end_src
-
-*** Ivy-explorer
-    #+begin_src emacs-lisp :tangle no
-(use-package ivy-explorer
-  :disabled)
-    #+end_src
-
-*** Counsel
-
-    #+begin_src emacs-lisp :tangle no
-;; (after! counsel
-;;   (progn (map! "M-<tab>" #'counsel-switch-buffer
-;;                (:leader
-;;                 (:prefix ("b" . "buffer") "b"
-;;                  #'counsel-switch-buffer "o"
-;;                  #'counsel-switch-buffer-other-window "C-b"
-;;                  #'counsel-switch-buffer-other-window)))))
-    #+end_src
-
-*** Counsel-ffdata
-    This package allows you to access your history and bookmarks from emacs, how awesome is that ?
-    #+begin_src emacs-lisp :tangle no
-(use-package! counsel-ffdata
-  :disabled
-  :commands (counsel-ffdata-firefox-history
-             counsel-ffdata-firefox-bookmarks)
-  :init
-  (map! (:leader
-         (:prefix ("s" . "search")
-          :desc "Firefox history"   "h" #'counsel-ffdata-firefox-history
-          :desc "Firefox bookmarks" "B" #'counsel-ffdata-firefox-bookmarks))))
-    #+end_src
-
-*** Ivy-youtube
-    #+begin_src emacs-lisp :tangle no
-(use-package! ivy-youtube
-  :disabled
-  :config
-  (map! :leader
-        (:prefix ("s" . "search")
-         "y" #'ivy-youtube))
-  (setq ivy-youtube-play-at "/usr/bin/mpv"))
-    #+end_src
-
-*** Ivy-yasnippet
-
-    Snippets are cool, but being able to narrow, preview and discover snippets is
-    even cooler !
-
-    #+begin_src emacs-lisp :tangle no
-(use-package! ivy-yasnippet
-  :disabled
-  :init
-  (map! (:leader
-         (:prefix ("i" . "insert")
-          :desc "Snippet" "s" #'ivy-yasnippet))))
-    #+end_src
-
-*** Ivy-Spotify
-
-    #+begin_src emacs-lisp :tangle no
-(use-package! counsel-spotify
-  :disabled
-  :commands
-  (counsel-spotify-next
-   counsel-spotify-previous
-   counsel-spotify-toggle-play-pause
-   counsel-spotify-search-album
-   counsel-spotify-search-track
-   counsel-spotify-search-artist
-   counsel-spotify-search-playlist)
-  :init
-  (defvar counsel-spotify-map (make-sparse-keymap))
-  (map! (:leader
-         (:prefix ("a" . "audio")
-          "a"  #'counsel-spotify-toggle-play-pause
-          "n"  #'counsel-spotify-next
-          "p"  #'counsel-spotify-previous
-          "j"  #'counsel-spotify-next
-          "k"  #'counsel-spotify-previous
-          "s"  nil
-          "sA" #'counsel-spotify-search-album
-          "sa" #'counsel-spotify-search-artist
-          "st" #'counsel-spotify-search-track
-          "sp" #'counsel-spotify-search-playlist)))
-  :config
-  (cl-defmethod counsel-spotify-do-play ((backend counsel-spotify-linux-backend) (something (eql nil)))
-    nil))
-    #+end_src
-
-*** Ivy-emms
-    #+begin_src emacs-lisp :tangle no
-(use-package! ivy-emms
-  :disabled
-  :after emms)
-    #+end_src
-
+#+end_src
 ** Selectrum :module:
 *** packages.el
 
-    #+begin_src emacs-lisp :tangle ./modules/personal/selectrum/packages.el
+#+begin_src emacs-lisp :tangle ./modules/personal/selectrum/packages.el
 (package! selectrum
   :recipe (:host github
            :repo "raxod502/selectrum"))
@@ -2023,11 +1980,11 @@ Format is a string matching the following format specification:
 (package! app-launcher
   :recipe (:host github
            :repo "SebastienWae/app-launcher"))
- #+end_src
+#+end_src
 
 *** config.el
 
-    #+begin_src emacs-lisp :tangle ./modules/personal/selectrum/config.el
+#+begin_src emacs-lisp :tangle ./modules/personal/selectrum/config.el
 (use-package! selectrum
   :init
   (setq projectile-completion-system 'default)
@@ -2076,9 +2033,9 @@ Format is a string matching the following format specification:
           :desc "Recent files" "r" #'consult-recent-file)
          (:prefix ("s" . "search")
           "s" #'consult-line)
-        (:prefix ("b" . "buffer")
-         "b" #'consult-buffer
-         "o" #'consult-buffer-other-window))
+         (:prefix ("b" . "buffer")
+          "b" #'consult-buffer
+          "o" #'consult-buffer-other-window))
         "s-\'" #'consult-buffer
         "M-y" #'consult-yank)
   :config
@@ -2100,14 +2057,14 @@ Format is a string matching the following format specification:
         embark-become-indicator embark-action-indicator)
 
   (defun current-candidate+category ()
-    (when selectrum-active-p
+    (when selectrum-is-active
       (cons (selectrum--get-meta 'category)
             (selectrum-get-current-candidate))))
 
   (add-hook 'embark-target-finders #'current-candidate+category)
 
   (defun current-candidates+category ()
-    (when selectrum-active-p
+    (when selectrum-is-active
       (cons (selectrum--get-meta 'category)
             (selectrum-get-current-candidates
              ;; Pass relative file names for dired.
@@ -2127,19 +2084,44 @@ Format is a string matching the following format specification:
   (add-hook 'embark-collect-mode-hook #'shrink-selectrum) (add-hook 'embark-setup-hook 'selectrum-set-selected-candidate))
 
 (use-package consult-spotify
-  :load-path "~/.doom.d/espotify/"
+  :load-path "~/.config/doom/espotify/"
   :init
-  (load! "~/.doom.d/private.el"))
-
-    #+end_src
+  (load! "~/.config/doom/private.el"))
+#+end_src
 
 * Multimedia
-** Spotify
+** Bongo
    #+begin_src emacs-lisp :tangle config.el
+(use-package bongo
+  :disabled t
+  :custom
+  (bongo-enabled-backends . '(mpv))
+  :config
+  (map!
+   (:map dired-mode-map
+    :localleader
+    "m" #'bongo-dired-play-line)
+   (:map emms-playlist-mode-map
+    :n "q" #'emms-playlist-mode-bury-buffer)
+   (:leader
+    (:prefix ("e" . "emms")
+     "j" #'bongo-next
+     "k" #'bongo-previous
+     "s" #'bongo-stop
+     "e" #'bongo-pause/resume
+     "S" #'bongo-play-random))))
+  #+end_src
+
+** smudge (spotify)
+#+begin_src emacs-lisp :tangle config.el
+(use-package! smudge)
+#+end_src
+** espotify
+#+begin_src emacs-lisp :tangle config.el
 (use-package espotify
   :load-path "./espotify"
   :init
-  (load! "private.el")
+  (load! "private.el"   )
   (setq espotify-use-system-bus-p nil)
   (setq espotify-service-name "spotify")
   (map! (:leader
@@ -2147,32 +2129,39 @@ Format is a string matching the following format specification:
           :desc "pause spotify" "a" #'espotify-play-pause
           :desc "next spotify track" "j" #'espotify-next
           :desc "previous spotify track" "k" #'espotify-previous))))
-   #+end_src
+#+end_src
 
 ** Emms
 
-   Emms is a huge package that helps you manage your media files like movies,
-   music, playlists and streams. You need an external player to play the media
-   since Emacs is not capable of such feature. My player of choice is =mpv=, along
-   with youtube-dl for content hosted on youtube.
+Emms is a huge package that helps you manage your media files like movies,
+music, playlists and streams. You need an external player to play the media
+since Emacs is not capable of such feature. My player of choice is =mpv=, along
+with youtube-dl for content hosted on youtube.
 
 *** General configuration
 
-    #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (use-package! emms
   :init
-  (setq emms-source-file-default-directory "~/Musique/")
-  (setq emms-streams-file "~/.doom.d/emms/streams.emms")
+  (setq emms-source-file-default-directory "~/Audio/Musique/")
+  (setq emms-streams-file "~/.config/doom/emms/streams.emms")
   (setq emms-playlist-buffer-name "*Music*")
   (setq emms-info-asynchronously t) ; update tags asynchronously)
   (setq emms-source-file-directory-tree-function 'emms-source-file-directory-tree-find)
   ;;emms-player-list '(emms-player-mpg321 emms-player-ogg123 emms-player-mplayer-playlist emms-player-mplayer emms-player-mpv emms-player-vlc emms-player-vlc-playlist)
-  (setq emms-player-list '(emms-player-mpv emms-player-mplayer))
-  (setq emms-mode-line-mode-line-function nil)
+  (setq emms-player-list '(emms-player-mplayer emms-player-mpv))
+                                        ;(setq emms-mode-line-mode-line-function nil)
   (setq emms-player-mpv-parameters '("--quiet" "--really-quiet" "--no-audio-display"))
+  (defun lg/find-music-directory ()
+    (interactive)
+    (find-file "~/Audio/Musique"))
   (map!
    (:map emms-playlist-mode-map
     :n "q" #'emms-playlist-mode-bury-buffer)
+   (:map dired-mode-map
+    :localleader
+    "m" #'emms-play-dired
+    "M" #'emms-add-dired)
    (:leader
     (:prefix ("e" . "emms")
      "j" #'emms-next
@@ -2181,23 +2170,24 @@ Format is a string matching the following format specification:
      "e" #'emms-pause
      "S" #'emms-shuffle
      "a" #'emms-show-all
-     "b" #'emms-browser
+     "b" #'lg/find-music-directory
      "m" #'emms
      :desc "radio / streams" "r" #'emms-streams)))
   :config
+  (emms-all)
   (defun lg/emms-kill-mpv ()
     (interactive)
     (shell-command "killall mpv"))
-  (emms-all)
+  (setq emms-info-functions '(emms-info-mp3info emms-info-cueinfo))
   (add-hook 'emms-player-stopped-hook #'lg/emms-kill-mpv))
-    #+end_src
+#+end_src
 
 *** Streams
 
-    Here is the file that contains all the streams that I listen to (radios), all
-    defined here and tangled to the right file.
+Here is the file that contains all the streams that I listen to (radios), all
+defined here and tangled to the right file.
 
-    #+begin_src emacs-lisp :tangle emms/streams.emms
+#+begin_src emacs-lisp :tangle emms/streams.emms
 ;;; This is an EMMS playlist file
 ;; This includes the built-in list of streams which come with Emms by
 ;; default. Emms has no affiliation of any kind with the streaming
@@ -2205,6 +2195,7 @@ Format is a string matching the following format specification:
 ;; stations. Instead, this is a collection of stations submitted to
 ;; the project over the years by people who enjoy Emms. We hope you
 ;; will enjoy them too.
+;; DO NOT EDIT HERE, THIS FILE WAS TANGLED FROM THE CONFIG.ORG FILE
 
 ((*track* (type . streamlist) (name . "http://www.somafm.com/beatblender.pls") (metadata "SomaFM: Beatblender" "http://www.somafm.com/beatblender.pls" 1 streamlist))
  (*track* (type . streamlist) (name . "http://www.somafm.com/secretagent.pls") (metadata "SomaFM: Secret Agent" "http://www.somafm.com/secretagent.pls" 1 streamlist))
@@ -2227,13 +2218,13 @@ Format is a string matching the following format specification:
  (*track* (type . streamlist) (name . "http://199.244.85.125:8000/wxhq1") (metadata "WXHQ-LP - Newport Radio" "http://199.244.85.125:8000/wxhq1" 1 streamlist))
  (*track (type . url) (name . "http://direct.franceinter.fr/live/franceinter-lofi.mp3"))
  (*track (type . url) (name . "http://direct.franceinter.fr/live/franceinter-midfi.mp3")))
-    #+end_src
+#+end_src
 
 ** Video
 
-   Mpv helper functions.
+Mpv helper functions.
 
-   #+BEGIN_SRC elisp :tangle config.el
+#+BEGIN_SRC elisp :tangle config.el
 (defun mpv-v-open (url)
   "Watch a video from URL in MPV"
   (async-shell-command (format "mpv %s" url)
@@ -2245,18 +2236,18 @@ Format is a string matching the following format specification:
   (async-shell-command (format "mpv %s --no-video" url)
                        (format "*mpv %s*" url))
   (switch-to-buffer-other-window (format "*mpv %s*" url)))
-   #+END_SRC
+#+END_SRC
 
 ** ytel
 
-   Ytel is a youtube frontend for Emacs. It is a rather new tool as of writing
-   these lines. It uses the invidious api (calling it through =curl=), and an
-   instance of the API has to be chosen. Instances might come and go, so it might
-   be necessary to check [[github:iv-org/invidious/wiki/Invidious-Instances][the available instances]].
+Ytel is a youtube frontend for Emacs. It is a rather new tool as of writing
+these lines. It uses the invidious api (calling it through =curl=), and an
+instance of the API has to be chosen. Instances might come and go, so it might
+be necessary to check [[github:iv-org/invidious/wiki/Invidious-Instances][the available instances]].
 
-   #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (use-package! ytel
-  :commands (ytel)
+  :commands ytel
   :hook (ytel-mode . (lambda () (interactive) (evil-snipe-local-mode -1)))
   :init
   (map! (:leader (:prefix ("o" . "open")
@@ -2311,53 +2302,34 @@ Format is a string matching the following format specification:
       (kill-new url)
       (message "Copied RSS feed for: %s -- %s" author url)))
 
-  ;; (setq! ytel-invidious-api-url "https://invidious.snopyta.org")
-  (setq! ytel-invidious-api-url "https://invidious.tube"))
-   #+end_src
+  (setq! ytel-invidious-api-url "https://invidious.snopyta.org"))
+;; (setq! ytel-invidious-api-url "https://invidious.tube"))
+#+end_src
 
 ** ytel-show
-   #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (use-package ytel-show
   :after ytel
   :config
   (setq ytel-show-image-max-height 150
         ytel-show-image-max-width 300))
-   #+end_src
+#+end_src
+
+** ytdious
+#+begin_src emacs-lisp :tangle yes
+(use-package ytdious
+  :after ytel
+  :config
+  (setq ytdious-invidious-api-url ytel-invidious-api-url))
+#+end_src
 
 * Elfeed
 
-  #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (after! elfeed
   (progn
-    (defun elfeed-view-mpv (&optional use-generic-p)
-      "Youtube-feed link"
-      (interactive "P")
-      (shell-command "killall mpv")
-      (setq emms-player-mpv-parameters '("--quiet" "--really-quiet" "--no-audio-display"))
-      (let ((entries (elfeed-search-selected)))
-        (cl-loop for entry in entries
-                 do (elfeed-untag entry 'unread)
-                 when (elfeed-entry-link entry)
-                 do (emms-play-url it))
-        (mapc #'elfeed-search-update-entry entries)
-        (unless (use-region-p) (forward-line))))
-
-    (defun elfeed-listen-mpv (&optional use-generic-p)
-      "Youtube-feed link"
-      (interactive "P")
-      (shell-command "killall mpv")
-      (setq emms-player-mpv-parameters '("--quiet" "--really-quiet" "--no-audio-display" "--vid=no"))
-      (let ((entries (elfeed-search-selected)))
-        (cl-loop for entry in entries
-                 do (elfeed-untag entry 'unread)
-                 when (elfeed-entry-link entry)
-                 do (emms-play-url it))
-        (mapc #'elfeed-search-update-entry entries)
-        (unless (use-region-p) (forward-line))))
-
-    ;; (evil-define-key 'normal elfeed-search-mode-map (kbd "v") 'elfeed-view-mpv)
-    ;; (evil-define-key 'normal elfeed-search-mode-map (kbd "a") 'elfeed-listen-mpv)
-
+    (use-package lg-elfeed
+      :load-path "lisp")
     (map!
      (:map elfeed-search-mode-map
       :n "v" #'elfeed-view-mpv
@@ -2371,17 +2343,17 @@ Format is a string matching the following format specification:
   (:prefix ("o" . "open")
    :desc "El[f]eed"         "f" #'elfeed
    :desc "El[F]eed update"  "F" #'elfeed-update)))
-  #+end_src
+#+end_src
 
 * Ripgrep
 
-  #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (use-package rg :commands rg)
-  #+end_src
+#+end_src
 
 * Treemacs
 
-  #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (when (featurep! :ui treemacs)
   (map! (:leader
          (:prefix ("t" . "toggle")
@@ -2402,32 +2374,32 @@ Format is a string matching the following format specification:
                   treemacs-file-face
                   treemacs-tags-face))
     (set-face-attribute face nil :family (face-attribute 'default :family))))
-  #+end_src
+#+end_src
 
 * Terminal
-   I tend to switch back and forth between vterm and eshell a lot, so I try to
-   keep a nice configuration for both.
+I tend to switch back and forth between vterm and eshell a lot, so I try to
+keep a nice configuration for both.
 
 ** Integration with emacs
-   Eshell has superb integration with Emacs. It's no surprise, it's written in
-   Elisp, but I like how it's able to hook into emacs to improve some commands.
-   Take ~man~ for instance, if you use it in eshell, you will actually use the
-   man page reader built into emacs. I want to be able to do similar things in
-   any shell. The way to go is to write aliases that call emacsclient with the
-   right functions and arguments.
+Eshell has superb integration with Emacs. It's no surprise, it's written in
+Elisp, but I like how it's able to hook into emacs to improve some commands.
+Take ~man~ for instance, if you use it in eshell, you will actually use the
+man page reader built into emacs. I want to be able to do similar things in
+any shell. The way to go is to write aliases that call emacsclient with the
+right functions and arguments.
 
 *** TODO Ytdl
-    Interface to yt-download.
-    #+begin_src emacs-lisp :tangle config.el
+Interface to yt-download.
+#+begin_src emacs-lisp :tangle config.el
 (use-package ytdl
   :init
   (setq ytdl-music-folder "~/Musique"
         ytdl-video-folder "~/Vidéos"))
-    #+end_src
+#+end_src
 
 *** DONE du
-    Interface to disk-usage.
-   #+begin_src sh :tangle ~/.doom.d/emacs-bash-layer.sh
+Interface to disk-usage.
+#+begin_src sh :tangle ~/.config/doom/emacs-shell-layer.sh
 function du(){
     if [ $# -eq 0 ]
     then
@@ -2439,12 +2411,12 @@ function du(){
         esac
     fi
 }
-   #+end_src
+#+end_src
 
 *** DONE man
-    Interface to man page reader
+Interface to man page reader
 
-   #+begin_src sh :tangle ~/.doom.d/emacs-bash-layer.sh
+#+begin_src sh :tangle ~/.config/doom/emacs-shell-layer.sh
 function man(){
     if [ $# -eq 0 ]
     then
@@ -2453,51 +2425,66 @@ function man(){
         emacsclient -e "(man $1)"
     fi
 }
-   #+end_src
+#+end_src
+
+*** TODO info
+
+#+begin_src sh :tangle ~/.config/doom/emacs-shell-layer.sh
+function info(){
+    if [ $# -eq 0 ]
+    then
+        emacsclient -e "(call-interactively #'info)"
+    else
+        emacsclient -e "(info $1)"
+    fi
+}
+#+end_src
 
 ** Vterm
-   Vterm is really nice, I like it.
-   #+begin_src emacs-lisp :tangle config.el
+Vterm is really nice, I like it.
+#+begin_src emacs-lisp :tangle config.el :results none
 (use-package! vterm
   :defer t
   :init
-  (setq vterm-shell "/usr/bin/bash")
+  (setq vterm-shell "zsh")
   (setq vterm-always-compile-module t)
-  (setq vterm-module-cmake-args "-DUSE_SYSTEM_VTERM=no")
-  (map! "s-<return>" #'+vterm/toggle))
-   #+end_src
+  (setq vterm-module-cmake-args "-DUSE_SYSTEM_VTERM=YES")
+  (map! "s-<return>" #'+vterm/toggle)
+  :config
+  (set-popup-rule! "^vterm" :ignore t) )
+#+end_src
 
 ** eshell
-   In most cases, eshell is sufficient for all my needs. It works really well,
-   and another advantage is that it works cross platforms. I only have linux on
-   my computer but it's nice for emacs users on windows out there !
+In most cases, eshell is sufficient for all my needs. It works really well,
+and another advantage is that it works cross platforms. I only have linux on
+my computer but it's nice for emacs users on windows out there !
 
-   #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (after! eshell
   (setq eshell-kill-on-exit nil)
   (setq eshell-kill-processes-on-exit nil))
-   #+end_src
+#+end_src
 
 ** fish completion
-   This package provide completion thanks to fish.
-   #+begin_src emacs-lisp :tangle config.el
+This package provide completion thanks to fish.
+#+begin_src emacs-lisp :tangle config.el
 (use-package fish-completion
   :disabled
   :after eshell
   :config
   (global-fish-completion-mode))
-   #+end_src
+#+end_src
 
 * Browsing the internet
 ** Eww
 
-   EWW stands for the Emacs Web Wowser, and it is a web browser written in emacs
-   lisp. It relies on =shr= (simple html renderer), and is only capable of
-   rendering /you guessed it/ : html. I find myself using it more and more, as it
-   is really lightweight, and is a really nice interface to read online
-   documentation, as you can easily copy and paste the snippets to your project.
+EWW stands for the Emacs Web Wowser, and it is a web browser written in emacs
+lisp. It relies on =shr= (simple html renderer), and is only capable of
+rendering /you guessed it/ : html. I find myself using it more and more, as it
+is really lightweight, and is a really nice interface to read online
+documentation, as you can easily copy and paste the snippets to your project.
 
-   #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (use-package eww
   :commands (eww eww-browse-with-history)
   :init
@@ -2505,59 +2492,42 @@ function man(){
          :prefix ("o" . "open")
          :desc "eww" "w" #'eww-browse-with-history)
         (:map eww-link-keymap
-         "v" #'eww-mpv-video-at-point
+         ;"v" #'eww-mpv-video-at-point
          "a" #'eww-mpv-audio-at-point
          "C-j" #'eww-next-url
          "C-k" #'eww-previous-url))
   :config
+  (setq eww-download-directory "~/Téléchargements/eww/")
   (setq eww-desktop-data-save '(:url :title))
-  (defun eww-mpv-video-at-point ()
-    "View video in url at point in mpv"
-    (interactive)
-    (emms-play-url (thing-at-point 'url)))
-
-  (defun eww-mpv-video-at-current-url ()
-    "View video in url at point in mpv"
-    (interactive)
-    (emms-play-url (eww-current-url)))
-
-  (defun eww-mpv-audio-at-point ()
-    (interactive)
-    "View video in url at point in mpv"
-    (mpv-a-open (thing-at-point 'url)))
-
-(defun eww-browse-with-history (arg)
-  (interactive "P")
-  (let ((url (completing-read "EWW: " eww-prompt-history)))
-    (eww url (if arg 4 nil))))
-
-  (defun prot-eww--rename-buffer ()
-    "Rename EWW buffer using page title or URL.
-To be used by `eww-after-render-hook'."
-    (let ((name (if (eq "" (plist-get eww-data :title))
-                    (plist-get eww-data :url)
-                  (plist-get eww-data :title))))
-      (rename-buffer (format "*%s # eww*" name) t)))
-
   (add-hook 'eww-after-render-hook #'prot-eww--rename-buffer)
   (advice-add 'eww-back-url :after #'prot-eww--rename-buffer)
-  (advice-add 'eww-forward-url :after #'prot-eww--rename-buffer))
-   #+end_src
+  (advice-add 'eww-forward-url :after #'prot-eww--rename-buffer)
+  (use-package lg-eww
+    :load-path "lisp"))
+#+end_src
 
 ** Elpher
-   Elpher is a gopher and gemini client for Emacs.
-   #+begin_src emacs-lisp :tangle config.el
-(use-package elpher :commands elpher)
-   #+end_src
 
-* Matlab
-** Packages
-   #+begin_src emacs-lisp :tangle ./modules/lang/matlab/packages.el
-(package! matlab-mode)
+Elpher is a gopher and gemini client for Emacs.
+#+begin_src emacs-lisp :tangle config.el
+(use-package elpher
+  :commands elpher)
+#+end_src
+
+** Webkit
+   #+begin_src emacs-lisp :tangle no
+  (use-package webkit)
    #+end_src
+* Matlab :module:
+** Packages
+
+#+begin_src emacs-lisp :tangle ./modules/lang/matlab/packages.el
+(package! matlab-mode)
+#+end_src
 
 ** Config
-   #+begin_src emacs-lisp :tangle ./modules/lang/matlab/config.el
+
+#+begin_src emacs-lisp :tangle ./modules/lang/matlab/config.el
 ;;;###autoload
 (defun +matlab/open-repl ()
   "Open the Matlab REPL."
@@ -2581,13 +2551,13 @@ To be used by `eww-after-render-hook'."
   (map! :map matlab-mode-map
         :v "gr" #'matlab-shell-run-region-or-line
         :n "gr" #'matlab-shell-run-region-or-line))
-   #+end_src
+#+end_src
 
 * Python
- #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (after! python
   (set-repl-handler! 'python-mode #'+python/open-ipython-repl :persist t))
- #+end_src
+#+end_src
 
 * Emacs Application Framework (eaf) :module:
 This is the module for the emacs application framework.
@@ -2604,12 +2574,12 @@ This is the module for the emacs application framework.
 
 ** config
 #+begin_src emacs-lisp :tangle ./modules/personal/eaf/config.el
- (use-package epc :defer t :ensure t)
- (use-package ctable :defer t :ensure t)
- (use-package deferred :defer t :ensure t)
- (use-package s :defer t :ensure t)
+(use-package epc :defer t :ensure t)
+(use-package ctable :defer t :ensure t)
+(use-package deferred :defer t :ensure t)
+(use-package s :defer t :ensure t)
 (use-package eaf
-  :load-path "~/.emacs.d/.local/straight/repos/emacs-application-framework" ; Set to "/usr/share/emacs/site-lisp/eaf" if installed from AUR
+  :load-path "~/.config/emacs/.local/straight/repos/emacs-application-framework" ; Set to "/usr/share/emacs/site-lisp/eaf" if installed from AUR
   :after (epc ctable deferred s)
   :custom
   (eaf-browser-continue-where-left-off t)
@@ -2619,19 +2589,34 @@ This is the module for the emacs application framework.
   (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
   (eaf-bind-key take_photo "p" eaf-camera-keybinding)
   (eaf-bind-key nil "M-q" eaf-browser-keybinding)) ;; unbind, see more in the Wiki
-#+end_src
+
+(use-package eaf-evil
+  :init
+  (define-key key-translation-map (kbd "SPC")
+    (lambda (prompt)
+      (if (derived-mode-p 'eaf-mode)
+          (pcase eaf--buffer-app-name
+            ("browser" (if  (string= (eaf-call-sync "call_function" eaf--buffer-id "is_focus") "True")
+                           (kbd "SPC")
+                         (kbd eaf-evil-leader-key)))
+            ("pdf-viewer" (kbd eaf-evil-leader-key))
+            ("image-viewer" (kbd eaf-evil-leader-key))
+            (_  (kbd "SPC")))
+        (kbd "SPC")))))
+  #+end_src
 
 * Keybindings
 ** Evil mode
-   #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (after! evil
   (map! :n "C-e" #'end-of-line))
-   #+end_src
+#+end_src
 
 ** Misc
-   #+begin_src emacs-lisp :tangle config.el
+#+begin_src emacs-lisp :tangle config.el
 (map! "M-j" #'drag-stuff-down
       "M-k" #'drag-stuff-up
+      "<key-chord> e r" #'execute-extended-command
       (:leader
        :desc "Control-x" "x" ctl-x-map
        (:prefix ("f" . "file")
